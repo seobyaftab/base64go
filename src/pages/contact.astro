@@ -1,0 +1,58 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">Contact</p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        Contact Us.
+      </h1>
+      <p class="mt-4 text-[16px] leading-6 text-body">
+        Have feedback, found a bug, or want to suggest a feature? We would love to hear from you.
+      </p>
+    </header>
+
+    <div class="grid gap-8 lg:grid-cols-2">
+      <!-- Email -->
+      <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-2">
+        <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-canvas-soft">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-ink"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        </div>
+        <h3 class="text-[16px] font-medium leading-6 text-ink mb-1">Email</h3>
+        <p class="text-[14px] leading-5 text-body mb-3">The fastest way to reach us. We typically respond within 24 hours.</p>
+        <a href="mailto:hello@base64go.com" class="text-[14px] font-medium text-link hover:text-link-deep">hello@base64go.com</a>
+      </div>
+
+      <!-- GitHub -->
+      <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-2">
+        <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-canvas-soft">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-ink"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+        </div>
+        <h3 class="text-[16px] font-medium leading-6 text-ink mb-1">GitHub</h3>
+        <p class="text-[14px] leading-5 text-body mb-3">Found a bug or have a feature request? Open an issue on GitHub.</p>
+        <a href="https://github.com/seobyaftab/base64go" rel="noopener noreferrer" target="_blank" class="text-[14px] font-medium text-link hover:text-link-deep">github.com/seobyaftab/base64go</a>
+      </div>
+
+      <!-- Response time -->
+      <div class="lg:col-span-2 rounded-xl border border-hairline bg-canvas-soft p-6">
+        <h3 class="text-[14px] font-medium leading-5 text-ink mb-2">What to expect</h3>
+        <ul class="space-y-2 text-[14px] leading-5 text-body">
+          <li class="flex items-start gap-2">
+            <span class="mt-1 block h-1.5 w-1.5 shrink-0 rounded-full bg-success"></span>
+            Technical issues &mdash; usually within 12 hours
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="mt-1 block h-1.5 w-1.5 shrink-0 rounded-full bg-success"></span>
+            Feature suggestions &mdash; reviewed within 48 hours
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="mt-1 block h-1.5 w-1.5 shrink-0 rounded-full bg-success"></span>
+            General inquiries &mdash; within 24 hours
+          </li>
+        </ul>
+      </div>
+    </div>
+  </article>
+</Layout>

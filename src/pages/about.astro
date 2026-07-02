@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">About</p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        About base64go.
+      </h1>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+      <p>
+        <strong class="text-ink font-medium">base64go.com</strong> is a free, fast, and private Base64 encoder and decoder. We built it because every other Base64 tool on the web is either ugly, slow, filled with ads, or secretly sending your data to a server. We wanted something better.
+      </p>
+
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mt-10 mb-4">Our Principles</h2>
+
+      <div class="space-y-4">
+        <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-2">
+          <h3 class="text-[16px] font-medium leading-6 text-ink mb-1">100% Client-Side</h3>
+          <p class="text-[14px] leading-5 text-body">Every encode and decode operation runs entirely in your browser using JavaScript. No data is ever uploaded to any server. We cannot see, access, store, or log anything you type or upload.</p>
+        </div>
+
+        <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-2">
+          <h3 class="text-[16px] font-medium leading-6 text-ink mb-1">No Ads, No Tracking</h3>
+          <p class="text-[14px] leading-5 text-body">We do not run advertisements, analytics trackers, or marketing pixels. The tool is free and always will be. We believe utility tools should be clean and trustworthy.</p>
+        </div>
+
+        <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-2">
+          <h3 class="text-[16px] font-medium leading-6 text-ink mb-1">Fast & Modern</h3>
+          <p class="text-[14px] leading-5 text-body">Built with Astro and Tailwind CSS for sub-second page loads. Live encoding and decoding means you see results as you type — no buttons, no waiting.</p>
+        </div>
+
+        <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-2">
+          <h3 class="text-[16px] font-medium leading-6 text-ink mb-1">Open Source</h3>
+          <p class="text-[14px] leading-5 text-body">The entire codebase is available on GitHub. You can inspect every line, suggest improvements, or host your own instance.</p>
+        </div>
+      </div>
+
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mt-10 mb-4">Who Built This</h2>
+      <p>
+        base64go was built by a developer who got tired of copying Base64 strings into sketchy websites that looked like they hadn't been updated since 2012. The goal is simple: make the best Base64 tool on the internet, keep it free, and respect user privacy.
+      </p>
+    </div>
+  </article>
+</Layout>
