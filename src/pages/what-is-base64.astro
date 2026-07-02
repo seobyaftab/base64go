@@ -1,0 +1,316 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <!-- Header -->
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">Guide</p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        What is Base64?
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        A complete guide to Base64 encoding &mdash; what it is, how it works, when to use it, and why it is essential for the modern web.
+      </p>
+    </header>
+
+    <!-- Table of Contents -->
+    <nav class="mb-12 rounded-xl border border-hairline bg-canvas p-6 shadow-level-2" aria-label="Table of contents">
+      <h2 class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">On this page</h2>
+      <ol class="space-y-1.5">
+        <li><a href="#definition" class="text-[14px] leading-5 text-link no-underline hover:text-link-deep">What is Base64 encoding?</a></li>
+        <li><a href="#how-it-works" class="text-[14px] leading-5 text-link no-underline hover:text-link-deep">How does Base64 work?</a></li>
+        <li><a href="#why-use" class="text-[14px] leading-5 text-link no-underline hover:text-link-deep">Why do we use Base64?</a></li>
+        <li><a href="#common-uses" class="text-[14px] leading-5 text-link no-underline hover:text-link-deep">Common use cases</a></li>
+        <li><a href="#base64url" class="text-[14px] leading-5 text-link no-underline hover:text-link-deep">Base64 vs Base64URL</a></li>
+        <li><a href="#security" class="text-[14px] leading-5 text-link no-underline hover:text-link-deep">Is Base64 encryption?</a></li>
+        <li><a href="#faq" class="text-[14px] leading-5 text-link no-underline hover:text-link-deep">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <!-- Content -->
+    <div class="prose-custom space-y-10">
+      <!-- Definition -->
+      <section id="definition">
+        <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mb-4">
+          What is Base64 encoding?
+        </h2>
+        <p class="text-[16px] leading-6 text-body mb-4">
+          Base64 is a <strong class="text-ink font-medium">binary-to-text encoding scheme</strong> that converts binary data into a string of ASCII characters. It uses a set of 64 characters &mdash; hence the name &mdash; consisting of uppercase letters (A-Z), lowercase letters (a-z), digits (0-9), and two special characters (typically <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">+</code> and <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">/</code>).
+        </p>
+        <p class="text-[16px] leading-6 text-body">
+          The purpose of Base64 is to <strong class="text-ink font-medium">represent binary data in a format that is safe for transmission</strong> through systems designed to handle text. Since many protocols &mdash; email, HTTP, JSON, XML &mdash; were built around text, binary data (like images or encrypted content) needs to be converted into a text-safe representation.
+        </p>
+      </section>
+
+      <!-- How it works -->
+      <section id="how-it-works">
+        <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mb-4">
+          How does Base64 work?
+        </h2>
+        <p class="text-[16px] leading-6 text-body mb-4">
+          Base64 encoding works by taking binary data and splitting it into <strong class="text-ink font-medium">groups of 6 bits</strong>, then mapping each 6-bit value to one of 64 printable characters. Here is the process step by step:
+        </p>
+        <ol class="list-decimal pl-6 space-y-3 text-[16px] leading-6 text-body">
+          <li>Take the input bytes (each byte is 8 bits).</li>
+          <li>Group the bits into 24-bit chunks (3 bytes at a time).</li>
+          <li>Split each 24-bit chunk into four 6-bit values.</li>
+          <li>Map each 6-bit value (0-63) to its corresponding Base64 character using the lookup table.</li>
+          <li>If the input is not a multiple of 3 bytes, add padding (<code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code>) to make the output a multiple of 4 characters.</li>
+        </ol>
+
+        <div class="mt-6 overflow-x-auto rounded-xl border border-hairline bg-canvas p-6 shadow-level-2">
+          <h3 class="text-[14px] font-medium leading-5 text-ink mb-3">Example: Encoding "Man"</h3>
+          <table class="w-full text-[13px] leading-5">
+            <thead>
+              <tr class="border-b border-hairline text-left text-mute font-mono uppercase text-[11px]">
+                <th class="pb-2 pr-4 font-normal">Text</th>
+                <th class="pb-2 pr-4 font-normal">M</th>
+                <th class="pb-2 pr-4 font-normal">a</th>
+                <th class="pb-2 pr-4 font-normal">n</th>
+              </tr>
+            </thead>
+            <tbody class="font-mono text-body">
+              <tr class="border-b border-hairline">
+                <td class="py-1.5 pr-4 text-mute">ASCII</td>
+                <td class="py-1.5 pr-4">77</td>
+                <td class="py-1.5 pr-4">97</td>
+                <td class="py-1.5 pr-4">110</td>
+              </tr>
+              <tr class="border-b border-hairline">
+                <td class="py-1.5 pr-4 text-mute">Binary</td>
+                <td class="py-1.5 pr-4">01001101</td>
+                <td class="py-1.5 pr-4">01100001</td>
+                <td class="py-1.5 pr-4">01101110</td>
+              </tr>
+              <tr class="border-b border-hairline">
+                <td class="py-1.5 pr-4 text-mute">6-bit groups</td>
+                <td class="py-1.5 pr-4">010011</td>
+                <td class="py-1.5 pr-4">010110</td>
+                <td class="py-1.5 pr-4">000101</td>
+                <td class="py-1.5 pr-4">101110</td>
+              </tr>
+              <tr class="border-b border-hairline">
+                <td class="py-1.5 pr-4 text-mute">Index</td>
+                <td class="py-1.5 pr-4">19</td>
+                <td class="py-1.5 pr-4">22</td>
+                <td class="py-1.5 pr-4">5</td>
+                <td class="py-1.5 pr-4">46</td>
+              </tr>
+              <tr>
+                <td class="py-1.5 pr-4 text-mute">Result</td>
+                <td class="py-1.5 pr-4 text-ink font-medium">T</td>
+                <td class="py-1.5 pr-4 text-ink font-medium">W</td>
+                <td class="py-1.5 pr-4 text-ink font-medium">F</td>
+                <td class="py-1.5 pr-4 text-ink font-medium">u</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="mt-4 text-[14px] leading-5 text-body">
+            <strong class="text-ink font-medium">"Man" → TWFu</strong> &mdash; 3 bytes become 4 Base64 characters.
+          </p>
+        </div>
+
+        <p class="mt-4 text-[16px] leading-6 text-body">
+          Because every 3 input bytes produce 4 output characters, Base64-encoded data is approximately <strong class="text-ink font-medium">33% larger</strong> than the original binary data. This is the trade-off for text-safe transmission.
+        </p>
+      </section>
+
+      <!-- Why use -->
+      <section id="why-use">
+        <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mb-4">
+          Why do we use Base64?
+        </h2>
+        <p class="text-[16px] leading-6 text-body mb-4">
+          Many systems in computing were designed to handle <strong class="text-ink font-medium">text only</strong>. Binary data can contain byte values that these systems interpret as control characters, causing corruption or failures. Base64 solves this by converting binary data into a safe, predictable set of ASCII characters.
+        </p>
+        <p class="text-[16px] leading-6 text-body">
+          The 64 characters chosen are:
+        </p>
+        <ul class="list-disc pl-6 space-y-1.5 text-[16px] leading-6 text-body mt-2">
+          <li>Common to virtually all character encodings</li>
+          <li>Printable and human-readable</li>
+          <li>Unlikely to be modified by text-based systems (unlike raw binary)</li>
+          <li>Safe in URLs, JSON, XML, and email headers</li>
+        </ul>
+      </section>
+
+      <!-- Common uses -->
+      <section id="common-uses">
+        <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mb-4">
+          Common use cases
+        </h2>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-2">
+            <h3 class="text-[16px] font-medium leading-6 text-ink mb-2">Data URIs</h3>
+            <p class="text-[14px] leading-5 text-body">Embed images, fonts, or other files directly in HTML and CSS using <code class="rounded bg-canvas-soft-2 px-1 py-0.5 text-[13px] font-mono text-ink">data:image/png;base64,...</code> URIs. Reduces HTTP requests for small assets.</p>
+          </div>
+          <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-2">
+            <h3 class="text-[16px] font-medium leading-6 text-ink mb-2">Email Attachments (MIME)</h3>
+            <p class="text-[14px] leading-5 text-body">Email protocols were designed for text. Base64 encodes binary attachments so they survive transit through email servers unchanged.</p>
+          </div>
+          <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-2">
+            <h3 class="text-[16px] font-medium leading-6 text-ink mb-2">API Payloads &amp; JSON</h3>
+            <p class="text-[14px] leading-5 text-body">JSON cannot hold raw binary. Base64 encodes binary data into a string so it can be sent as part of a REST API request or response.</p>
+          </div>
+          <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-2">
+            <h3 class="text-[16px] font-medium leading-6 text-ink mb-2">JWTs (JSON Web Tokens)</h3>
+            <p class="text-[14px] leading-5 text-body">JWT payloads use Base64URL encoding to safely include claims, signatures, and headers in URLs and HTTP Authorization headers.</p>
+          </div>
+          <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-2">
+            <h3 class="text-[16px] font-medium leading-6 text-ink mb-2">Basic Authentication</h3>
+            <p class="text-[14px] leading-5 text-body">HTTP Basic Auth encodes <code class="rounded bg-canvas-soft-2 px-1 py-0.5 text-[13px] font-mono text-ink">username:password</code> as Base64 in the Authorization header.</p>
+          </div>
+          <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-2">
+            <h3 class="text-[16px] font-medium leading-6 text-ink mb-2">Local Storage</h3>
+            <p class="text-[14px] leading-5 text-body">Store binary data (like user-uploaded images) in browser localStorage by Base64-encoding it first.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Base64URL -->
+      <section id="base64url">
+        <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mb-4">
+          Base64 vs Base64URL
+        </h2>
+        <p class="text-[16px] leading-6 text-body mb-4">
+          Standard Base64 uses <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">+</code> and <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">/</code> as the last two characters, and <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code> for padding. But these characters have special meanings in URLs:
+        </p>
+        <ul class="list-disc pl-6 space-y-1.5 text-[16px] leading-6 text-body mb-4">
+          <li><code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">+</code> is interpreted as a space in URLs</li>
+          <li><code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">/</code> is a path separator</li>
+          <li><code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code> is used for query parameters</li>
+        </ul>
+        <p class="text-[16px] leading-6 text-body">
+          <strong class="text-ink font-medium">Base64URL</strong> (RFC 4648 &sect;5) replaces <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">+</code> with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">-</code> and <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">/</code> with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">_</code>, and the padding <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code> is often omitted. This makes it safe for use in URLs, file names, and JWT tokens. Our <a href="/" class="text-link hover:text-link-deep">Base64 tool</a> supports both variants automatically.
+        </p>
+
+        <div class="mt-6 overflow-x-auto rounded-xl border border-hairline bg-canvas p-6 shadow-level-2">
+          <table class="w-full text-[13px] leading-5">
+            <thead>
+              <tr class="border-b border-hairline text-left text-mute font-mono uppercase text-[11px]">
+                <th class="pb-2 pr-4 font-normal">Feature</th>
+                <th class="pb-2 pr-4 font-normal">Standard Base64</th>
+                <th class="pb-2 pr-4 font-normal">Base64URL</th>
+              </tr>
+            </thead>
+            <tbody class="text-body">
+              <tr class="border-b border-hairline">
+                <td class="py-1.5 pr-4 text-mute font-mono">Characters 62-63</td>
+                <td class="py-1.5 pr-4 font-mono">+ /</td>
+                <td class="py-1.5 pr-4 font-mono">- _</td>
+              </tr>
+              <tr class="border-b border-hairline">
+                <td class="py-1.5 pr-4 text-mute font-mono">Padding</td>
+                <td class="py-1.5 pr-4 font-mono">= (required)</td>
+                <td class="py-1.5 pr-4 font-mono">= (optional, often omitted)</td>
+              </tr>
+              <tr class="border-b border-hairline">
+                <td class="py-1.5 pr-4 text-mute font-mono">URL Safe</td>
+                <td class="py-1.5 pr-4">No &mdash; needs percent-encoding</td>
+                <td class="py-1.5 pr-4">Yes &mdash; URL-ready</td>
+              </tr>
+              <tr>
+                <td class="py-1.5 pr-4 text-mute font-mono">Common in</td>
+                <td class="py-1.5 pr-4">Email, data URIs, file storage</td>
+                <td class="py-1.5 pr-4">JWTs, OAuth tokens, URL params</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Security -->
+      <section id="security">
+        <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mb-4">
+          Is Base64 encryption?
+        </h2>
+        <p class="text-[16px] leading-6 text-body mb-4">
+          <strong class="text-ink font-medium">No. Base64 is NOT encryption.</strong> It provides zero security. Anyone can decode a Base64 string back to its original form &mdash; there is no key, no password, and no secret involved. Base64 is an <em>encoding</em>, not an encryption algorithm.
+        </p>
+        <div class="rounded-xl border border-hairline bg-error-soft/30 p-5">
+          <p class="text-[14px] leading-5 text-error-deep">
+            <strong>Warning:</strong> Never rely on Base64 to protect sensitive data. Use proper encryption (AES, RSA, etc.) for security. Base64 only makes data text-safe &mdash; it does not hide it.
+          </p>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section id="faq">
+        <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mb-6">
+          Frequently asked questions
+        </h2>
+        <div class="space-y-4">
+          <details class="group rounded-xl border border-hairline bg-canvas shadow-level-2">
+            <summary class="cursor-pointer px-6 py-4 text-[16px] font-medium leading-6 text-ink list-none flex items-center justify-between">
+              How much larger is Base64 than the original data?
+              <svg class="shrink-0 ml-2 transition-transform group-open:rotate-180" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="px-6 pb-4 text-[14px] leading-5 text-body">
+              Base64 encoding increases data size by approximately 33%. Every 3 bytes of input produce 4 bytes of output. For example, a 300 KB image becomes roughly 400 KB when Base64-encoded.
+            </div>
+          </details>
+
+          <details class="group rounded-xl border border-hairline bg-canvas shadow-level-2">
+            <summary class="cursor-pointer px-6 py-4 text-[16px] font-medium leading-6 text-ink list-none flex items-center justify-between">
+              Can Base64 handle any type of file?
+              <svg class="shrink-0 ml-2 transition-transform group-open:rotate-180" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="px-6 pb-4 text-[14px] leading-5 text-body">
+              Yes. Base64 can encode any binary data &mdash; images, PDFs, ZIP files, audio, video, or any arbitrary bytes. The encoding does not care what the data represents; it works at the byte level.
+            </div>
+          </details>
+
+          <details class="group rounded-xl border border-hairline bg-canvas shadow-level-2">
+            <summary class="cursor-pointer px-6 py-4 text-[16px] font-medium leading-6 text-ink list-none flex items-center justify-between">
+              Is this tool free?
+              <svg class="shrink-0 ml-2 transition-transform group-open:rotate-180" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="px-6 pb-4 text-[14px] leading-5 text-body">
+              Yes, completely free. No ads, no sign-ups, no limitations. All encoding and decoding happens directly in your browser &mdash; your data is never uploaded to any server.
+            </div>
+          </details>
+
+          <details class="group rounded-xl border border-hairline bg-canvas shadow-level-2">
+            <summary class="cursor-pointer px-6 py-4 text-[16px] font-medium leading-6 text-ink list-none flex items-center justify-between">
+              Does base64go store my data?
+              <svg class="shrink-0 ml-2 transition-transform group-open:rotate-180" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <div class="px-6 pb-4 text-[14px] leading-5 text-body">
+              Never. Your data stays on your device. We cannot see, access, or store anything you type or upload. The tool runs entirely in your browser using JavaScript &mdash; there is no server-side processing at all.
+            </div>
+          </details>
+        </div>
+      </section>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">
+        Ready to encode or decode?
+      </h2>
+      <p class="text-[14px] leading-5 text-body mb-4">
+        Try our free Base64 tool &mdash; live, instant, and 100% private.
+      </p>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90"
+      >
+        Open the Tool
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .prose-custom a {
+    color: var(--color-link);
+    text-decoration: none;
+  }
+  .prose-custom a:hover {
+    color: var(--color-link-deep);
+    text-decoration: underline;
+  }
+</style>

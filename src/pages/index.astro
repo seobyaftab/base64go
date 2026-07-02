@@ -1,0 +1,650 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden bg-canvas px-4 pb-16 pt-24 sm:pb-24 sm:pt-32 lg:pb-32 lg:pt-40">
+    <!-- Mesh gradient backdrop -->
+    <div
+      class="absolute inset-0 opacity-[0.07] dark:opacity-[0.12]"
+      style="background: radial-gradient(ellipse 80% 60% at 50% 0%, #007cf0 0%, transparent 40%), radial-gradient(ellipse 60% 50% at 80% 50%, #7928ca 0%, transparent 40%), radial-gradient(ellipse 60% 50% at 20% 50%, #ff0080 0%, transparent 40%), radial-gradient(ellipse 80% 60% at 50% 100%, #f9cb28 0%, transparent 40%);"
+    ></div>
+
+    <div class="relative mx-auto max-w-[1400px] text-center">
+      <div class="mx-auto mb-4 flex items-center justify-center gap-2">
+        <span
+          class="inline-flex items-center rounded-full bg-canvas-soft px-3 py-1 text-[12px] leading-4 text-body font-mono"
+        >
+          New &mdash; 100% Client-Side
+        </span>
+      </div>
+      <h1
+        class="mx-auto max-w-3xl text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]"
+      >
+        Base64 Encoder &amp; Decoder.
+      </h1>
+      <p
+        class="mx-auto mt-4 max-w-xl text-[16px] leading-6 text-body sm:text-[18px] sm:leading-7"
+      >
+        Live, instant, and 100% private. Encode or decode Base64 right in your browser &mdash; no data is ever sent to a server.
+      </p>
+    </div>
+  </section>
+
+  <!-- Tool Section -->
+  <section class="px-4 pb-16 sm:pb-24 lg:pb-32">
+    <div class="mx-auto max-w-[1200px]">
+      <!-- Mode Tabs -->
+      <div class="mb-6 flex items-center justify-center gap-1">
+        <div class="inline-flex rounded-full bg-canvas-soft-2 p-1" role="tablist" aria-label="Encode or Decode mode">
+          <button
+            id="tab-encode"
+            role="tab"
+            aria-selected="true"
+            class="rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-ink bg-canvas shadow-level-1 transition-all"
+          >
+            Encode
+          </button>
+          <button
+            id="tab-decode"
+            role="tab"
+            aria-selected="false"
+            class="rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-body hover:text-ink transition-all"
+          >
+            Decode
+          </button>
+        </div>
+      </div>
+
+      <!-- Input Panel -->
+      <div class="mb-4">
+        <div class="flex items-center justify-between mb-2 px-1">
+          <div class="flex items-center gap-2">
+            <label for="input-area" class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px]">
+              <span id="input-label">Plain Text</span>
+            </label>
+            <!-- Smart detection badge -->
+            <span
+              id="detection-badge"
+              class="hidden items-center gap-1 rounded-full bg-warning-soft px-2 py-0.5 text-[11px] leading-4 text-warning-deep font-medium"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span id="detection-text"></span>
+            </span>
+          </div>
+          <span id="input-stats" class="text-[12px] leading-4 text-mute font-mono"></span>
+        </div>
+
+        <!-- Drag & Drop zone -->
+        <div
+          id="drop-zone"
+          class="relative rounded-xl border-2 border-dashed border-hairline bg-canvas transition-colors hover:border-hairline-strong"
+        >
+          <textarea
+            id="input-area"
+            rows="6"
+            placeholder="Type or paste here…"
+            autofocus
+            class="block w-full resize-y rounded-xl bg-transparent px-4 py-3.5 text-[14px] leading-5 text-ink placeholder:text-mute font-mono min-h-[160px] outline-none"
+            aria-label="Input text area"
+          ></textarea>
+
+          <!-- File drop overlay -->
+          <div
+            id="drop-overlay"
+            class="pointer-events-none absolute inset-0 hidden items-center justify-center rounded-xl bg-link-bg-soft/80"
+          >
+            <p class="text-[14px] font-medium text-link-deep">Drop file to encode</p>
+          </div>
+
+          <!-- File info bar -->
+          <div
+            id="file-info"
+            class="hidden items-center gap-2 border-t border-hairline px-4 py-2"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-mute"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+            <span id="file-name" class="text-[12px] leading-4 text-body"></span>
+            <span id="file-size" class="text-[12px] leading-4 text-mute font-mono"></span>
+            <button
+              id="file-clear"
+              type="button"
+              class="ml-auto flex h-6 w-6 items-center justify-center rounded-full text-mute hover:text-error hover:bg-error-soft transition-colors"
+              aria-label="Remove file"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Swap button -->
+      <div class="flex justify-center my-3">
+        <button
+          id="swap-btn"
+          type="button"
+          class="flex h-10 w-10 items-center justify-center rounded-full border border-hairline bg-canvas text-body shadow-level-1 transition-all hover:text-ink hover:shadow-level-2 active:scale-95"
+          aria-label="Swap input and output"
+          title="Swap (Ctrl+Shift+S)"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <polyline points="19 12 12 19 5 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Output Panel -->
+      <div class="mb-4">
+        <div class="flex items-center justify-between mb-2 px-1">
+          <label for="output-area" class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px]">
+            <span id="output-label">Base64 Encoded</span>
+          </label>
+          <span id="output-stats" class="text-[12px] leading-4 text-mute font-mono"></span>
+        </div>
+
+        <div class="relative rounded-xl border border-hairline bg-canvas shadow-level-2">
+          <textarea
+            id="output-area"
+            rows="6"
+            readonly
+            placeholder="Output will appear here…"
+            class="block w-full resize-y rounded-xl bg-transparent px-4 py-3.5 text-[14px] leading-5 text-ink placeholder:text-mute font-mono min-h-[160px] outline-none"
+            aria-label="Output text area"
+          ></textarea>
+
+          <!-- Error message -->
+          <div
+            id="error-msg"
+            class="hidden items-center gap-2 border-t border-error-soft bg-error-soft/50 rounded-b-xl px-4 py-2.5"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-error shrink-0"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            <span id="error-text" class="text-[13px] leading-5 text-error-deep"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="flex flex-wrap items-center gap-2 mb-8">
+        <button
+          id="copy-btn"
+          type="button"
+          class="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2.5 text-[14px] font-medium leading-5 text-canvas transition-all hover:opacity-90 active:scale-[0.97]"
+        >
+          <svg id="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span id="copy-text">Copy</span>
+        </button>
+
+        <button
+          id="download-btn"
+          type="button"
+          class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-2.5 text-[14px] font-medium leading-5 text-ink transition-all hover:bg-canvas-soft-2 active:scale-[0.97]"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+
+        <button
+          id="clear-btn"
+          type="button"
+          class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-2.5 text-[14px] font-medium leading-5 text-body transition-all hover:text-error hover:border-error-soft active:scale-[0.97]"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          Clear All
+        </button>
+
+        <button
+          id="history-toggle"
+          type="button"
+          class="ml-auto inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-2.5 text-[14px] font-medium leading-5 text-body transition-all hover:text-ink hover:bg-canvas-soft-2 active:scale-[0.97]"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          History
+          <span id="history-count" class="flex h-5 min-w-5 items-center justify-center rounded-full bg-canvas-soft-2 px-1.5 text-[11px] font-medium text-mute">0</span>
+        </button>
+      </div>
+
+      <!-- History Panel -->
+      <div id="history-panel" class="hidden rounded-xl border border-hairline bg-canvas shadow-level-2 p-4 mb-8">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px]">Recent Operations</h3>
+          <button id="history-clear-all" class="text-[12px] leading-4 text-mute hover:text-error transition-colors">Clear all</button>
+        </div>
+        <div id="history-list" class="space-y-1 max-h-[240px] overflow-y-auto"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="bg-canvas px-4 py-16 sm:py-24 lg:py-32 border-t border-hairline">
+    <div class="mx-auto max-w-[1200px]">
+      <div class="mb-12 text-center">
+        <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">Why base64go</p>
+        <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink sm:text-[32px] sm:leading-10 sm:tracking-[-1.28px]">
+          Better than every other Base64 tool.
+        </h2>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-2">
+          <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-canvas-soft">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-ink"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h3 class="mb-1 text-[16px] font-medium leading-6 text-ink">Live, Instant</h3>
+          <p class="text-[14px] leading-5 text-body">Updates as you type. No buttons, no delays. Encode and decode in real time.</p>
+        </div>
+
+        <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-2">
+          <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-canvas-soft">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-ink"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3 class="mb-1 text-[16px] font-medium leading-6 text-ink">100% Private</h3>
+          <p class="text-[14px] leading-5 text-body">Everything runs in your browser. No server, no logs, no tracking. Your data stays yours.</p>
+        </div>
+
+        <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-2">
+          <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-canvas-soft">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-ink"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3 class="mb-1 text-[16px] font-medium leading-6 text-ink">Smart Detection</h3>
+          <p class="text-[14px] leading-5 text-body">Auto-detects Base64, Base64URL, and plain text. Warns if your input needs attention.</p>
+        </div>
+
+        <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-2">
+          <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-canvas-soft">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-ink"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <h3 class="mb-1 text-[16px] font-medium leading-6 text-ink">Drag &amp; Drop Files</h3>
+          <p class="text-[14px] leading-5 text-body">Drop any file to encode it to Base64. Text, images, JSON &mdash; all supported.</p>
+        </div>
+
+        <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-2">
+          <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-canvas-soft">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-ink"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <h3 class="mb-1 text-[16px] font-medium leading-6 text-ink">Base64URL + Variants</h3>
+          <p class="text-[14px] leading-5 text-body">Standard Base64 and URL-safe Base64URL. Perfect for JWTs and API debugging.</p>
+        </div>
+
+        <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-2">
+          <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-canvas-soft">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-ink"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3 class="mb-1 text-[16px] font-medium leading-6 text-ink">Dark Mode + Mobile</h3>
+          <p class="text-[14px] leading-5 text-body">Beautiful dark mode and fully responsive. Works great on any device, any time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What is Base64? Teaser -->
+  <section class="bg-canvas-soft px-4 py-16 sm:py-24 border-t border-hairline">
+    <div class="mx-auto max-w-[1200px] text-center">
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink sm:text-[32px] sm:leading-10 sm:tracking-[-1.28px]">
+        New to Base64?
+      </h2>
+      <p class="mt-3 mx-auto max-w-lg text-[16px] leading-6 text-body">
+        Learn how Base64 encoding works, when to use it, and why it is essential for web development, APIs, and data transfer.
+      </p>
+      <a
+        href="/what-is-base64/"
+        class="mt-6 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90 active:scale-[0.97]"
+      >
+        Read the Guide
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import { encode, decode, fileToBase64, downloadAsFile, formatBytes, looksLikeBase64 } from '../lib/base64';
+
+  // ─── DOM refs ───
+  const inputArea = document.getElementById('input-area') as HTMLTextAreaElement;
+  const outputArea = document.getElementById('output-area') as HTMLTextAreaElement;
+  const inputLabel = document.getElementById('input-label')!;
+  const outputLabel = document.getElementById('output-label')!;
+  const inputStats = document.getElementById('input-stats')!;
+  const outputStats = document.getElementById('output-stats')!;
+  const detectionBadge = document.getElementById('detection-badge')!;
+  const detectionText = document.getElementById('detection-text')!;
+  const errorMsg = document.getElementById('error-msg')!;
+  const errorText = document.getElementById('error-text')!;
+  const copyBtn = document.getElementById('copy-btn')!;
+  const copyText = document.getElementById('copy-text')!;
+  const copyIcon = document.getElementById('copy-icon')!;
+  const downloadBtn = document.getElementById('download-btn')!;
+  const clearBtn = document.getElementById('clear-btn')!;
+  const swapBtn = document.getElementById('swap-btn')!;
+  const tabEncode = document.getElementById('tab-encode')!;
+  const tabDecode = document.getElementById('tab-decode')!;
+  const dropZone = document.getElementById('drop-zone')!;
+  const dropOverlay = document.getElementById('drop-overlay')!;
+  const fileInfo = document.getElementById('file-info')!;
+  const fileClear = document.getElementById('file-clear')!;
+  const fileName = document.getElementById('file-name')!;
+  const fileSize = document.getElementById('file-size')!;
+  const historyToggle = document.getElementById('history-toggle')!;
+  const historyPanel = document.getElementById('history-panel')!;
+  const historyList = document.getElementById('history-list')!;
+  const historyCount = document.getElementById('history-count')!;
+  const historyClearAll = document.getElementById('history-clear-all')!;
+
+  let mode: 'encode' | 'decode' = 'encode';
+  let currentFile: File | null = null;
+  let history: Array<{ mode: string; input: string; output: string; time: number }> = [];
+
+  // ─── Load history ───
+  try {
+    const stored = localStorage.getItem('base64go-history');
+    if (stored) history = JSON.parse(stored);
+  } catch {}
+
+  function saveHistory() {
+    localStorage.setItem('base64go-history', JSON.stringify(history.slice(0, 20)));
+  }
+
+  function addToHistory(m: string, input: string, output: string) {
+    if (!input || !output) return;
+    history.unshift({ mode: m, input: input.slice(0, 200), output: output.slice(0, 200), time: Date.now() });
+    if (history.length > 20) history.pop();
+    saveHistory();
+    renderHistory();
+  }
+
+  function renderHistory() {
+    historyCount.textContent = String(history.length);
+    historyList.innerHTML = history
+      .map(
+        (h, i) => `
+      <button
+        class="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-canvas-soft-2 transition-colors group"
+        data-index="${i}"
+      >
+        <span class="shrink-0 rounded-md bg-canvas-soft-2 px-1.5 py-0.5 text-[10px] leading-4 text-mute font-mono uppercase">${h.mode === 'encode' ? 'ENC' : 'DEC'}</span>
+        <span class="flex-1 truncate text-[13px] leading-5 text-body font-mono">${escapeHtml(h.input)}</span>
+        <span class="shrink-0 text-[11px] leading-4 text-mute">${timeAgo(h.time)}</span>
+      </button>`
+      )
+      .join('');
+
+    historyList.querySelectorAll('button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const idx = Number((btn as HTMLElement).dataset.index);
+        if (!isNaN(idx) && history[idx]) {
+          const h = history[idx];
+          if (h.mode === 'encode') {
+            setMode('encode');
+            inputArea.value = h.input;
+          } else {
+            setMode('decode');
+            inputArea.value = h.input;
+          }
+          processInput();
+        }
+      });
+    });
+  }
+
+  function escapeHtml(s: string): string {
+    const div = document.createElement('div');
+    div.textContent = s;
+    return div.innerHTML;
+  }
+
+  function timeAgo(ts: number): string {
+    const sec = Math.floor((Date.now() - ts) / 1000);
+    if (sec < 60) return 'just now';
+    if (sec < 3600) return `${Math.floor(sec / 60)}m ago`;
+    if (sec < 86400) return `${Math.floor(sec / 3600)}h ago`;
+    return `${Math.floor(sec / 86400)}d ago`;
+  }
+
+  // ─── Mode switching ───
+  function setMode(m: 'encode' | 'decode') {
+    mode = m;
+    if (m === 'encode') {
+      tabEncode.setAttribute('aria-selected', 'true');
+      tabEncode.className =
+        'rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-ink bg-canvas shadow-level-1 transition-all';
+      tabDecode.setAttribute('aria-selected', 'false');
+      tabDecode.className =
+        'rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-body hover:text-ink transition-all';
+      inputLabel.textContent = 'Plain Text';
+      outputLabel.textContent = 'Base64 Encoded';
+    } else {
+      tabDecode.setAttribute('aria-selected', 'true');
+      tabDecode.className =
+        'rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-ink bg-canvas shadow-level-1 transition-all';
+      tabEncode.setAttribute('aria-selected', 'false');
+      tabEncode.className =
+        'rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-body hover:text-ink transition-all';
+      inputLabel.textContent = 'Base64 Encoded';
+      outputLabel.textContent = 'Decoded Text';
+    }
+    processInput();
+  }
+
+  tabEncode.addEventListener('click', () => setMode('encode'));
+  tabDecode.addEventListener('click', () => setMode('decode'));
+
+  // ─── Processing ───
+  function processInput() {
+    const input = inputArea.value;
+    const hasContent = input.trim().length > 0;
+
+    inputStats.textContent = hasContent ? formatBytes(new TextEncoder().encode(input).length) : '';
+
+    // Smart detection
+    if (hasContent) {
+      const looksB64 = looksLikeBase64(input);
+      if (mode === 'encode' && looksB64) {
+        detectionBadge.classList.remove('hidden');
+        detectionBadge.querySelector('span')!.textContent = 'Looks like Base64 — try Decode mode?';
+      } else if (mode === 'decode' && !/[+/=_-]/.test(input.replace(/\s/g, '')) && input.length < 100) {
+        detectionBadge.classList.remove('hidden');
+        detectionBadge.querySelector('span')!.textContent = "Doesn't look like Base64 — try Encode?";
+      } else {
+        detectionBadge.classList.add('hidden');
+      }
+    } else {
+      detectionBadge.classList.add('hidden');
+    }
+
+    errorMsg.classList.add('hidden');
+
+    if (!hasContent) {
+      outputArea.value = '';
+      outputStats.textContent = '';
+      return;
+    }
+
+    let result: { output: string };
+    if (mode === 'encode') {
+      result = { output: encode(input).output };
+    } else {
+      const decoded = decode(input);
+      if (!decoded.isValid) {
+        errorMsg.classList.remove('hidden');
+        const pos = decoded.errorPosition ?? 0;
+        errorText.textContent = `Invalid Base64 at position ${pos}: unexpected character or incorrect padding.`;
+        outputArea.value = '';
+        outputStats.textContent = '';
+        return;
+      }
+      result = { output: decoded.output };
+    }
+
+    outputArea.value = result.output;
+    outputStats.textContent = formatBytes(new TextEncoder().encode(result.output).length);
+  }
+
+  let processTimer: ReturnType<typeof setTimeout>;
+  inputArea.addEventListener('input', () => {
+    clearTimeout(processTimer);
+    processTimer = setTimeout(processInput, 50);
+  });
+
+  // ─── Copy ───
+  copyBtn.addEventListener('click', async () => {
+    const text = outputArea.value;
+    if (!text) return;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      copyText.textContent = 'Copied!';
+      copyIcon.innerHTML =
+        '<polyline points="20 6 9 17 4 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+      copyBtn.classList.add('opacity-70');
+      setTimeout(() => {
+        copyText.textContent = 'Copy';
+        copyIcon.innerHTML =
+          '<rect x="9" y="9" width="13" height="13" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+        copyBtn.classList.remove('opacity-70');
+      }, 2000);
+    } catch {
+      outputArea.select();
+      document.execCommand('copy');
+      copyText.textContent = 'Copied!';
+      setTimeout(() => { copyText.textContent = 'Copy'; }, 2000);
+    }
+
+    addToHistory(mode, inputArea.value, outputArea.value);
+  });
+
+  // ─── Download ───
+  downloadBtn.addEventListener('click', () => {
+    const text = outputArea.value;
+    if (!text) return;
+    const ext = mode === 'encode' ? '.b64' : '.txt';
+    downloadAsFile(text, `base64go-output${ext}`);
+    addToHistory(mode, inputArea.value, outputArea.value);
+  });
+
+  // ─── Clear ───
+  clearBtn.addEventListener('click', () => {
+    inputArea.value = '';
+    outputArea.value = '';
+    inputStats.textContent = '';
+    outputStats.textContent = '';
+    detectionBadge.classList.add('hidden');
+    errorMsg.classList.add('hidden');
+    currentFile = null;
+    fileInfo.classList.add('hidden');
+    inputArea.focus();
+  });
+
+  // ─── Swap ───
+  swapBtn.addEventListener('click', () => {
+    const outputVal = outputArea.value;
+    if (!outputVal) return;
+    const newMode = mode === 'encode' ? 'decode' : 'encode';
+    setMode(newMode);
+    inputArea.value = outputVal;
+    processInput();
+  });
+
+  // ─── Drag & Drop ───
+  ['dragenter', 'dragover'].forEach((evt) => {
+    dropZone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropOverlay.classList.add('flex');
+      dropOverlay.classList.remove('hidden');
+    });
+  });
+
+  ['dragleave', 'drop'].forEach((evt) => {
+    dropOverlay.addEventListener(evt, () => {
+      dropOverlay.classList.add('hidden');
+      dropOverlay.classList.remove('flex');
+    });
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dropOverlay.classList.add('hidden');
+    dropOverlay.classList.remove('flex');
+
+    const files = (e as DragEvent).dataTransfer?.files;
+    if (files && files.length > 0) {
+      handleFile(files[0]);
+    }
+  });
+
+  // Paste files
+  document.addEventListener('paste', (e) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of Array.from(items)) {
+      if (item.kind === 'file') {
+        e.preventDefault();
+        const file = item.getAsFile();
+        if (file) handleFile(file);
+        return;
+      }
+    }
+  });
+
+  async function handleFile(file: File) {
+    currentFile = file;
+    setMode('encode');
+    fileInfo.classList.remove('hidden');
+    fileName.textContent = file.name;
+    fileSize.textContent = `(${formatBytes(file.size)})`;
+
+    try {
+      const result = await fileToBase64(file);
+      inputArea.value = result.output;
+      processInput();
+    } catch {
+      errorMsg.classList.remove('hidden');
+      errorText.textContent = 'Failed to read file. Please try again.';
+    }
+  }
+
+  fileClear.addEventListener('click', () => {
+    currentFile = null;
+    fileInfo.classList.add('hidden');
+    inputArea.value = '';
+    outputArea.value = '';
+    inputStats.textContent = '';
+    outputStats.textContent = '';
+  });
+
+  // ─── History ───
+  historyToggle.addEventListener('click', () => {
+    historyPanel.classList.toggle('hidden');
+    renderHistory();
+  });
+
+  historyClearAll.addEventListener('click', () => {
+    history = [];
+    saveHistory();
+    renderHistory();
+    historyPanel.classList.add('hidden');
+  });
+
+  // ─── Keyboard shortcuts ───
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      processInput();
+      addToHistory(mode, inputArea.value, outputArea.value);
+    }
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'S') {
+      e.preventDefault();
+      swapBtn.click();
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      clearBtn.click();
+    }
+  });
+
+  // ─── Init ───
+  renderHistory();
+  inputArea.focus();
+</script>

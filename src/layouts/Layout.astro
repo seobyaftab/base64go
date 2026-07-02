@@ -1,0 +1,71 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap"
+      rel="stylesheet"
+    />
+    <title>Base64 Encoder & Decoder — Free Online Tool | base64go.com</title>
+    <meta
+      name="description"
+      content="Free online Base64 encoder and decoder. Live encode/decode text, files, and images. Base64URL support, drag & drop, dark mode. No data sent to any server."
+    />
+    <!-- Open Graph -->
+    <meta property="og:title" content="Base64 Encoder & Decoder — Free Online Tool | base64go.com" />
+    <meta
+      property="og:description"
+      content="Live Base64 encode and decode. 100% client-side, no data leaves your browser. UTF-8 safe, file support, Base64URL."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://base64go.com" />
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Base64 Encoder & Decoder",
+        "url": "https://base64go.com",
+        "description": "Free online Base64 encoder and decoder tool. Live encode/decode with 100% client-side processing.",
+        "applicationCategory": "DeveloperTool",
+        "operatingSystem": "All",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    </script>
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#fafafa" />
+    <meta name="theme-color" content="#0f0f0f" media="(prefers-color-scheme: dark)" />
+    <!-- Preload fonts -->
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap"
+      as="style"
+    />
+    <!-- Inline theme detection — prevent FOUC -->
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem('theme');
+        if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <Nav />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

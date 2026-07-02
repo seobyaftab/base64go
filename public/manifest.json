@@ -1,0 +1,16 @@
+{
+  "name": "Base64 Encoder & Decoder",
+  "short_name": "base64go",
+  "description": "Free online Base64 encoder and decoder. Live, instant, and 100% private — all processing happens in your browser.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#171717",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
