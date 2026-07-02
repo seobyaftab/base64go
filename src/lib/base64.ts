@@ -1,5 +1,5 @@
 /**
- * Base64 encode/decode engine — all client-side, zero dependencies.
+ * Base64 encode/decode engine  -  all client-side, zero dependencies.
  * Handles UTF-8 safely (unlike btoa/atob which are ASCII-only).
  */
 
@@ -203,7 +203,7 @@ export function fileToBase64(file: File): Promise<FileResult> {
     // For text files, read as text and encode; for others, read as data URI
     if (file.type.startsWith('text/') || file.type === 'application/json') {
       reader.readAsText(file);
-      // Override — for text files we read as text then encode
+      // Override  -  for text files we read as text then encode
       const textReader = new FileReader();
       textReader.onload = () => {
         const encoded = encode(textReader.result as string);

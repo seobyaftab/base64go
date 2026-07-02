@@ -2,7 +2,7 @@
 
 /* ─── Vercel Design System Tokens ─── */
 @theme {
-  /* Colors — Vercel palette */
+  /* Colors  -  Vercel palette */
   --color-ink: #171717;
   --color-canvas: #ffffff;
   --color-canvas-soft: #fafafa;
@@ -40,7 +40,7 @@
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
 
-  /* Shadows — Vercel stacked system */
+  /* Shadows  -  Vercel stacked system */
   --shadow-level-1: 0 0 0 1px rgba(0, 0, 0, 0.08);
   --shadow-level-2: 0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
     0px 2px 2px rgba(0, 0, 0, 0.04);
@@ -51,7 +51,7 @@
   --shadow-level-5: 0 0 0 1px rgba(0, 0, 0, 0.08), 0px 1px 1px rgba(0, 0, 0, 0.02),
     0px 8px 16px -4px rgba(0, 0, 0, 0.04), 0px 24px 32px -8px rgba(0, 0, 0, 0.06);
 
-  /* Spacing — multiples of 4px */
+  /* Spacing  -  multiples of 4px */
   --spacing-section: 192px;
 }
 
