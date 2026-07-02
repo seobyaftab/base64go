@@ -1,0 +1,83 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; How-To
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        How to Decode Base64: Step-by-Step Guide
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Learn how to decode Base64 strings in JavaScript, Python, command line, and online. Covers UTF-8, binary data, and common mistakes.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        You have a Base64 string. Maybe it came from an API response, a JWT token, or a data URI. You need to <strong class="text-ink font-medium">decode Base64</strong> back into readable text. Here is how to do it, no matter what tools you have available.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Method 1: Online (No Code)</h2>
+      <p>Go to <a href="/" class="text-link hover:text-link-deep">base64go.com</a>, switch to Decode mode, paste your Base64 string, and the decoded text appears instantly. The tool auto-detects standard Base64 and Base64URL. This is the fastest method for one-off decoding.</p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Method 2: JavaScript</h2>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-mute">// Simple ASCII-only decode (atob)</span><br/>
+        <span class="text-violet">const</span> decoded = atob(<span class="text-warning-deep">"SGVsbG8gV29ybGQ="</span>);<br/>
+        <span class="text-mute">// "Hello World"</span><br/>
+        <br/>
+        <span class="text-mute">// UTF-8 safe decode (handles non-ASCII characters)</span><br/>
+        <span class="text-violet">const</span> binary = atob(base64String);<br/>
+        <span class="text-violet">const</span> bytes = Uint8Array.from(binary, c => c.charCodeAt(0));<br/>
+        <span class="text-violet">const</span> text = <span class="text-violet">new</span> TextDecoder().decode(bytes);
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Method 3: Python</h2>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">import</span> base64<br/>
+        <span class="text-violet">import</span> json<br/>
+        <br/>
+        <span class="text-mute"># Decode text</span><br/>
+        decoded = base64.b64decode(<span class="text-warning-deep">"SGVsbG8="</span>).decode(<span class="text-warning-deep">"utf-8"</span>)<br/>
+        <br/>
+        <span class="text-mute"># Decode JSON payload</span><br/>
+        payload = base64.b64decode(api_response[<span class="text-warning-deep">"data"</span>])<br/>
+        obj = json.loads(payload)
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Method 4: Command Line</h2>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-mute"># Linux / Mac</span><br/>
+        <span class="text-ink">echo</span> <span class="text-warning-deep">"SGVsbG8="</span> | base64 --decode<br/>
+        <br/>
+        <span class="text-mute"># Decode a file</span><br/>
+        base64 --decode encoded.txt > output.txt
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Common Mistakes</h2>
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">Using atob() on UTF-8.</strong> atob() only handles ASCII. For UTF-8 text, use TextDecoder as shown above.</li>
+        <li><strong class="text-ink font-medium">Forgetting padding.</strong> Some tools strip trailing =. Restore it before decoding.</li>
+        <li><strong class="text-ink font-medium">Mixing Base64 and Base64URL.</strong> Base64URL uses - and _ instead of + and /. Our tool auto-detects both.</li>
+        <li><strong class="text-ink font-medium">Decoding the wrong charset.</strong> Know whether the original data was UTF-8, UTF-16, or binary before decoding.</li>
+      </ul>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">Ready to decode?</h2>
+      <p class="text-[14px] leading-5 text-body mb-4">Paste your Base64 string and get instant results. No installs, no code.</p>
+      <a href="/" class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90">
+        Open Base64 Tool
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"How to Decode Base64: Step-by-Step Guide","description":"Learn how to decode Base64 in JavaScript, Python, command line, and online. UTF-8 safe methods and common mistakes.","datePublished":"2026-07-02","author":{"@type":"Organization","name":"base64go.com"}}</script>
+  </article>
+</Layout>

@@ -1,0 +1,78 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; How-To
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        PNG to Base64: How to Convert Images to Base64
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Convert PNG images to Base64 for embedding in HTML, CSS, and JSON. Methods for browser, JavaScript, Python, and command line.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        Converting a <strong class="text-ink font-medium">PNG to Base64</strong> lets you embed the image directly in your HTML or CSS as a data URI. No separate file, no extra HTTP request. This is useful for small icons, email signatures, and single-file HTML documents.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Method 1: Use Our Online Tool</h2>
+      <p>Drag and drop any PNG onto <a href="/" class="text-link hover:text-link-deep">base64go.com</a>. The tool reads the file and outputs the Base64 string instantly. Copy it and use it as <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:image/png;base64,...</code> in your HTML.</p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Method 2: JavaScript (Browser)</h2>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">function</span> <span class="text-ink">pngToBase64</span>(file) {'{'}<br/>
+        &nbsp;&nbsp;<span class="text-violet">return new</span> <span class="text-ink">Promise</span>((resolve, reject) => {'{'}<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-violet">const</span> reader = <span class="text-violet">new</span> <span class="text-ink">FileReader</span>();<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;reader.onload = () => resolve(reader.result);<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;reader.onerror = reject;<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;reader.readAsDataURL(file);<br/>
+        &nbsp;&nbsp;{'}'});<br/>
+        {'}'}
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Method 3: Python</h2>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">import</span> base64<br/>
+        <br/>
+        <span class="text-violet">with</span> <span class="text-ink">open</span>(<span class="text-warning-deep">"image.png"</span>, <span class="text-warning-deep">"rb"</span>) <span class="text-violet">as</span> img:<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;b64 = base64.b64encode(img.read()).decode()<br/>
+        <br/>
+        <span class="text-mute"># Use in HTML</span><br/>
+        src = <span class="text-warning-deep">f"data:image/png;base64,{'{'}b64{'}'}"</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Base64 to PNG (Reverse)</h2>
+      <p>To convert Base64 back to a PNG file, strip the data URI prefix and decode:</p>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">import</span> base64<br/>
+        <br/>
+        b64_str = <span class="text-warning-deep">"iVBORw0KGgo..."</span><br/>
+        img_data = base64.b64decode(b64_str)<br/>
+        <span class="text-violet">with</span> <span class="text-ink">open</span>(<span class="text-warning-deep">"output.png"</span>, <span class="text-warning-deep">"wb"</span>) <span class="text-violet">as</span> f:<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;f.write(img_data)
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">When Not to Base64 Encode Images</h2>
+      <p>Base64 encoding increases file size by about 33%. For large images, this hurts page load time. Use Base64 for small assets (icons under 5KB, email signatures, inline SVGs). For larger images, serve them as regular files with proper caching headers.</p>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">Convert PNG to Base64 now</h2>
+      <p class="text-[14px] leading-5 text-body mb-4">Drag and drop any image. Instant Base64 output. No upload.</p>
+      <a href="/" class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90">
+        Open Base64 Tool
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"PNG to Base64: How to Convert Images to Base64","description":"Convert PNG images to Base64 for HTML, CSS, and JSON. JavaScript, Python, and command line methods. Base64 to PNG reverse guide.","datePublished":"2026-07-02","author":{"@type":"Organization","name":"base64go.com"}}</script>
+  </article>
+</Layout>

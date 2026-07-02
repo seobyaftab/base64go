@@ -1,0 +1,67 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; Encoding
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        Hex to Base64: How to Convert Between Formats
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Convert hexadecimal strings to Base64 in JavaScript, Python, and the command line. Smaller output, URL-safe, and ready for APIs.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        Hex is readable but wasteful. Every byte takes two hex characters, doubling the size. Base64 encodes the same data 33% more efficiently. When you are sending binary data over a network or storing it in JSON, converting <strong class="text-ink font-medium">hex to Base64</strong> saves bandwidth and storage.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">JavaScript</h2>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">function</span> <span class="text-ink">hexToBase64</span>(hex) {'{'}<br/>
+        &nbsp;&nbsp;<span class="text-mute">// Convert hex pairs to byte array</span><br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> bytes = <span class="text-violet">new</span> <span class="text-ink">Uint8Array</span>(hex.length / 2);<br/>
+        &nbsp;&nbsp;<span class="text-violet">for</span> (<span class="text-violet">let</span> i = 0; i &lt; hex.length; i += 2) {'{'}<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;bytes[i / 2] = parseInt(hex.slice(i, i + 2), 16);<br/>
+        &nbsp;&nbsp;{'}'}<br/>
+        &nbsp;&nbsp;<span class="text-violet">return</span> btoa(String.fromCharCode(...bytes));<br/>
+        {'}'}
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Python</h2>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">import</span> base64<br/>
+        raw_bytes = bytes.fromhex(<span class="text-warning-deep">"48656c6c6f"</span>)<br/>
+        result = base64.b64encode(raw_bytes).decode()<br/>
+        <span class="text-mute"># "SGVsbG8="</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Command Line (Linux/Mac)</h2>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-mute"># Hex string to Base64</span><br/>
+        <span class="text-ink">echo</span> <span class="text-warning-deep">"48656c6c6f"</span> | xxd -r -p | base64<br/>
+        <span class="text-mute"># "SGVsbG8="</span>
+      </div>
+
+      <p>For quick conversions without writing code, use our <a href="/" class="text-link hover:text-link-deep">free online Base64 tool</a>. Paste hex, decode to raw bytes, then re-encode as Base64.</p>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">Convert hex to Base64 instantly</h2>
+      <p class="text-[14px] leading-5 text-body mb-4">No code needed. Paste, convert, copy. All in your browser.</p>
+      <a href="/" class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90">
+        Open Base64 Tool
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Hex to Base64: How to Convert Between Formats","description":"Convert hex to Base64 in JavaScript, Python, and command line. Smaller output, URL-safe encoding for APIs and JSON.","datePublished":"2026-07-02","author":{"@type":"Organization","name":"base64go.com"}}</script>
+  </article>
+</Layout>

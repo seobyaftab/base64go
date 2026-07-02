@@ -1,0 +1,74 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; How-To
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        PowerShell Base64 Decode: Commands and Examples
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Decode Base64 strings in PowerShell using built-in commands. No modules, no dependencies. Works on Windows, Linux, and Mac.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        Need to <strong class="text-ink font-medium">decode Base64 in PowerShell</strong>? You do not need any external libraries. PowerShell has built-in .NET methods that handle Base64 encoding and decoding in a single line. Here is everything you need.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Decode a Base64 String</h2>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-mute"># Standard Base64 decode</span><br/>
+        <span class="text-violet">[System.Text.Encoding]::UTF8</span>.GetString(<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-violet">[System.Convert]::</span>FromBase64String(<span class="text-warning-deep">"SGVsbG8gV29ybGQ="</span>)<br/>
+        )<br/>
+        <span class="text-mute"># Output: Hello World</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Encode a String to Base64</h2>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-mute"># Convert plain text to Base64</span><br/>
+        <span class="text-violet">[System.Convert]::</span>ToBase64String(<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-violet">[System.Text.Encoding]::UTF8</span>.GetBytes(<span class="text-warning-deep">"Hello World"</span>)<br/>
+        )<br/>
+        <span class="text-mute"># Output: SGVsbG8gV29ybGQ=</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Decode Base64 from a File</h2>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">$base64</span> = <span class="text-ink">Get-Content</span> -Raw <span class="text-warning-deep">"encoded.txt"</span><br/>
+        <span class="text-violet">$bytes</span> = <span class="text-violet">[System.Convert]::</span>FromBase64String(<span class="text-violet">$base64</span>)<br/>
+        <span class="text-violet">[System.IO.File]::</span>WriteAllBytes(<span class="text-warning-deep">"output.bin"</span>, <span class="text-violet">$bytes</span>)
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Decode a Script Block (Suspicious Commands)</h2>
+      <p>Attackers sometimes hide PowerShell commands in Base64. If you see a suspicious encoded string, decode it:</p>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-mute"># Powershell often uses Unicode (UTF-16LE) for encoded commands</span><br/>
+        <span class="text-violet">[System.Text.Encoding]::Unicode</span>.GetString(<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-violet">[System.Convert]::</span>FromBase64String(<span class="text-violet">$encoded</span>)<br/>
+        )
+      </div>
+
+      <p>For quick one-off decoding without opening PowerShell, try our <a href="/" class="text-link hover:text-link-deep">free online Base64 decoder</a>. Paste any string and get instant results in your browser.</p>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">Decode Base64 without PowerShell</h2>
+      <p class="text-[14px] leading-5 text-body mb-4">Paste any Base64 string and decode it instantly. No installs, no commands.</p>
+      <a href="/" class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90">
+        Open Base64 Tool
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"PowerShell Base64 Decode: Commands and Examples","description":"Decode Base64 in PowerShell using built-in .NET commands. UTF-8, Unicode, file decode. No modules needed.","datePublished":"2026-07-02","author":{"@type":"Organization","name":"base64go.com"}}</script>
+  </article>
+</Layout>

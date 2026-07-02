@@ -1,0 +1,128 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; Encoding
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        Base64 to Hex: Complete Conversion Guide
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Convert Base64 to hexadecimal and back. Learn when to use hex instead of Base64, and how to convert between the two formats in JavaScript, Python, and online.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        Base64 is great for text-safe transmission. But sometimes you need <strong class="text-ink font-medium">hexadecimal</strong> instead. Hex is easier to read, debug, and compare. Every byte becomes exactly two characters. No padding, no special characters. Here is how to convert between the two.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Why Convert Base64 to Hex?
+      </h2>
+
+      <p>Hex makes binary data human-readable at a glance:</p>
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">Debugging hash values.</strong> SHA256, MD5, and other hashes are typically displayed in hex. If you get a Base64-encoded hash from an API, convert it to hex to compare.</li>
+        <li><strong class="text-ink font-medium">Inspecting binary payloads.</strong> Each pair of hex digits is one byte. Easy to count offsets and spot patterns.</li>
+        <li><strong class="text-ink font-medium">Firmware and embedded systems.</strong> Many tools output hex dumps. Base64 is rare in low-level contexts.</li>
+      </ul>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        JavaScript: Base64 to Hex
+      </h2>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">function</span> <span class="text-ink">base64ToHex</span>(base64) {'{'}<br/>
+        &nbsp;&nbsp;<span class="text-mute">// Decode Base64 to raw bytes</span><br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> binary = atob(base64);<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> bytes = <span class="text-violet">new</span> <span class="text-ink">Uint8Array</span>(binary.length);<br/>
+        &nbsp;&nbsp;<span class="text-violet">for</span> (<span class="text-violet">let</span> i = 0; i &lt; binary.length; i++) {'{'}<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;bytes[i] = binary.charCodeAt(i);<br/>
+        &nbsp;&nbsp;{'}'}<br/>
+        &nbsp;&nbsp;<span class="text-mute">// Convert each byte to 2-char hex</span><br/>
+        &nbsp;&nbsp;<span class="text-violet">return</span> [...bytes].map(b => b.toString(16).padStart(2, <span class="text-warning-deep">'0'</span>)).join(<span class="text-warning-deep">''</span>);<br/>
+        {'}'}<br/>
+        <br/>
+        base64ToHex(<span class="text-warning-deep">"SGVsbG8="</span>); <span class="text-mute">// "48656c6c6f" (Hello)</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        JavaScript: Hex to Base64
+      </h2>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">function</span> <span class="text-ink">hexToBase64</span>(hex) {'{'}<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> bytes = <span class="text-violet">new</span> <span class="text-ink">Uint8Array</span>(hex.length / 2);<br/>
+        &nbsp;&nbsp;<span class="text-violet">for</span> (<span class="text-violet">let</span> i = 0; i &lt; hex.length; i += 2) {'{'}<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;bytes[i / 2] = parseInt(hex.slice(i, i + 2), 16);<br/>
+        &nbsp;&nbsp;{'}'}<br/>
+        &nbsp;&nbsp;<span class="text-violet">return</span> btoa(String.fromCharCode(...bytes));<br/>
+        {'}'}<br/>
+        <br/>
+        hexToBase64(<span class="text-warning-deep">"48656c6c6f"</span>); <span class="text-mute">// "SGVsbG8="</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Python: One-Liner
+      </h2>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">import</span> base64, binascii<br/>
+        <br/>
+        <span class="text-mute"># Base64 to Hex</span><br/>
+        decoded = base64.b64decode(<span class="text-warning-deep">"SGVsbG8="</span>)<br/>
+        hex_str = binascii.hexlify(decoded).decode()<br/>
+        <span class="text-mute"># "48656c6c6f"</span><br/>
+        <br/>
+        <span class="text-mute"># Hex to Base64</span><br/>
+        raw = bytes.fromhex(<span class="text-warning-deep">"48656c6c6f"</span>)<br/>
+        b64 = base64.b64encode(raw).decode()<br/>
+        <span class="text-mute"># "SGVsbG8="</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Base64 vs Hex: When to Use Which
+      </h2>
+
+      <div class="rounded-xl border border-hairline bg-canvas p-6 overflow-x-auto">
+        <table class="w-full text-[13px] leading-5">
+          <thead>
+            <tr class="border-b border-hairline text-left text-mute font-mono uppercase text-[11px]">
+              <th class="pb-2 pr-4 font-normal">Feature</th>
+              <th class="pb-2 pr-4 font-normal">Base64</th>
+              <th class="pb-2 pr-4 font-normal">Hex</th>
+            </tr>
+          </thead>
+          <tbody class="text-body font-mono">
+            <tr class="border-b border-hairline"><td class="py-1.5 pr-4 text-mute">Size increase</td><td class="py-1.5 pr-4">33% larger</td><td class="py-1.5">100% larger</td></tr>
+            <tr class="border-b border-hairline"><td class="py-1.5 pr-4 text-mute">Characters</td><td class="py-1.5 pr-4">A-Z, a-z, 0-9, +, /</td><td class="py-1.5">0-9, A-F</td></tr>
+            <tr class="border-b border-hairline"><td class="py-1.5 pr-4 text-mute">Human readable</td><td class="py-1.5 pr-4">No</td><td class="py-1.5">Partially (byte-pairs)</td></tr>
+            <tr><td class="py-1.5 pr-4 text-mute">Best for</td><td class="py-1.5 pr-4">Network transfer, JSON, data URIs</td><td class="py-1.5">Hashes, debugging, firmware</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">
+        Need to encode or decode Base64?
+      </h2>
+      <p class="text-[14px] leading-5 text-body mb-4">
+        Try our free online tool. Paste Base64 or hex and get instant results.
+      </p>
+      <a href="/" class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90">
+        Open Base64 Tool
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Base64 to Hex: Complete Conversion Guide","description":"Convert Base64 to hexadecimal and back. JavaScript and Python examples. When to use hex vs Base64.","datePublished":"2026-07-02","author":{"@type":"Organization","name":"base64go.com"}}</script>
+  </article>
+</Layout>

@@ -1,0 +1,78 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; How-To
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        SVG to Base64: Embed Vector Graphics in HTML
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Convert SVG files to Base64 for inline embedding in HTML, CSS backgrounds, and data URIs. Smaller than PNG, scales infinitely, and renders at any resolution.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        SVGs are already text. Why encode them? Because embedding an <strong class="text-ink font-medium">SVG as Base64</strong> in a data URI avoids certain escaping issues and lets you use the same image in CSS <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">background-image</code> properties cleanly. It also protects against SVG injection in user-generated content.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">JavaScript: SVG Element to Base64</h2>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">const</span> svg = document.querySelector(<span class="text-warning-deep">"svg"</span>);<br/>
+        <span class="text-violet">const</span> xml = <span class="text-violet">new</span> XMLSerializer().serializeToString(svg);<br/>
+        <span class="text-violet">const</span> b64 = btoa(<span class="text-violet">unescape</span>(<span class="text-ink">encodeURIComponent</span>(xml)));<br/>
+        <span class="text-violet">const</span> dataUri = <span class="text-warning-deep">`data:image/svg+xml;base64,${'{'}b64{'}'}`</span>;
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Python: SVG File to Base64</h2>
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">import</span> base64<br/>
+        <br/>
+        <span class="text-violet">with</span> <span class="text-ink">open</span>(<span class="text-warning-deep">"icon.svg"</span>, <span class="text-warning-deep">"rb"</span>) <span class="text-violet">as</span> f:<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;b64 = base64.b64encode(f.read()).decode()<br/>
+        <br/>
+        <span class="text-mute"># CSS background-image usage</span><br/>
+        css = <span class="text-warning-deep">f"background-image: url(data:image/svg+xml;base64,{'{'}b64{'}'});"</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Inline SVG vs Base64 SVG</h2>
+      <div class="rounded-xl border border-hairline bg-canvas p-6 overflow-x-auto">
+        <table class="w-full text-[13px] leading-5">
+          <thead>
+            <tr class="border-b border-hairline text-left text-mute font-mono uppercase text-[11px]">
+              <th class="pb-2 pr-4 font-normal">Feature</th>
+              <th class="pb-2 pr-4 font-normal">Inline SVG</th>
+              <th class="pb-2 pr-4 font-normal">Base64 SVG</th>
+            </tr>
+          </thead>
+          <tbody class="text-body font-mono">
+            <tr class="border-b border-hairline"><td class="py-1.5 pr-4 text-mute">CSS customisation</td><td class="py-1.5 pr-4">Yes (fill, stroke via CSS)</td><td class="py-1.5">No (static image)</td></tr>
+            <tr class="border-b border-hairline"><td class="py-1.5 pr-4 text-mute">Security (UGC)</td><td class="py-1.5 pr-4">Risky (script injection)</td><td class="py-1.5">Safe (no script execution)</td></tr>
+            <tr class="border-b border-hairline"><td class="py-1.5 pr-4 text-mute">Cacheable</td><td class="py-1.5 pr-4">Only as part of HTML</td><td class="py-1.5">Can be cached in CSS</td></tr>
+            <tr><td class="py-1.5 pr-4 text-mute">Size</td><td class="py-1.5 pr-4">Raw SVG size</td><td class="py-1.5">~33% larger than raw</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>For quick conversion of any image or SVG to Base64, use our <a href="/" class="text-link hover:text-link-deep">free online tool</a>. Drag, drop, and get the encoded string instantly.</p>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">Convert SVG to Base64 now</h2>
+      <p class="text-[14px] leading-5 text-body mb-4">Drop any SVG or image file. Get Base64 output instantly.</p>
+      <a href="/" class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90">
+        Open Base64 Tool
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"SVG to Base64: Embed Vector Graphics in HTML","description":"Convert SVG files to Base64 for CSS backgrounds, data URIs, and secure embedding. JavaScript and Python examples.","datePublished":"2026-07-02","author":{"@type":"Organization","name":"base64go.com"}}</script>
+  </article>
+</Layout>
