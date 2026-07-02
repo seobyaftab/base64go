@@ -13,6 +13,6 @@
 /favicon.svg
   Cache-Control: public, max-age=604800
 
-# Prevent duplicate content on pages.dev subdomain
-https://*.pages.dev/*
+# Prevent duplicate content on pages.dev
+base64go.pages.dev/*
   X-Robots-Tag: noindex

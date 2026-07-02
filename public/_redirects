@@ -1,0 +1,2 @@
+# Redirect pages.dev to custom domain to prevent duplicate content
+https://base64go.pages.dev/* https://base64go.com/:splat 301!

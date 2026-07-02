@@ -52,6 +52,15 @@ import Footer from '../components/Footer.astro';
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap"
       as="style"
     />
+    <!-- Noindex on pages.dev  -  prevent duplicate content -->
+    <script is:inline>
+      if (location.hostname.endsWith('.pages.dev')) {
+        var meta = document.createElement('meta');
+        meta.name = 'robots';
+        meta.content = 'noindex';
+        document.head.appendChild(meta);
+      }
+    </script>
     <!-- Inline theme detection  -  prevent FOUC -->
     <script is:inline>
       (function () {
