@@ -1,0 +1,75 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const posts = [
+  {
+    title: "Can I Concatenate Base64 Strings?",
+    slug: "can-i-concatenate-base64-strings",
+    description: "Yes, but you need to strip the padding first. Here is how it works, why it breaks, and the right way to join Base64 strings in JavaScript and Python.",
+    date: "2026-07-02",
+    category: "Base64 How-To",
+  },
+  {
+    title: "How to Encode a File to Base64",
+    slug: "how-to-encode-file-to-base64",
+    description: "Encode any file to Base64 right in your browser. Images, PDFs, JSON, text files — drag, drop, and get Base64 instantly.",
+    date: "2026-07-02",
+    category: "Base64 How-To",
+  },
+  {
+    title: "Base64 vs Base64URL: What's the Difference?",
+    slug: "base64-vs-base64url",
+    description: "The difference between standard Base64 and URL-safe Base64URL, when to use each, and how our tool handles both automatically.",
+    date: "2026-07-02",
+    category: "Encoding Comparison",
+  },
+];
+---
+
+<Layout>
+  <section class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">Blog</p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        Base64 Guides &amp; Tutorials.
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Practical guides on Base64 encoding, decoding, and everything in between. Written for developers, by developers.
+      </p>
+    </header>
+
+    <div class="space-y-4">
+      {posts.map((post) => (
+        <a
+          href={`/blog/${post.slug}/`}
+          class="block rounded-xl border border-hairline bg-canvas p-6 shadow-level-2 no-underline transition-all hover:shadow-level-3 hover:border-hairline-strong"
+        >
+          <div class="flex items-center gap-3 mb-2">
+            <span class="text-[11px] leading-4 text-mute font-mono uppercase">{post.category}</span>
+            <span class="text-[11px] leading-4 text-mute">{post.date}</span>
+          </div>
+          <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-1">
+            {post.title}
+          </h2>
+          <p class="text-[14px] leading-5 text-body">{post.description}</p>
+        </a>
+      ))}
+    </div>
+
+    <div class="mt-12 rounded-xl border border-hairline bg-canvas-soft p-6 text-center">
+      <h2 class="text-[16px] font-medium leading-6 text-ink mb-2">More guides coming soon</h2>
+      <p class="text-[14px] leading-5 text-body">
+        We are writing in-depth Base64 tutorials. Topics include JavaScript decoding, Python encoding, Base64 vs Hex, and common debugging tips.
+      </p>
+    </div>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Base64 Guides & Tutorials",
+        "url": "https://base64go.com/blog/"
+      }
+    </script>
+  </section>
+</Layout>

@@ -1,0 +1,126 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; Base64 How-To
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        How to Encode a File to Base64
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Convert any file to Base64 in seconds. Drag, drop, and get the encoded string instantly. Works with images, PDFs, JSON, and more.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        Need to embed an image in HTML, send a file through a JSON API, or store binary data as text? <strong class="text-ink font-medium">Encoding a file to Base64</strong> converts any binary file into a safe, printable ASCII string. Here is how to do it, without installing anything.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Method 1: Use Our Online Tool (No Setup)
+      </h2>
+
+      <p>
+        The fastest way: open our <a href="/" class="text-link hover:text-link-deep">free Base64 encoder</a>, drag your file onto the page, and the Base64 output appears instantly. Works for images, documents, code files, anything. No account, no upload to any server. Everything runs locally in your browser.
+      </p>
+
+      <ol class="list-decimal pl-6 space-y-2">
+        <li>Go to <a href="/" class="text-link hover:text-link-deep">base64go.com</a></li>
+        <li>Drag and drop your file onto the input area</li>
+        <li>The Base64 string appears in the output panel</li>
+        <li>Click Copy or Download to save it</li>
+      </ol>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Method 2: JavaScript (Browser)
+      </h2>
+
+      <p>
+        Use the <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">FileReader</code> API to convert a file to Base64 in the browser:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">function</span> <span class="text-ink">fileToBase64</span>(file) {'{'}<br/>
+        &nbsp;&nbsp;<span class="text-violet">return new</span> <span class="text-ink">Promise</span>((resolve, reject) => {'{'}<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-violet">const</span> reader = <span class="text-violet">new</span> <span class="text-ink">FileReader</span>();<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;reader.onload = () => resolve(reader.result);<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;reader.onerror = reject;<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;reader.readAsDataURL(file);<br/>
+        &nbsp;&nbsp;{'}'});<br/>
+        {'}'}<br/>
+        <br/>
+        <span class="text-mute">// Output: "data:image/png;base64,iVBORw0KG..."</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Method 3: Python
+      </h2>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">import</span> base64<br/>
+        <br/>
+        <span class="text-violet">with</span> <span class="text-ink">open</span>(<span class="text-warning-deep">"image.png"</span>, <span class="text-warning-deep">"rb"</span>) <span class="text-violet">as</span> f:<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;encoded = base64.b64encode(f.read()).decode(<span class="text-warning-deep">"utf-8"</span>)<br/>
+        <br/>
+        <span class="text-mute"># encoded is now a plain Base64 string</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Method 4: Command Line (Linux / Mac / WSL)
+      </h2>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-mute"># Encode a file</span><br/>
+        base64 -i input.png -o output.b64<br/>
+        <br/>
+        <span class="text-mute"># Or output directly to terminal</span><br/>
+        base64 image.png
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Common Use Cases
+      </h2>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">Data URIs in HTML/CSS.</strong> Embed small images directly in your code: <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">&lt;img src="data:image/png;base64,..."&gt;</code></li>
+        <li><strong class="text-ink font-medium">JSON API payloads.</strong> Send binary files through REST APIs that only accept JSON.</li>
+        <li><strong class="text-ink font-medium">Email attachments.</strong> MIME uses Base64 to encode attachments in email bodies.</li>
+        <li><strong class="text-ink font-medium">Browser localStorage.</strong> Store small files client-side by encoding them as Base64 first.</li>
+      </ul>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">
+        Try it now. Drag and drop any file.
+      </h2>
+      <p class="text-[14px] leading-5 text-body mb-4">
+        No upload, no sign-up. Everything happens in your browser.
+      </p>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90"
+      >
+        Open Base64 Tool
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "How to Encode a File to Base64",
+        "description": "Convert any file to Base64 instantly. Methods for browser, JavaScript, Python, and command line. No software install needed.",
+        "datePublished": "2026-07-02",
+        "author": { "@type": "Organization", "name": "base64go.com" }
+      }
+    </script>
+  </article>
+</Layout>

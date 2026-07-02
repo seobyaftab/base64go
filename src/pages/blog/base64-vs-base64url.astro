@@ -1,0 +1,142 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; Encoding Comparison
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        Base64 vs Base64URL: What's the Difference?
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Two characters and some padding. That is the entire difference. But it matters a lot when you are working with URLs, JWTs, and API tokens.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        You are debugging a JWT token, or passing encoded data in a URL query string, and the standard Base64 decoder chokes on it. Chances are you are looking at <strong class="text-ink font-medium">Base64URL</strong>, not standard Base64. Here is what changed and why.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        The Difference: 2 Characters
+      </h2>
+
+      <p>
+        Standard <strong class="text-ink font-medium">Base64</strong> (RFC 4648 section 4) uses 64 characters: A-Z, a-z, 0-9, <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">+</code>, and <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">/</code>. It also adds <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code> padding to make the output length a multiple of 4.
+      </p>
+
+      <p>
+        <strong class="text-ink font-medium">Base64URL</strong> (RFC 4648 section 5) makes three changes:
+      </p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">+</code> becomes <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">-</code> (plus is a space in URLs)</li>
+        <li><code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">/</code> becomes <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">_</code> (slash is a path separator in URLs)</li>
+        <li><code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code> padding is often omitted (equals is a query param delimiter in URLs)</li>
+      </ul>
+
+      <div class="rounded-xl border border-hairline bg-canvas p-6 overflow-x-auto">
+        <table class="w-full text-[13px] leading-5">
+          <thead>
+            <tr class="border-b border-hairline text-left text-mute font-mono uppercase text-[11px]">
+              <th class="pb-2 pr-4 font-normal">Feature</th>
+              <th class="pb-2 pr-4 font-normal">Base64</th>
+              <th class="pb-2 pr-4 font-normal">Base64URL</th>
+            </tr>
+          </thead>
+          <tbody class="text-body font-mono">
+            <tr class="border-b border-hairline">
+              <td class="py-1.5 pr-4 text-mute">Chars 62-63</td>
+              <td class="py-1.5 pr-4">+ /</td>
+              <td class="py-1.5 pr-4">- _</td>
+            </tr>
+            <tr class="border-b border-hairline">
+              <td class="py-1.5 pr-4 text-mute">Padding</td>
+              <td class="py-1.5 pr-4">= (required)</td>
+              <td class="py-1.5 pr-4">= (optional)</td>
+            </tr>
+            <tr class="border-b border-hairline">
+              <td class="py-1.5 pr-4 text-mute">URL Safe</td>
+              <td class="py-1.5">No</td>
+              <td class="py-1.5">Yes</td>
+            </tr>
+            <tr>
+              <td class="py-1.5 pr-4 text-mute">Used In</td>
+              <td class="py-1.5">Email, data URIs, files</td>
+              <td class="py-1.5">JWTs, OAuth, URL params</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Converting Between the Two
+      </h2>
+
+      <p>
+        Base64URL to standard Base64 (for decoding):
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">const</span> base64 = base64url<br/>
+        &nbsp;&nbsp;.replace(<span class="text-success">/</span><span class="text-error">-</span><span class="text-success">/g</span>, <span class="text-warning-deep">'+'</span>)<br/>
+        &nbsp;&nbsp;.replace(<span class="text-success">/</span><span class="text-error">_</span><span class="text-success">/g</span>, <span class="text-warning-deep">'/'</span>)<br/>
+        &nbsp;&nbsp;.padEnd(base64url.length + (4 - base64url.length % 4) % 4, <span class="text-warning-deep">'='</span>);<br/>
+        <br/>
+        <span class="text-violet">const</span> decoded = atob(base64);
+      </div>
+
+      <p>
+        Standard Base64 to Base64URL (for URLs):
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">const</span> base64url = encoded<br/>
+        &nbsp;&nbsp;.replace(<span class="text-success">/</span><span class="text-error">\+</span><span class="text-success">/g</span>, <span class="text-warning-deep">'-'</span>)<br/>
+        &nbsp;&nbsp;.replace(<span class="text-success">/</span><span class="text-error">\/</span><span class="text-success">/g</span>, <span class="text-warning-deep">'_'</span>)<br/>
+        &nbsp;&nbsp;.replace(<span class="text-success">/</span><span class="text-error">=+$</span><span class="text-success">/</span>, <span class="text-warning-deep">''</span>);
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Our Tool Handles Both Automatically
+      </h2>
+
+      <p>
+        Our <a href="/" class="text-link hover:text-link-deep">Base64 encoder and decoder</a> auto-detects whether your input is standard Base64 or Base64URL. It checks for <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">-</code> and <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">_</code> characters and handles the conversion automatically. Paste either format and it just works.
+      </p>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">
+        Ready to encode or decode?
+      </h2>
+      <p class="text-[14px] leading-5 text-body mb-4">
+        Our tool auto-detects Base64 and Base64URL. No setup needed.
+      </p>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90"
+      >
+        Open Base64 Tool
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Base64 vs Base64URL: What's the Difference?",
+        "description": "The complete guide to Base64 vs Base64URL. Learn the 3 differences, when to use each, and how to convert between them.",
+        "datePublished": "2026-07-02",
+        "author": { "@type": "Organization", "name": "base64go.com" }
+      }
+    </script>
+  </article>
+</Layout>

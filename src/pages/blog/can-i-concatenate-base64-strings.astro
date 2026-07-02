@@ -1,0 +1,148 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; Base64 How-To
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        Can I Concatenate Base64 Strings?
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Yes, but only if you fix the padding first. Here is how it works, why it breaks, and the right way to join Base64 strings.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        You have two Base64 strings and you want to join them together. Maybe you are decoding chunks from an API, or splitting a large file across multiple requests. You try <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">string1 + string2</code> and hit Decode. It fails. What went wrong?
+      </p>
+
+      <p>
+        The short answer: <strong class="text-ink font-medium">you can concatenate Base64 strings, but you need to handle the padding correctly.</strong> Each independent Base64 string ends with padding characters (<code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code>) that make no sense in the middle of a combined string. Strip those, then join.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Why Concatenating Base64 Fails
+      </h2>
+
+      <p>
+        Base64 encodes 3 bytes into 4 characters. If your input is not a multiple of 3 bytes, padding (<code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code> or <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">==</code>) is added to round it up. Each Base64 string is a complete, self-contained encoding.
+      </p>
+
+      <p>
+        When you naively concatenate them, you get this:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        String A: <code class="text-ink">SGVsbG8=</code> ("Hello")<br/>
+        String B: <code class="text-ink">V29ybGQ=</code> ("World")<br/>
+        Naive join: <code class="text-error">SGVsbG8=V29ybGQ=</code><br/>
+        <span class="text-mute">The = in the middle breaks the decoder.</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        The Fix: Strip Padding, Then Join
+      </h2>
+
+      <p>
+        Remove the trailing <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code> characters from each string before concatenating. The combined Base64 value will be decoded as one continuous byte stream.
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-mute">// JavaScript</span><br/>
+        <span class="text-violet">const</span> combined = strings<br/>
+        &nbsp;&nbsp;.map(<span class="text-ink">s</span> => <span class="text-ink">s</span>.replace(<span class="text-success">/</span><span class="text-error">=+$</span><span class="text-success">/</span>, <span class="text-warning-deep">''</span>))<br/>
+        &nbsp;&nbsp;.join(<span class="text-warning-deep">''</span>);<br/>
+        <br/>
+        <span class="text-mute">// Works: "SGVsbG8=" + "V29ybGQ=" becomes</span><br/>
+        <span class="text-mute">// "SGVsbG8V29ybGQ" - decodes to "HelloWorld"</span>
+      </div>
+
+      <p>
+        Here is the same in Python:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-mute"># Python</span><br/>
+        <span class="text-violet">import</span> base64<br/>
+        <br/>
+        strings = [<span class="text-warning-deep">"SGVsbG8="</span>, <span class="text-warning-deep">"V29ybGQ="</span>]<br/>
+        combined = <span class="text-warning-deep">""</span>.join(<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;s.rstrip(<span class="text-warning-deep">"="</span>) <span class="text-violet">for</span> s <span class="text-violet">in</span> strings<br/>
+        )<br/>
+        result = base64.b64decode(combined)<br/>
+        <span class="text-mute"># b'HelloWorld'</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        When Does This Actually Come Up?
+      </h2>
+
+      <p>
+        Concatenating Base64 strings is useful in a few real scenarios:
+      </p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">Streaming API responses.</strong> A large file is returned as Base64 chunks. You need to reassemble them before decoding.</li>
+        <li><strong class="text-ink font-medium">MIME multi-part messages.</strong> Email attachments split across MIME boundaries use chunked Base64.</li>
+        <li><strong class="text-ink font-medium">Database-stored fragments.</strong> Binary data stored as Base64 across multiple rows or columns.</li>
+        <li><strong class="text-ink font-medium">Log file reassembly.</strong> Debug logs that dump Base64 in fixed-length lines.</li>
+      </ul>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        What About Base64URL?
+      </h2>
+
+      <p>
+        Base64URL (used in JWTs and URL parameters) often omits padding entirely. If you are working with Base64URL strings, you can concatenate them directly without stripping anything. Our <a href="/" class="text-link hover:text-link-deep">online Base64 decoder</a> auto-detects both formats.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        One More Thing: Newlines
+      </h2>
+
+      <p>
+        Some tools split Base64 output into 76-character lines (MIME standard). If your strings have line breaks, strip those too before joining:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5">
+        <span class="text-violet">const</span> clean = base64String.replace(<span class="text-success">/</span><span class="text-error">\s</span><span class="text-success">/g</span>, <span class="text-warning-deep">''</span>);
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">
+        Need to decode or encode Base64?
+      </h2>
+      <p class="text-[14px] leading-5 text-body mb-4">
+        Try our free online tool. Live encoding, no sign-ups, works right in your browser.
+      </p>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90"
+      >
+        Open Base64 Tool
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <!-- Schema -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Can I Concatenate Base64 Strings?",
+        "description": "Yes, but you need to strip padding first. Learn the right way to join Base64 strings in JavaScript and Python.",
+        "datePublished": "2026-07-02",
+        "author": { "@type": "Organization", "name": "base64go.com" }
+      }
+    </script>
+  </article>
+</Layout>
