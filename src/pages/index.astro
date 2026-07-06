@@ -432,6 +432,23 @@ import Layout from '../layouts/Layout.astro';
         </details>
       </div>
     </div>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "What is a Base64 decoder?", "acceptedAnswer": { "@type": "Answer", "text": "A Base64 decoder reverses the Base64 encoding process. It converts a Base64 string back into its original text or file format. Our tool does this live as you type." } },
+          { "@type": "Question", "name": "How do I decode Base64 online?", "acceptedAnswer": { "@type": "Answer", "text": "Go to base64go.com, paste your Base64 string into the input field, and the decoded text appears instantly. For files, click Download after decoding. No account required." } },
+          { "@type": "Question", "name": "Is Base64 encoding the same as encryption?", "acceptedAnswer": { "@type": "Answer", "text": "No. Base64 is encoding, not encryption. It requires no key and anyone can reverse it. Learn more in our guide on why Base64 is not encryption." } },
+          { "@type": "Question", "name": "What is the difference between Base64 and Base64URL?", "acceptedAnswer": { "@type": "Answer", "text": "Base64URL replaces + with - and / with _, and often omits = padding. This makes it safe for URLs, file names, and JWT tokens." } },
+          { "@type": "Question", "name": "Can I encode a file to Base64?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Drag and drop any file onto the tool and it will be encoded to Base64 instantly. Works for images, documents, JSON files, and any binary data." } },
+          { "@type": "Question", "name": "Is this Base64 decoder tool really free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free. No sign-ups, no limitations, no hidden costs. All encoding and decoding happens directly in your browser." } },
+          { "@type": "Question", "name": "Does base64go store my data or track me?", "acceptedAnswer": { "@type": "Answer", "text": "Never. Everything runs client-side with no server-side processing. The only data stored is your theme preference, saved locally in your browser's localStorage." } },
+          { "@type": "Question", "name": "How much larger is Base64 than the original data?", "acceptedAnswer": { "@type": "Answer", "text": "Base64 encoding increases data size by approximately 33%. Every 3 bytes of input produce 4 bytes of Base64 output." } }
+        ]
+      }
+    </script>
   </section>
 </Layout>
 

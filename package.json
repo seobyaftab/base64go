@@ -13,6 +13,7 @@
     "deploy": "astro build && wrangler pages deploy dist --project-name=base64go --branch=main --commit-dirty=true"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
     "@tailwindcss/vite": "^4.3.2",
     "astro": "^7.0.5",
