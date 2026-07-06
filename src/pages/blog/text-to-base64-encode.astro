@@ -1,0 +1,281 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; Base64 How-To
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        How to Encode Text to Base64: The Complete Guide
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Turn any text string into Base64. Step-by-step methods for browser, JavaScript, Python, and online tools. UTF-8, emojis, multi-line text — all covered.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        You have a text string and you need it in Base64. Maybe you are building a Basic Auth header, encoding credentials for an API call, or embedding text in a data URI. Whatever the reason, <strong class="text-ink font-medium">encoding text to Base64</strong> is one of those operations that comes up constantly in web development. This guide covers every method, from zero-setup online tools to production-ready code, including UTF-8 safe encoding for non-English text and emojis.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        The Fastest Way: Online Text to Base64 Tool
+      </h2>
+
+      <p>
+        If you need a result right now, use our <a href="/" class="text-link hover:text-link-deep">free text to Base64 encoder</a>:
+      </p>
+
+      <ol class="list-decimal pl-6 space-y-2">
+        <li>Type or paste your text on <a href="/" class="text-link hover:text-link-deep">base64go.com</a></li>
+        <li>Switch the mode to <strong class="text-ink font-medium">Encode</strong></li>
+        <li>The Base64 output appears instantly in the right panel</li>
+        <li>Click <strong class="text-ink font-medium">Copy</strong> to grab the encoded string</li>
+      </ol>
+
+      <p>
+        No page refresh, no server round-trip. Encoding happens locally with JavaScript, so your text never leaves your computer. If you need to go the other direction, see our <a href="/blog/how-to-decode-base64/" class="text-link hover:text-link-deep">Base64 decoding guide</a>.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        JavaScript: The Built-in Way
+      </h2>
+
+      <p>
+        JavaScript gives you two functions: <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">btoa()</code> ("binary to ASCII") for encoding and <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">atob()</code> ("ASCII to binary") for decoding. For a deeper understanding of how these functions work, read our <a href="/blog/base64-translator-guide/" class="text-link hover:text-link-deep">Base64 translator guide</a> which explains the underlying algorithm.
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-violet">const</span> text = <span class="text-warning-deep">"Hello, World!"</span>;<br/>
+        <span class="text-violet">const</span> encoded = btoa(text);<br/>
+        console.log(encoded); <span class="text-mute">// "SGVsbG8sIFdvcmxkIQ=="</span>
+      </div>
+
+      <div class="rounded-xl border border-hairline-strong bg-warning-soft p-5 text-[14px] leading-5">
+        <strong class="text-ink font-medium">Gotcha with non-Latin text:</strong> <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono">btoa()</code> throws an error on characters outside the Latin-1 range (code points above 255). This includes emojis, Chinese characters, and most non-English scripts. Use the UTF-8 safe method below instead.
+      </div>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-violet">function</span> <span class="text-ink">toBase64UTF8</span>(str) {'{'}<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> bytes = <span class="text-violet">new</span> <span class="text-ink">TextEncoder</span>().encode(str);<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> binString = <span class="text-ink">Array</span>.from(bytes, b => <span class="text-ink">String</span>.fromCodePoint(b)).join(<span class="text-warning-deep">''</span>);<br/>
+        &nbsp;&nbsp;<span class="text-violet">return</span> btoa(binString);<br/>
+        {'}'}<br/>
+        <br/>
+        toBase64UTF8(<span class="text-warning-deep">"Hello 😀"</span>); <span class="text-mute">// Works with emojis</span><br/>
+        toBase64UTF8(<span class="text-warning-deep">"こんにちは"</span>); <span class="text-mute">// Works with Japanese</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Python: One Import Does It
+      </h2>
+
+      <p>
+        Python's <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64</code> module handles everything, including multi-byte characters:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-violet">import</span> base64<br/>
+        <br/>
+        <span class="text-mute"># Simple ASCII text</span><br/>
+        text = <span class="text-warning-deep">"Hello, World!"</span><br/>
+        encoded = base64.b64encode(text.encode(<span class="text-warning-deep">"utf-8"</span>)).decode(<span class="text-warning-deep">"utf-8"</span>)<br/>
+        <span class="text-ink">print</span>(encoded)  <span class="text-mute"># SGVsbG8sIFdvcmxkIQ==</span><br/>
+        <br/>
+        <span class="text-mute"># Any Unicode, including emojis and non-Latin scripts</span><br/>
+        text_unicode = <span class="text-warning-deep">"Café résumé 🌍"</span><br/>
+        encoded_unicode = base64.b64encode(text_unicode.encode(<span class="text-warning-deep">"utf-8"</span>)).decode(<span class="text-warning-deep">"utf-8"</span>)<br/>
+        <span class="text-ink">print</span>(encoded_unicode)  <span class="text-mute"># Q2Fmw6kgcsOpc3Vtw6kg8J+MjQ==</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Command Line: No Programming Required
+      </h2>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-mute"># Linux / WSL</span><br/>
+        <span class="text-ink">echo</span> -n <span class="text-warning-deep">"Hello, World!"</span> | base64<br/>
+        <span class="text-mute"># Output: SGVsbG8sIFdvcmxkIQ==</span><br/>
+        <br/>
+        <span class="text-mute"># macOS (different flag)</span><br/>
+        <span class="text-ink">echo</span> -n <span class="text-warning-deep">"Hello, World!"</span> | base64 -i<br/>
+        <br/>
+        <span class="text-mute"># Windows PowerShell</span><br/>
+        [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(<span class="text-warning-deep">"Hello, World!"</span>))<br/>
+        <br/>
+        <span class="text-mute"># Encode an entire text file</span><br/>
+        base64 input.txt > encoded.b64
+      </div>
+
+      <div class="rounded-xl border border-hairline-strong bg-warning-soft p-5 text-[14px] leading-5">
+        <strong class="text-ink font-medium">Watch the newline:</strong> The <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono">echo</code> command appends a newline by default. Always use <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono">echo -n</code> when encoding text, or the newline gets encoded too.
+      </div>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft-2 p-5 overflow-x-auto">
+        <p class="text-[14px] leading-5 font-medium text-ink mb-3">Encoding Methods Comparison</p>
+        <table class="w-full text-left text-[13px] leading-5">
+          <thead>
+            <tr class="border-b border-hairline text-mute font-mono uppercase text-[11px] tracking-[0.5px]">
+              <th class="pb-2 pr-4 font-medium">Method</th>
+              <th class="pb-2 pr-4 font-medium">UTF-8 Safe</th>
+              <th class="pb-2 pr-4 font-medium">Setup</th>
+              <th class="pb-2 font-medium">Best For</th>
+            </tr>
+          </thead>
+          <tbody class="text-body">
+            <tr class="border-b border-hairline/50">
+              <td class="py-2 pr-4 font-medium text-ink">Online Tool</td><td class="py-2 pr-4">✓</td><td class="py-2 pr-4">None</td><td class="py-2">Quick one-off conversions</td>
+            </tr>
+            <tr class="border-b border-hairline/50">
+              <td class="py-2 pr-4 font-medium text-ink">JS btoa()</td><td class="py-2 pr-4">✗</td><td class="py-2 pr-4">None</td><td class="py-2">Simple ASCII text in browsers</td>
+            </tr>
+            <tr class="border-b border-hairline/50">
+              <td class="py-2 pr-4 font-medium text-ink">JS + TextEncoder</td><td class="py-2 pr-4">✓</td><td class="py-2 pr-4">None</td><td class="py-2">Any Unicode text in browsers</td>
+            </tr>
+            <tr class="border-b border-hairline/50">
+              <td class="py-2 pr-4 font-medium text-ink">Python base64</td><td class="py-2 pr-4">✓</td><td class="py-2 pr-4">Python installed</td><td class="py-2">Scripts, automation, any text</td>
+            </tr>
+            <tr>
+              <td class="py-2 pr-4 font-medium text-ink">CLI base64</td><td class="py-2 pr-4">✓</td><td class="py-2 pr-4">Unix/macOS</td><td class="py-2">Shell pipelines, file encoding</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Real-World Uses for Text-to-Base64
+      </h2>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">HTTP Basic Authentication.</strong> The <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">Authorization: Basic ...</code> header is <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">btoa("username:password")</code>. Note: this is encoding, not security — use HTTPS to protect the header in transit. Learn why <a href="/blog/base64-is-not-encryption/" class="text-link hover:text-link-deep">Base64 is not encryption</a>.</li>
+        <li><strong class="text-ink font-medium">Storing credentials in CI/CD.</strong> GitHub Actions and similar platforms accept Base64-encoded secrets. Encode your config, paste it, and decode it in your pipeline.</li>
+        <li><strong class="text-ink font-medium">Embedding JSON in URLs.</strong> A Base64URL-encoded JSON payload in a query parameter survives URL encoding without corruption.</li>
+        <li><strong class="text-ink font-medium">Data URIs for text content.</strong> <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:text/plain;base64,SGVsbG8=</code> renders as "Hello" in the browser. For image Data URIs, see our <a href="/blog/base64-picture-guide/" class="text-link hover:text-link-deep">Base64 pictures guide</a>.</li>
+      </ul>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Decoding Back: The Round Trip
+      </h2>
+
+      <p>
+        Any text encoded to Base64 can be decoded back to the original, as long as you know the original encoding (UTF-8 is the universal default). Here is the round trip:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-violet">const</span> original = <span class="text-warning-deep">"Hello, World!"</span>;<br/>
+        <span class="text-violet">const</span> encoded = btoa(original);<br/>
+        <span class="text-violet">const</span> decoded = atob(encoded);<br/>
+        console.log(original === decoded); <span class="text-mute">// true</span>
+      </div>
+
+      <p>
+        For UTF-8 safe round trips, pair <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">TextEncoder</code> with a decoder that uses <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">TextDecoder</code> on the way back. See our <a href="/blog/how-to-decode-base64/" class="text-link hover:text-link-deep">Base64 decoding guide</a> for the full decode function.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Frequently Asked Questions
+      </h2>
+
+      <div class="space-y-4">
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Can I encode any text to Base64, including emojis?</h3>
+          <p class="text-[14px] leading-5 text-body">Yes. Any Unicode text — including emojis, Chinese, Arabic, Cyrillic — can be Base64-encoded. You must encode the text as UTF-8 bytes first, then Base64-encode those bytes. Our <a href="/" class="text-link hover:text-link-deep">online tool</a> handles this automatically. In code, use TextEncoder in JavaScript or <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">.encode("utf-8")</code> in Python.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Is Base64 encoding reversible?</h3>
+          <p class="text-[14px] leading-5 text-body">Yes, completely. Base64 is a deterministic, lossless encoding. Any properly encoded text can be decoded back to the exact original using the standard Base64 algorithm defined in <a href="https://datatracker.ietf.org/doc/html/rfc4648" target="_blank" rel="noopener" class="text-link hover:text-link-deep">RFC 4648</a>.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Does Base64 encoding increase the text size?</h3>
+          <p class="text-[14px] leading-5 text-body">Yes. Base64 expands data by about 33%. Every 3 bytes of input produce 4 Base64 characters. For a short text string this is negligible, but for large files, the size increase is noticeable.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Can I use Base64 to hide or encrypt passwords?</h3>
+          <p class="text-[14px] leading-5 text-body">No. <a href="/blog/base64-is-not-encryption/" class="text-link hover:text-link-deep">Base64 is encoding, not encryption</a>. A Base64-encoded password can be decoded instantly by anyone — it provides zero security. For passwords, use proper hashing like bcrypt or Argon2.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">
+        Encode text to Base64 now. Fast and private.
+      </h2>
+      <p class="text-[14px] leading-5 text-body mb-4">
+        Type or paste your text and get the Base64 output instantly.
+      </p>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90"
+      >
+        Encode Text Now
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <div class="mt-12 border-t border-hairline pt-8">
+      <h2 class="text-[18px] font-semibold leading-7 tracking-[-0.54px] text-ink mb-4">Related Guides</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href="/blog/base64-translator-guide/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">What Is a Base64 Translator?</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">How the encoding algorithm works, step by step</p>
+        </a>
+        <a href="/blog/how-to-decode-base64/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">How to Decode Base64</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">Reverse the process: Base64 back to readable text</p>
+        </a>
+        <a href="/blog/base64-picture-guide/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">Base64 Images Explained</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">Embed images as Base64 in HTML and CSS</p>
+        </a>
+        <a href="/blog/base64-is-not-encryption/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">Base64 Is Not Encryption</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">Why encoding passwords in Base64 is not secure</p>
+        </a>
+      </div>
+    </div>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "How to Encode Text to Base64: The Complete Guide",
+        "description": "Convert any text string to Base64. Methods for browser, JavaScript, Python, and command line. UTF-8 safe encoding with emojis and multi-line text.",
+        "datePublished": "2026-07-02",
+        "author": { "@type": "Organization", "name": "base64go.com" }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Can I encode any text to Base64, including emojis?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Any Unicode text — including emojis, Chinese, Arabic, Cyrillic — can be Base64-encoded. You must encode the text as UTF-8 bytes first. Our online tool handles this automatically." }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Base64 encoding reversible?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely. Base64 is a deterministic, lossless encoding defined in RFC 4648. Any properly encoded text can be decoded back to the exact original." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Base64 encoding increase the text size?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Base64 expands data by about 33%. Every 3 bytes of input produce 4 Base64 characters. For short text this is negligible, but for large files the increase is noticeable." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use Base64 to hide or encrypt passwords?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. Base64 is encoding, not encryption. A Base64-encoded password can be decoded instantly — it provides zero security. Use proper hashing like bcrypt or Argon2 instead." }
+          }
+        ]
+      }
+    </script>
+  </article>
+</Layout>

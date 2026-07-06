@@ -1,0 +1,250 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; Encoding
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        What Is a Base64 Translator? How Encoding and Decoding Work
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        A Base64 translator converts text and binary data to and from Base64 format. Learn how the translation process works, with clear examples, tables, and no fluff.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        Search for "Base64 translator" and you will find a page full of online tools. But a Base64 translator is not a language translator — it does not convert English to Spanish. It <strong class="text-ink font-medium">translates data between two formats</strong>: raw bytes and the Base64 character set defined in <a href="https://datatracker.ietf.org/doc/html/rfc4648" target="_blank" rel="noopener" class="text-link hover:text-link-deep">RFC 4648</a>. Understanding how that translation works makes you better at debugging encoding issues, working with APIs, and choosing the right tool for the job.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        What a Base64 Translator Actually Does
+      </h2>
+
+      <p>
+        A Base64 translator performs one of two operations:
+      </p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">Encode:</strong> Takes raw text or binary data and produces a Base64 string. For example, the word <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">Hello</code> becomes <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">SGVsbG8=</code>. See our dedicated guide on <a href="/blog/text-to-base64-encode/" class="text-link hover:text-link-deep">encoding text to Base64</a>.</li>
+        <li><strong class="text-ink font-medium">Decode:</strong> Takes a Base64 string and recovers the original data. The string <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">SGVsbG8=</code> translates back to <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">Hello</code>. If you need to <a href="/blog/online-base64-to-file/" class="text-link hover:text-link-deep">convert Base64 to a downloadable file</a>, decoding is the core step.</li>
+      </ul>
+
+      <p>
+        The "translation" is mathematical, not linguistic. Each Base64 character represents exactly 6 bits of the original data. The algorithm chunks the input into 6-bit groups and maps each group to one of 64 printable ASCII characters — hence the name Base64.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        The Base64 Alphabet: 64 Characters That Do Everything
+      </h2>
+
+      <p>
+        Per RFC 4648, Base64 uses this exact character set, in this order:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 text-ink break-all">
+        ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
+      </div>
+
+      <p>
+        That is 26 uppercase letters, 26 lowercase letters, 10 digits, plus <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">+</code> and <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">/</code>. Each character encodes exactly 6 bits. Four Base64 characters together encode 24 bits — exactly 3 bytes of original data. That clean 3:4 ratio is why Base64 is so widely used: no fractional bytes, no wasted bits.
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft-2 p-5 overflow-x-auto">
+        <p class="text-[14px] leading-5 font-medium text-ink mb-3">Base64 Index Table (First 16 of 64 Characters)</p>
+        <table class="w-full text-left text-[13px] leading-5">
+          <thead>
+            <tr class="border-b border-hairline text-mute font-mono uppercase text-[11px] tracking-[0.5px]">
+              <th class="pb-2 pr-4 font-medium">Value</th>
+              <th class="pb-2 pr-4 font-medium">Char</th>
+              <th class="pb-2 pr-4 font-medium">Value</th>
+              <th class="pb-2 pr-4 font-medium">Char</th>
+              <th class="pb-2 pr-4 font-medium">Value</th>
+              <th class="pb-2 pr-4 font-medium">Char</th>
+              <th class="pb-2 font-medium">Value</th>
+              <th class="pb-2 font-medium">Char</th>
+            </tr>
+          </thead>
+          <tbody class="text-body font-mono">
+            <tr class="border-b border-hairline/50"><td class="py-1 pr-4">0</td><td class="py-1 pr-4 font-semibold text-ink">A</td><td class="py-1 pr-4">4</td><td class="py-1 pr-4 font-semibold text-ink">E</td><td class="py-1 pr-4">8</td><td class="py-1 pr-4 font-semibold text-ink">I</td><td class="py-1">12</td><td class="py-1 font-semibold text-ink">M</td></tr>
+            <tr class="border-b border-hairline/50"><td class="py-1 pr-4">1</td><td class="py-1 pr-4 font-semibold text-ink">B</td><td class="py-1 pr-4">5</td><td class="py-1 pr-4 font-semibold text-ink">F</td><td class="py-1 pr-4">9</td><td class="py-1 pr-4 font-semibold text-ink">J</td><td class="py-1">13</td><td class="py-1 font-semibold text-ink">N</td></tr>
+            <tr class="border-b border-hairline/50"><td class="py-1 pr-4">2</td><td class="py-1 pr-4 font-semibold text-ink">C</td><td class="py-1 pr-4">6</td><td class="py-1 pr-4 font-semibold text-ink">G</td><td class="py-1 pr-4">10</td><td class="py-1 pr-4 font-semibold text-ink">K</td><td class="py-1">14</td><td class="py-1 font-semibold text-ink">O</td></tr>
+            <tr><td class="py-1 pr-4">3</td><td class="py-1 pr-4 font-semibold text-ink">D</td><td class="py-1 pr-4">7</td><td class="py-1 pr-4 font-semibold text-ink">H</td><td class="py-1 pr-4">11</td><td class="py-1 pr-4 font-semibold text-ink">L</td><td class="py-1">15</td><td class="py-1 font-semibold text-ink">P</td></tr>
+          </tbody>
+        </table>
+        <p class="text-[11px] leading-4 text-mute mt-2">Full table: values 0–25 = A–Z, 26–51 = a–z, 52–61 = 0–9, 62 = +, 63 = /</p>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        How Encoding Works, Step by Step
+      </h2>
+
+      <p>
+        Let us walk through encoding the word <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">Hi</code>:
+      </p>
+
+      <ol class="list-decimal pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">Convert to bytes.</strong> <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">H</code> = 0x48, <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">i</code> = 0x69. So the bytes are <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">01001000 01101001</code>.</li>
+        <li><strong class="text-ink font-medium">Chunk into 6-bit groups.</strong> 16 bits doesn't divide evenly by 6. Pad with zeros to reach the next multiple: <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">010010 000110 100100</code>.</li>
+        <li><strong class="text-ink font-medium">Map to the Base64 alphabet.</strong> <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">010010</code> = 18 → S, <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">000110</code> = 6 → G, <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">100100</code> = 36 → k.</li>
+        <li><strong class="text-ink font-medium">Add padding.</strong> 16 bits produced 18 bits of output (3 groups × 6). To reach the next multiple of 24, add one <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code> padding. Result: <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">SGk=</code>.</li>
+      </ol>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Why Use a Base64 Translator?
+      </h2>
+
+      <p>
+        Base64 translation solves a specific problem: <strong class="text-ink font-medium">many systems only handle text</strong>. JSON APIs, email protocols (MIME), XML documents, and HTML attributes all expect printable characters. Binary data contains bytes that would break these text-based formats. Base64 bridges that gap.
+      </p>
+
+      <p>Common real-world uses:</p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">JSON APIs.</strong> When an endpoint needs to accept a file but only speaks JSON, the client <a href="/blog/text-to-base64-encode/" class="text-link hover:text-link-deep">encodes the file as a Base64 string</a> and sends it as a text field.</li>
+        <li><strong class="text-ink font-medium">Email attachments.</strong> MIME uses Base64 to encode binary attachments inside email bodies, which are fundamentally text-based.</li>
+        <li><strong class="text-ink font-medium">Data URIs.</strong> Embedding a small image directly in CSS or HTML using <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:image/png;base64,...</code> saves an HTTP request. See our <a href="/blog/base64-picture-guide/" class="text-link hover:text-link-deep">Base64 pictures guide</a> for details.</li>
+        <li><strong class="text-ink font-medium">JWT tokens.</strong> The header and payload of a JSON Web Token are Base64URL-encoded JSON — not encrypted, just encoded. Learn why in our <a href="/blog/base64-is-not-encryption/" class="text-link hover:text-link-deep">Base64 vs encryption guide</a>.</li>
+        <li><strong class="text-ink font-medium">Configuration files.</strong> Kubernetes secrets and Docker configs often store certificates and keys as Base64 strings for transport through text-based config formats.</li>
+      </ul>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Online Translators vs Writing Code
+      </h2>
+
+      <p>
+        An online Base64 translator is the fastest option for one-off conversions. Paste your string, hit a button, done. Our <a href="/" class="text-link hover:text-link-deep">free Base64 tool</a> handles both encode and decode, auto-detects file types, and keeps your data local.
+      </p>
+
+      <p>
+        For automated workflows, use a script:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-mute">// JavaScript</span><br/>
+        <span class="text-violet">const</span> encoded = btoa(<span class="text-warning-deep">"Hello"</span>);  <span class="text-mute">// "SGVsbG8="</span><br/>
+        <span class="text-violet">const</span> decoded = atob(encoded);    <span class="text-mute">// "Hello"</span><br/>
+        <br/>
+        <span class="text-mute"># Python</span><br/>
+        <span class="text-violet">import</span> base64<br/>
+        encoded = base64.b64encode(<span class="text-mute">b</span><span class="text-warning-deep">"Hello"</span>).decode()  <span class="text-mute"># "SGVsbG8="</span><br/>
+        decoded = base64.b64decode(encoded).decode()  <span class="text-mute"># "Hello"</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Base64 vs Base64URL: When the Translator Changes Alphabet
+      </h2>
+
+      <p>
+        Standard Base64 uses <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">+</code>, <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">/</code>, and <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code> — characters that cause trouble in URLs and filenames. Base64URL, defined in the same <a href="https://datatracker.ietf.org/doc/html/rfc4648#section-5" target="_blank" rel="noopener" class="text-link hover:text-link-deep">RFC 4648 Section 5</a>, swaps <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">+</code> → <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">-</code>, <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">/</code> → <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">_</code>, and strips <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code> padding. Our guide on <a href="/blog/base64-vs-base64url/" class="text-link hover:text-link-deep">Base64 vs Base64URL</a> covers when to use each variant.
+
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Frequently Asked Questions
+      </h2>
+
+      <div class="space-y-4">
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Is this Base64 translator free?</h3>
+          <p class="text-[14px] leading-5 text-body">Yes. Our translator at <a href="/" class="text-link hover:text-link-deep">base64go.com</a> is completely free, no sign-up required. All encoding and decoding runs locally in your browser.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Can a Base64 translator convert any language or data?</h3>
+          <p class="text-[14px] leading-5 text-body">A Base64 translator works on binary data, not natural language. It can encode any text (in any language, including Unicode) and any binary file — images, PDFs, audio, archives. The output is always ASCII text.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">What is the difference between a Base64 translator and a Base64 encoder?</h3>
+          <p class="text-[14px] leading-5 text-body">A Base64 encoder only converts data TO Base64. A Base64 decoder only converts FROM Base64. A Base64 translator typically does both — it is a combined encoder and decoder in one tool.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Is Base64 translation secure? Can someone read my data?</h3>
+          <p class="text-[14px] leading-5 text-body">Our tool runs entirely in your browser — data never leaves your computer. But remember: <a href="/blog/base64-is-not-encryption/" class="text-link hover:text-link-deep">Base64 is encoding, not encryption</a>. Anyone who has the Base64 string can reverse it.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">
+        Translate Base64 now. Free, fast, local.
+      </h2>
+      <p class="text-[14px] leading-5 text-body mb-4">
+        Encode or decode anything to Base64 right in your browser.
+      </p>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90"
+      >
+        Open Base64 Translator
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <div class="mt-12 border-t border-hairline pt-8">
+      <h2 class="text-[18px] font-semibold leading-7 tracking-[-0.54px] text-ink mb-4">Related Guides</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href="/blog/text-to-base64-encode/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">How to Encode Text to Base64</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">JavaScript, Python, and CLI methods for text encoding</p>
+        </a>
+        <a href="/blog/base64-vs-base64url/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">Base64 vs Base64URL</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">When to use URL-safe Base64 encoding</p>
+        </a>
+        <a href="/blog/online-base64-to-file/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">Base64 to Downloadable File</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">Turn encoded strings back into real files</p>
+        </a>
+        <a href="/blog/base64-is-not-encryption/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">Base64 Is Not Encryption</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">Why encoding and encryption are not the same</p>
+        </a>
+      </div>
+    </div>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "What Is a Base64 Translator? How Encoding and Decoding Work",
+        "description": "Learn how a Base64 translator converts text and binary data to and from Base64 format. Step-by-step encoding walkthrough with tables and examples.",
+        "datePublished": "2026-07-02",
+        "author": { "@type": "Organization", "name": "base64go.com" }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is this Base64 translator free?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Our translator at base64go.com is completely free, no sign-up required. All encoding and decoding runs locally in your browser." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can a Base64 translator convert any language or data?",
+            "acceptedAnswer": { "@type": "Answer", "text": "A Base64 translator works on binary data, not natural language. It can encode any text in any language including Unicode, and any binary file — images, PDFs, audio, archives." }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the difference between a Base64 translator and a Base64 encoder?",
+            "acceptedAnswer": { "@type": "Answer", "text": "A Base64 encoder only converts data TO Base64. A Base64 decoder only converts FROM Base64. A Base64 translator typically does both — it is a combined encoder and decoder in one tool." }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Base64 translation secure?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Our tool runs entirely in your browser — data never leaves your computer. But Base64 is encoding, not encryption — anyone who has the Base64 string can reverse it." }
+          }
+        ]
+      }
+    </script>
+  </article>
+</Layout>

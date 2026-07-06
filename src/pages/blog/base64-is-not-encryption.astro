@@ -1,0 +1,256 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; Encoding
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        Base64 Is Not Encryption: What People Get Wrong
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Searching for an "online decryption tool base64" reveals a widespread misunderstanding. Base64 encodes data — it does not protect it. Here is the difference, why people confuse the two, and what to use when you actually need security.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        Type "online decryption tool base64" into Google and you will find thousands of results. The search itself reveals a common misconception: <strong class="text-ink font-medium">Base64 is not encryption</strong>. It has no key, no secret, no security boundary. It is encoding — a reversible data format conversion, like saving a Word document as PDF. Anyone who has the Base64 string can recover the original data in seconds, with no password needed. This article breaks down the difference and explains why it matters for real-world security.
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft-2 p-5 overflow-x-auto">
+        <p class="text-[14px] leading-5 font-medium text-ink mb-3">Encoding vs Encryption vs Hashing: Quick Comparison</p>
+        <table class="w-full text-left text-[13px] leading-5">
+          <thead>
+            <tr class="border-b border-hairline text-mute font-mono uppercase text-[11px] tracking-[0.5px]">
+              <th class="pb-2 pr-4 font-medium">Property</th>
+              <th class="pb-2 pr-4 font-medium">Base64 (Encoding)</th>
+              <th class="pb-2 pr-4 font-medium">AES (Encryption)</th>
+              <th class="pb-2 font-medium">SHA-256 (Hashing)</th>
+            </tr>
+          </thead>
+          <tbody class="text-body">
+            <tr class="border-b border-hairline/50">
+              <td class="py-2 pr-4 font-medium text-ink">Reversible?</td><td class="py-2 pr-4 text-success-deep">Yes, always</td><td class="py-2 pr-4 text-success-deep">Yes, with key</td><td class="py-2 text-danger">No</td>
+            </tr>
+            <tr class="border-b border-hairline/50">
+              <td class="py-2 pr-4 font-medium text-ink">Requires key?</td><td class="py-2 pr-4">No</td><td class="py-2 pr-4 text-warning-deep">Yes</td><td class="py-2">N/A</td>
+            </tr>
+            <tr class="border-b border-hairline/50">
+              <td class="py-2 pr-4 font-medium text-ink">Purpose</td><td class="py-2 pr-4">Data format conversion</td><td class="py-2 pr-4">Confidentiality</td><td class="py-2">Integrity verification</td>
+            </tr>
+            <tr class="border-b border-hairline/50">
+              <td class="py-2 pr-4 font-medium text-ink">Output size</td><td class="py-2 pr-4">~33% larger</td><td class="py-2 pr-4">Similar to input</td><td class="py-2">Fixed (256 bits)</td>
+            </tr>
+            <tr>
+              <td class="py-2 pr-4 font-medium text-ink">Standard</td><td class="py-2 pr-4">RFC 4648</td><td class="py-2 pr-4">NIST FIPS 197</td><td class="py-2">NIST FIPS 180-4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Encoding vs Encryption: The Core Difference
+      </h2>
+
+      <p>
+        The confusion is understandable. Both transform readable data into something that looks like gibberish:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <strong class="text-ink">Original:</strong> Hello, World!<br/>
+        <strong class="text-ink">Base64 encoded:</strong> SGVsbG8sIFdvcmxkIQ== <span class="text-mute">← reversible without a key</span><br/>
+        <strong class="text-ink">AES-256-GCM encrypted:</strong> U2FsdGVkX1+8x3KqZz... <span class="text-mute">← unrecoverable without the key</span>
+      </div>
+
+      <p>But the similarity is only skin-deep:</p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">Encoding (Base64):</strong> A public, fully documented algorithm per <a href="https://datatracker.ietf.org/doc/html/rfc4648" target="_blank" rel="noopener" class="text-link hover:text-link-deep">RFC 4648</a>. No key required. Anyone can decode it with a single function call. The purpose is <em>format compatibility</em> — making binary data safe for text-based systems.</li>
+        <li><strong class="text-ink font-medium">Encryption (AES, ChaCha20, RSA):</strong> A secret-key algorithm. Without the correct cryptographic key, the ciphertext is computationally infeasible to reverse — brute-forcing AES-256 would take billions of years even with all the world's computing power. The purpose is <em>confidentiality</em>.</li>
+      </ul>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Why People Search "Base64 Decrypt" and "Base64 Decryption Tool"
+      </h2>
+
+      <p>
+        The confusion has several common sources:
+      </p>
+
+      <ol class="list-decimal pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">Obfuscation looks like encryption.</strong> Developers sometimes Base64-encode API keys or configuration values to make them harder to read at a glance. It looks scrambled, so people assume it is protected. It is the digital equivalent of writing something in Pig Latin — anyone who knows the rule can reverse it instantly.</li>
+        <li><strong class="text-ink font-medium">JWT tokens use Base64.</strong> JSON Web Tokens have three Base64URL-encoded sections. The payload is just Base64-encoded JSON — anyone can decode it with <a href="/blog/base64-translator-guide/" class="text-link hover:text-link-deep">a Base64 translator</a>. The <em>signature</em> provides integrity, but the payload is not encrypted unless you use JWE.</li>
+        <li><strong class="text-ink font-medium">Tool labels reinforce the myth.</strong> Many online tools call their Base64 decoder a "Base64 decrypt" or "decryption tool" because that is what people search for. This creates a feedback loop of misunderstanding.</li>
+        <li><strong class="text-ink font-medium">The output looks random.</strong> <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">dXNlcjpwYXNz</code> feels like ciphertext. But it is just <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">user:pass</code> in a different alphabet — as formulaic as A=1, B=2, C=3.</li>
+      </ol>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Real-World Security Risks of Confusing the Two
+      </h2>
+
+      <p>
+        Thinking Base64 provides security leads to real vulnerabilities that show up in security audits and breach post-mortems:
+      </p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">"Hidden" passwords in code.</strong> A developer Base64-encodes a database password and puts the string in a config file, thinking it is protected. Anyone who sees the string can decode it in one line of code: <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">atob("cGFzc3dvcmQ=")</code> → <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">"password"</code>. Use a secrets manager (HashiCorp Vault, AWS Secrets Manager, Doppler) instead.</li>
+        <li><strong class="text-ink font-medium">Sensitive data in JWTs.</strong> Storing email addresses or PII in an unencrypted JWT payload means anyone who intercepts the token — or copies it from browser DevTools — can read the data. JWT payloads are public by default.</li>
+        <li><strong class="text-ink font-medium">Session token forgery.</strong> Some poorly designed systems use Base64-encoded user IDs as session tokens. An attacker can change <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">eyJ1c2VySWQiOiAxMjM0fQ==</code> to encode a different user ID and impersonate them. Base64 provides zero tamper detection — use signed tokens (JWT with HMAC/RSA) or opaque session IDs.</li>
+        <li><strong class="text-ink font-medium">GitHub secrets leaks.</strong> Scanners look for Base64 patterns because developers often encode credentials before accidentally committing them. Tools like GitGuardian and truffleHog specifically scan for Base64-encoded secrets — they are trivially detectable and decodable.</li>
+      </ul>
+
+      <div class="rounded-xl border border-hairline-strong bg-warning-soft p-5 text-[14px] leading-5">
+        <strong class="text-ink font-medium">The definitive test:</strong> If you can reverse the transformation without knowing a secret, it is not encryption. Base64 fails this test every single time.
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        When Base64 Appears Alongside Real Encryption
+      </h2>
+
+      <p>
+        The confusion persists partly because Base64 and encryption often appear <em>together</em> in the same system:
+      </p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">Ciphertext is Base64-encoded for transport.</strong> After encrypting data, the resulting ciphertext is binary. To send it through JSON APIs, email, or URLs, it gets Base64-encoded. The Base64 layer is transport formatting — the encryption happened before it. Decoding the Base64 gives you ciphertext, not plaintext. You still need the key.</li>
+        <li><strong class="text-ink font-medium">Keys stored as Base64.</strong> A 256-bit AES key is 32 bytes of binary — represented as 44 Base64 characters for storage. The encoding is just a representation; the key's randomness and secrecy provide the actual security.</li>
+        <li><strong class="text-ink font-medium">Digital signatures.</strong> Cryptographic signatures are binary data, so they are Base64-encoded for headers and APIs. The signature provides authenticity and integrity — the Base64 wrapper just makes it portable.</li>
+        <li><strong class="text-ink font-medium">PEM certificates.</strong> The <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">-----BEGIN CERTIFICATE-----</code> block in SSL/TLS is Base64-encoded DER data. The certificate's trust comes from the CA's signature, not from being Base64-encoded.</li>
+      </ul>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        What to Use When You Actually Need Encryption
+      </h2>
+
+      <p>
+        Here are the right tools for actual data protection:
+      </p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">AES-256-GCM</strong> — Symmetric encryption. Fast, authenticated (detects tampering), widely supported in every language. Use for encrypting data at rest.</li>
+        <li><strong class="text-ink font-medium">XChaCha20-Poly1305</strong> — Alternative to AES. Included in libsodium. Excellent on mobile/ARM devices without AES hardware acceleration.</li>
+        <li><strong class="text-ink font-medium">Argon2id</strong> or <strong class="text-ink font-medium">bcrypt</strong> — Password hashing. Deliberately slow, not reversible at all — which is the point. Never store passwords with reversible encoding or encryption.</li>
+        <li><strong class="text-ink font-medium">TLS 1.3 (HTTPS)</strong> — Encryption for data in transit. Free with any modern web server via Let's Encrypt certificates. Non-negotiable for any production site.</li>
+        <li><strong class="text-ink font-medium">libsodium / NaCl</strong> — High-level cryptography library. Hard to misuse by design. If you are not a cryptographer, use this instead of raw OpenSSL.</li>
+      </ul>
+
+      <p>
+        Then, if you need to send that encrypted binary data through a text-based channel, <em>that is when you Base64-encode it</em>. The order matters: encrypt first, then encode. Never the reverse.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Summary: You Decode, You Do Not Decrypt
+      </h2>
+
+      <p>
+        When you reverse a Base64 string, you are <strong class="text-ink font-medium">decoding</strong>. No key, no secret, no security boundary crossed. Our <a href="/" class="text-link hover:text-link-deep">free Base64 decoder</a> is a data format converter — not a cryptanalysis tool. For proper data protection, use real encryption. For making binary data work in text-based systems, use Base64. Understanding the boundary between these two tools is a fundamental skill for any developer working with web technologies.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Frequently Asked Questions
+      </h2>
+
+      <div class="space-y-4">
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Is Base64 a type of encryption?</h3>
+          <p class="text-[14px] leading-5 text-body">No. Base64 is an encoding scheme, not encryption. It requires no key, has no security properties, and anyone can reverse it using built-in functions in any programming language. It is defined in <a href="https://datatracker.ietf.org/doc/html/rfc4648" target="_blank" rel="noopener" class="text-link hover:text-link-deep">RFC 4648</a> as a binary-to-text encoding, not a cryptographic algorithm.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Can Base64 be "cracked" or "decrypted"?</h3>
+          <p class="text-[14px] leading-5 text-body">There is nothing to crack. Base64 is <a href="/blog/base64-translator-guide/" class="text-link hover:text-link-deep">decoded</a>, not decrypted. The algorithm is public knowledge — the same function that encodes data also reverses it with zero computational effort. A Base64 string can be decoded in microseconds with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">atob()</code> in JavaScript or <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64.b64decode()</code> in Python.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Why do so many tools call it "Base64 decryption"?</h3>
+          <p class="text-[14px] leading-5 text-body">Because that is what people search for. Google Keyword Planner shows thousands of monthly searches for "Base64 decrypt" and "Base64 decryption tool." Tools label their decoders as "decrypt" to match search intent, even though the term is technically incorrect.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">What should I use for actual encryption instead of Base64?</h3>
+          <p class="text-[14px] leading-5 text-body">Use AES-256-GCM for symmetric encryption, Argon2id for password hashing, and TLS 1.3 for data in transit. For high-level, misuse-resistant cryptography, use libsodium. After encrypting, you can then Base64-encode the ciphertext for transport — but the encryption must happen first.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">
+        Decode Base64 instantly. No "decryption" needed.
+      </h2>
+      <p class="text-[14px] leading-5 text-body mb-4">
+        Paste your Base64 string and recover the original data — fast, free, and local.
+      </p>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90"
+      >
+        Open Base64 Decoder
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <div class="mt-12 border-t border-hairline pt-8">
+      <h2 class="text-[18px] font-semibold leading-7 tracking-[-0.54px] text-ink mb-4">Related Guides</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href="/blog/base64-translator-guide/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">What Is a Base64 Translator?</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">Understand how Base64 encoding actually works</p>
+        </a>
+        <a href="/blog/text-to-base64-encode/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">How to Encode Text to Base64</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">Practical encoding guide for text strings</p>
+        </a>
+        <a href="/blog/how-to-decode-base64/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">How to Decode Base64</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">Step-by-step decoding methods</p>
+        </a>
+        <a href="/blog/base64-vs-base64url/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">Base64 vs Base64URL</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">URL-safe encoding differences explained</p>
+        </a>
+      </div>
+    </div>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Base64 Is Not Encryption: What People Get Wrong",
+        "description": "Base64 is encoding, not encryption. Learn the critical difference, why people confuse them, and the real security risks of treating Base64 as protection.",
+        "datePublished": "2026-07-02",
+        "author": { "@type": "Organization", "name": "base64go.com" }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is Base64 a type of encryption?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. Base64 is an encoding scheme, not encryption. It requires no key, has no security properties, and anyone can reverse it. It is defined in RFC 4648 as a binary-to-text encoding, not a cryptographic algorithm." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can Base64 be cracked or decrypted?",
+            "acceptedAnswer": { "@type": "Answer", "text": "There is nothing to crack. Base64 is decoded, not decrypted. The algorithm is public — the same function that encodes data also reverses it with zero computational effort, using atob() in JavaScript or base64.b64decode() in Python." }
+          },
+          {
+            "@type": "Question",
+            "name": "Why do so many tools call it Base64 decryption?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Because that is what people search for. Thousands search for 'Base64 decrypt' monthly. Tools label decoders as 'decrypt' to match search intent, even though the term is technically incorrect." }
+          },
+          {
+            "@type": "Question",
+            "name": "What should I use for actual encryption instead of Base64?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Use AES-256-GCM for symmetric encryption, Argon2id for password hashing, and TLS 1.3 for data in transit. For misuse-resistant cryptography, use libsodium. Then Base64-encode the ciphertext for transport if needed." }
+          }
+        ]
+      }
+    </script>
+  </article>
+</Layout>

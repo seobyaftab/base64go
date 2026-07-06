@@ -1,0 +1,256 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; Base64 How-To
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        How to Convert Base64 to a Downloadable File
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Got a Base64 string and need the actual file back? Turn any Base64-encoded data into a downloadable file — images, PDFs, ZIPs, and more. No upload, no install, free.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        Someone sent you a Base64 string, or you pulled one from a JSON API, and now you need the <strong class="text-ink font-medium">actual file</strong> — an image, a PDF, a spreadsheet. Converting Base64 back to a file is straightforward once you know the steps. This guide covers every method, from clicking a button to writing a script, following the standard defined in <a href="https://datatracker.ietf.org/doc/html/rfc4648" target="_blank" rel="noopener" class="text-link hover:text-link-deep">RFC 4648</a>.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        What Does "Base64 to File" Actually Mean?
+      </h2>
+
+      <p>
+        When a file gets encoded to Base64, its raw binary data turns into a long string of letters, numbers, and <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">+</code> / <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">/</code> characters with optional <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code> padding. Converting it back means <a href="/blog/base64-translator-guide/" class="text-link hover:text-link-deep">decoding that string</a> into the original binary format — bytes — and saving those bytes as a file with the correct extension and MIME type. The process is deterministic: the same Base64 string will always produce the same file, bit for bit.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Method 1: Use the Free Online Tool (One Click)
+      </h2>
+
+      <p>
+        The quickest path: our <a href="/" class="text-link hover:text-link-deep">free Base64 to file converter</a> does the heavy lifting in your browser. Nothing leaves your computer — all decoding happens locally via JavaScript.
+      </p>
+
+      <ol class="list-decimal pl-6 space-y-2">
+        <li>Paste your Base64 string into the input field on <a href="/" class="text-link hover:text-link-deep">base64go.com</a></li>
+        <li>Click <strong class="text-ink font-medium">Decode</strong> — the tool auto-detects the file type</li>
+        <li>Click <strong class="text-ink font-medium">Download</strong> to save the reconstructed file</li>
+      </ol>
+
+      <p>
+        For <a href="/blog/base64-picture-guide/" class="text-link hover:text-link-deep">data URIs</a> (strings starting with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:image/png;base64,...</code>), the tool strips the prefix automatically and figures out the right file extension. You do not need to manually extract the MIME type.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Method 2: JavaScript (Browser Download)
+      </h2>
+
+      <p>
+        Use this snippet to trigger a file download from a Base64 string directly on a webpage:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-violet">function</span> <span class="text-ink">base64ToFile</span>(base64, filename, mimeType = <span class="text-warning-deep">'application/octet-stream'</span>) {'{'}<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> byteChars = atob(base64.replace(<span class="text-warning-deep">/^data:.*?;base64,/</span>, <span class="text-warning-deep">''</span>));<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> bytes = <span class="text-violet">new</span> <span class="text-ink">Uint8Array</span>(byteChars.length);<br/>
+        &nbsp;&nbsp;<span class="text-violet">for</span> (<span class="text-violet">let</span> i = 0; i &lt; byteChars.length; i++) {'{'}<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;bytes[i] = byteChars.charCodeAt(i);<br/>
+        &nbsp;&nbsp;{'}'}<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> blob = <span class="text-violet">new</span> <span class="text-ink">Blob</span>([bytes], {'{'} type: mimeType {'}'});<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> url = URL.createObjectURL(blob);<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> a = document.createElement(<span class="text-warning-deep">'a'</span>);<br/>
+        &nbsp;&nbsp;a.href = url;<br/>
+        &nbsp;&nbsp;a.download = filename;<br/>
+        &nbsp;&nbsp;a.click();<br/>
+        &nbsp;&nbsp;URL.revokeObjectURL(url);<br/>
+        {'}'}<br/>
+        <br/>
+        <span class="text-mute">// Usage: base64ToFile(encodedStr, 'photo.png', 'image/png');</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Method 3: Python
+      </h2>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-violet">import</span> base64<br/>
+        <br/>
+        <span class="text-violet">def</span> <span class="text-ink">base64_to_file</span>(b64_string, output_path):<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-violet">with</span> <span class="text-ink">open</span>(output_path, <span class="text-warning-deep">"wb"</span>) <span class="text-violet">as</span> f:<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f.write(base64.b64decode(b64_string))<br/>
+        <br/>
+        <span class="text-mute"># Decode and save as a file</span><br/>
+        base64_to_file(b64_str, <span class="text-warning-deep">"output.pdf"</span>)
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Method 4: Command Line
+      </h2>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-mute"># Save your Base64 string to a temp file first, then:</span><br/>
+        base64 -d encoded.b64 > output.png<br/>
+        <br/>
+        <span class="text-mute"># Or pipe directly (macOS):</span><br/>
+        base64 -D &lt;&lt;&lt; <span class="text-warning-deep">"iVBORw0KGgoAAAANS..."</span> > image.png<br/>
+        <br/>
+        <span class="text-mute"># Linux / WSL:</span><br/>
+        <span class="text-ink">echo</span> <span class="text-warning-deep">"iVBORw0KGgoAAAANS..."</span> | base64 -d > image.png
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        How to Identify the File Type from a Base64 String
+      </h2>
+
+      <p>
+        Most Base64 strings don't carry a label telling you what kind of file they represent. Here is how to figure it out:
+      </p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">Check for a data URI prefix.</strong> If the string starts with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:image/png;base64,</code>, the MIME type is right there. Strip that prefix before decoding. For more on this, see our <a href="/blog/base64-picture-guide/" class="text-link hover:text-link-deep">Base64 pictures guide</a>.</li>
+        <li><strong class="text-ink font-medium">Decode the first few bytes.</strong> PNGs start with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">‰PNG</code>, PDFs start with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">%PDF</code>, ZIPs start with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">PK</code>. Decode a small sample and look at the bytes.</li>
+        <li><strong class="text-ink font-medium">Check the Base64 header.</strong> Some tools prepend the Base64 with a hint, like <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">JVBERi0</code> for PDFs or <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">iVBORw0KGgo</code> for PNGs. Our tool scans for these patterns automatically.</li>
+        <li><strong class="text-ink font-medium">When in doubt, try common extensions.</strong> If the decoded file won't open, rename it to <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">.png</code>, <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">.pdf</code>, or <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">.zip</code> and try each. Most Base64 strings come from one of these three formats.</li>
+      </ul>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft-2 p-5 overflow-x-auto">
+        <p class="text-[14px] leading-5 font-medium text-ink mb-3">Common Base64 Headers by File Type</p>
+        <table class="w-full text-left text-[13px] leading-5">
+          <thead>
+            <tr class="border-b border-hairline text-mute font-mono uppercase text-[11px] tracking-[0.5px]">
+              <th class="pb-2 pr-4 font-medium">File Type</th>
+              <th class="pb-2 pr-4 font-medium">Base64 Prefix</th>
+              <th class="pb-2 font-medium">Binary Magic Bytes</th>
+            </tr>
+          </thead>
+          <tbody class="text-body">
+            <tr class="border-b border-hairline/50"><td class="py-2 pr-4 font-medium text-ink">PNG</td><td class="py-2 pr-4 font-mono">iVBORw0KGgo</td><td class="py-2 font-mono">89 50 4E 47</td></tr>
+            <tr class="border-b border-hairline/50"><td class="py-2 pr-4 font-medium text-ink">PDF</td><td class="py-2 pr-4 font-mono">JVBERi0</td><td class="py-2 font-mono">25 50 44 46</td></tr>
+            <tr class="border-b border-hairline/50"><td class="py-2 pr-4 font-medium text-ink">ZIP</td><td class="py-2 pr-4 font-mono">UEsDBBQ</td><td class="py-2 font-mono">50 4B 03 04</td></tr>
+            <tr class="border-b border-hairline/50"><td class="py-2 pr-4 font-medium text-ink">JPEG</td><td class="py-2 pr-4 font-mono">/9j/</td><td class="py-2 font-mono">FF D8 FF</td></tr>
+            <tr><td class="py-2 pr-4 font-medium text-ink">GIF</td><td class="py-2 pr-4 font-mono">R0lGOD</td><td class="py-2 font-mono">47 49 46 38</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Common Pitfalls
+      </h2>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">Missing padding.</strong> Some systems strip the trailing <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code> characters. Most decoders handle this, but if yours doesn't, add padding until the string length is a multiple of 4.</li>
+        <li><strong class="text-ink font-medium">Line breaks in the string.</strong> Remove all whitespace before decoding — newlines inside a Base64 string will break the output.</li>
+        <li><strong class="text-ink font-medium">Wrong MIME type.</strong> If the downloaded file won't open, try renaming it with the correct extension. A <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">.pdf</code> saved as <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">.png</code> won't render.</li>
+        <li><strong class="text-ink font-medium">Truncated strings.</strong> If your Base64 string is cut off mid-way, the last few bytes will be corrupted. Always verify you have the complete string before decoding.</li>
+      </ul>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Frequently Asked Questions
+      </h2>
+
+      <div class="space-y-4">
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Is this Base64 to file converter really free?</h3>
+          <p class="text-[14px] leading-5 text-body">Yes. Our tool at <a href="/" class="text-link hover:text-link-deep">base64go.com</a> is completely free. No sign-up, no payment, no usage limits. Everything runs in your browser — we never see your data.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Can I convert Base64 back to any file type?</h3>
+          <p class="text-[14px] leading-5 text-body">Yes. Base64 can represent any binary data — images, documents, archives, audio, executables. As long as the original file was properly encoded, decoding it will reconstruct the exact same file, byte for byte.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Do I need to install software to convert Base64 to a file?</h3>
+          <p class="text-[14px] leading-5 text-body">No. Our online tool works in any browser with no installation. If you prefer offline tools, Python's built-in <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64</code> module, the Unix <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64</code> command, and JavaScript's <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">atob()</code> are all pre-installed on most systems.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Is Base64 the same as encryption? Can I use it to protect files?</h3>
+          <p class="text-[14px] leading-5 text-body">No. Base64 is encoding, not encryption. Anyone can decode it — there is no password or key. Read our guide on <a href="/blog/base64-is-not-encryption/" class="text-link hover:text-link-deep">why Base64 is not encryption</a> to understand the critical difference.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">
+        Convert Base64 to file now. Free, no upload.
+      </h2>
+      <p class="text-[14px] leading-5 text-body mb-4">
+        Paste your Base64 string and download the original file in seconds.
+      </p>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90"
+      >
+        Open Base64 Tool
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <div class="mt-12 border-t border-hairline pt-8">
+      <h2 class="text-[18px] font-semibold leading-7 tracking-[-0.54px] text-ink mb-4">Related Guides</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href="/blog/base64-picture-guide/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">Base64 Images Explained</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">Data URIs, performance, and when to use them</p>
+        </a>
+        <a href="/blog/base64-translator-guide/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">What Is a Base64 Translator?</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">How encoding and decoding work under the hood</p>
+        </a>
+        <a href="/blog/how-to-decode-base64/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">How to Decode Base64</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">Step-by-step guide with JavaScript, Python, and CLI</p>
+        </a>
+        <a href="/blog/base64-is-not-encryption/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">Base64 Is Not Encryption</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">The difference between encoding and encrypting data</p>
+        </a>
+      </div>
+    </div>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "How to Convert Base64 to a Downloadable File",
+        "description": "Turn any Base64 string back into a downloadable file. Methods for browser, JavaScript, Python, and command line. Free online tool included.",
+        "datePublished": "2026-07-02",
+        "author": { "@type": "Organization", "name": "base64go.com" }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is this Base64 to file converter really free?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Our tool at base64go.com is completely free. No sign-up, no payment, no usage limits. Everything runs in your browser — we never see your data." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I convert Base64 back to any file type?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Base64 can represent any binary data — images, documents, archives, audio, executables. As long as the original file was properly encoded, decoding it will reconstruct the exact same file." }
+          },
+          {
+            "@type": "Question",
+            "name": "Do I need to install software to convert Base64 to a file?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. Our online tool works in any browser with no installation. Python, Unix command line, and JavaScript all have built-in Base64 decoding capabilities." }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Base64 the same as encryption?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. Base64 is encoding, not encryption. Anyone can decode it — there is no password or key required." }
+          }
+        ]
+      }
+    </script>
+  </article>
+</Layout>

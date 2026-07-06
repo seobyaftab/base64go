@@ -1,0 +1,274 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout>
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; How-To
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        Base64 Images Explained: Data URIs, Performance, and When to Use Them
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        What a Base64 picture actually is, how Data URIs work, and when embedding images as Base64 makes your site faster — or slower. Performance data included.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        You have seen them: long strings of text that start with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:image/png;base64,...</code> and somehow turn into a picture in the browser. A Base64 picture is a regular image file — PNG, JPEG, SVG, GIF, WebP — <a href="/blog/text-to-base64-encode/" class="text-link hover:text-link-deep">encoded as a Base64 text string</a> and embedded directly into HTML or CSS instead of being loaded as a separate file. This guide explains how it works, when to use it, and — critically — when to avoid it.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        What Is a Base64 Picture?
+      </h2>
+
+      <p>
+        A Base64 picture is exactly the same image you would normally serve as a separate file — its binary data is just represented as a text string and wrapped in a Data URI. The browser decodes the string and renders the image inline. No extra HTTP request, no separate file. If you want to go the other direction — <a href="/blog/online-base64-to-file/" class="text-link hover:text-link-deep">converting a Base64 string back to a downloadable image file</a> — the process reverses the encoding.
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 text-ink break-all">
+        data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==
+      </div>
+
+      <p class="text-[12px] leading-4 text-mute">That string renders as a 1×1 red pixel. The format is: <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono">data:</code> prefix → MIME type → <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono">;base64,</code> marker → encoded image data.</p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        How to Convert Any Image to Base64
+      </h2>
+
+      <p>
+        <strong class="text-ink font-medium">Using our online tool:</strong> Drag any image onto <a href="/" class="text-link hover:text-link-deep">base64go.com</a> and the Base64 Data URI appears instantly. No upload, no server involved. Click copy and paste it into your HTML or CSS.
+      </p>
+
+      <p><strong class="text-ink font-medium">Using JavaScript:</strong></p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-violet">function</span> <span class="text-ink">imageToBase64</span>(file) {'{'}<br/>
+        &nbsp;&nbsp;<span class="text-violet">return new</span> <span class="text-ink">Promise</span>((resolve, reject) => {'{'}<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-violet">const</span> reader = <span class="text-violet">new</span> <span class="text-ink">FileReader</span>();<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;reader.onload = () => resolve(reader.result);<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;reader.onerror = reject;<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;reader.readAsDataURL(file);<br/>
+        &nbsp;&nbsp;{'}'});<br/>
+        {'}'}
+      </div>
+
+      <p><strong class="text-ink font-medium">Using Python:</strong></p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-violet">import</span> base64<br/>
+        <br/>
+        <span class="text-violet">def</span> <span class="text-ink">image_to_data_uri</span>(path, mime=<span class="text-warning-deep">"image/png"</span>):<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-violet">with</span> <span class="text-ink">open</span>(path, <span class="text-warning-deep">"rb"</span>) <span class="text-violet">as</span> f:<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b64 = base64.b64encode(f.read()).decode(<span class="text-warning-deep">"utf-8"</span>)<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-violet">return</span> <span class="text-mute">f</span><span class="text-warning-deep">"data:</span><span class="text-mute">{</span>mime<span class="text-mute">}</span><span class="text-warning-deep">;base64,</span><span class="text-mute">{</span>b64<span class="text-mute">}</span><span class="text-warning-deep">"</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        When Base64 Images Help Performance
+      </h2>
+
+      <p>
+        Base64 embedding eliminates an HTTP request. For <strong class="text-ink font-medium">very small images</strong> — icons, logos, decorative elements under roughly 1–2 KB — that trade-off is worth it. The encoded string adds about 33% to the file size (Base64 overhead), but you save the latency of a separate network round trip, which on a typical 3G/4G connection can be 50–200ms.
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft-2 p-5 overflow-x-auto">
+        <p class="text-[14px] leading-5 font-medium text-ink mb-3">Base64 Image Performance: When to Embed vs When to Link</p>
+        <table class="w-full text-left text-[13px] leading-5">
+          <thead>
+            <tr class="border-b border-hairline text-mute font-mono uppercase text-[11px] tracking-[0.5px]">
+              <th class="pb-2 pr-4 font-medium">Scenario</th>
+              <th class="pb-2 pr-4 font-medium">Recommendation</th>
+              <th class="pb-2 font-medium">Reason</th>
+            </tr>
+          </thead>
+          <tbody class="text-body">
+            <tr class="border-b border-hairline/50">
+              <td class="py-2 pr-4 font-medium text-ink">Tiny icons (&lt;1KB)</td>
+              <td class="py-2 pr-4 text-success-deep font-medium">Embed ✓</td>
+              <td class="py-2">Saves HTTP request; overhead is negligible</td>
+            </tr>
+            <tr class="border-b border-hairline/50">
+              <td class="py-2 pr-4 font-medium text-ink">Small logos (1–2KB)</td>
+              <td class="py-2 pr-4 text-success-deep font-medium">Embed ✓</td>
+              <td class="py-2">Above-the-fold; avoids render-blocking request</td>
+            </tr>
+            <tr class="border-b border-hairline/50">
+              <td class="py-2 pr-4 font-medium text-ink">Email template images</td>
+              <td class="py-2 pr-4 text-success-deep font-medium">Embed ✓</td>
+              <td class="py-2">Bypasses email client image blocking</td>
+            </tr>
+            <tr class="border-b border-hairline/50">
+              <td class="py-2 pr-4 font-medium text-ink">Medium images (5–50KB)</td>
+              <td class="py-2 pr-4 text-warning-deep font-medium">Depends</td>
+              <td class="py-2">Only if image is critical and changes rarely</td>
+            </tr>
+            <tr>
+              <td class="py-2 pr-4 font-medium text-ink">Large photos (&gt;50KB)</td>
+              <td class="py-2 pr-4 text-danger font-medium">Avoid ✗</td>
+              <td class="py-2">Cannot cache, bloats HTML, blocks rendering</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        When Base64 Images Hurt Performance
+      </h2>
+
+      <p>
+        For anything larger than a few kilobytes, Base64 is a <strong class="text-ink font-medium">performance anti-pattern</strong>:
+      </p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">No caching.</strong> A separate image file gets cached by the browser for future visits. A Base64 string embedded in HTML must be re-downloaded every single page load — even if the image never changes.</li>
+        <li><strong class="text-ink font-medium">Bigger HTML payload.</strong> The Base64 string is roughly 33% larger than the original binary. A 100 KB JPEG becomes ~133 KB of text stuffed into your HTML document. Gzip helps somewhat but does not fully offset the bloat.</li>
+        <li><strong class="text-ink font-medium">Slower parsing.</strong> The browser must decode the Base64 string before rendering. For large images, this decode step adds measurable CPU time — especially on mobile devices.</li>
+        <li><strong class="text-ink font-medium">Blocks rendering.</strong> Inline images are part of the HTML stream. The browser cannot display content after a large Base64 image until the entire string is parsed.</li>
+      </ul>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Supported Image Formats
+      </h2>
+
+      <p>
+        Any image format works with Base64 Data URIs. The MIME type tells the browser how to interpret the decoded bytes:
+      </p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">PNG:</strong> <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:image/png;base64,...</code> — Best for graphics with transparency or sharp edges. Lossless. See our dedicated <a href="/blog/png-to-base64/" class="text-link hover:text-link-deep">PNG to Base64 guide</a>.</li>
+        <li><strong class="text-ink font-medium">JPEG:</strong> <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:image/jpeg;base64,...</code> — Best for photos. Smaller than PNG but lossy compression.</li>
+        <li><strong class="text-ink font-medium">SVG:</strong> <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:image/svg+xml;base64,...</code> — Best for vector graphics. Tiny when the SVG is simple. Also see our <a href="/blog/svg-to-base64/" class="text-link hover:text-link-deep">SVG to Base64 guide</a>.</li>
+        <li><strong class="text-ink font-medium">WebP:</strong> <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:image/webp;base64,...</code> — Modern format, smaller than both PNG and JPEG. Supported in all modern browsers since 2020.</li>
+        <li><strong class="text-ink font-medium">GIF:</strong> <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:image/gif;base64,...</code> — Animated or static. Generally avoid except for tiny animated spinners.</li>
+      </ul>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        CSS Background Images with Base64
+      </h2>
+
+      <p>
+        Embedding images in CSS using Base64 Data URIs is common for small decorative elements. The technique eliminates the sprite sheet HTTP request and keeps the icon tied to the component:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        .icon-check {'{'}<br/>
+        &nbsp;&nbsp;background-image: <span class="text-ink">url</span>(<span class="text-warning-deep">"data:image/svg+xml;base64,PHN2ZyB4bWxucz0i..."</span>);<br/>
+        &nbsp;&nbsp;background-size: contain;<br/>
+        &nbsp;&nbsp;width: 24px;<br/>
+        &nbsp;&nbsp;height: 24px;<br/>
+        &nbsp;&nbsp;display: inline-block;<br/>
+        {'}'}
+      </div>
+
+      <p>
+        For design systems with many small icons, this is a legitimate optimization. But modern alternatives — CSS <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">mask-image</code> with SVG, icon fonts, or HTTP/2 multiplexing for many small files — may be easier to maintain at scale.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
+        Frequently Asked Questions
+      </h2>
+
+      <div class="space-y-4">
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Should I use Base64 images on my website?</h3>
+          <p class="text-[14px] leading-5 text-body">Only for very small images (under 2 KB) that appear on every page — icons, logos, UI elements. For larger images, serve them as regular files with proper caching headers. The performance trade-off shifts negative around the 5 KB mark.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Does Base64 increase image file size?</h3>
+          <p class="text-[14px] leading-5 text-body">Yes, by approximately 33%. A 1 KB image becomes ~1.33 KB as a Base64 Data URI. This is the encoding overhead from representing binary data in a 64-character alphabet.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Can I use Base64 images in emails?</h3>
+          <p class="text-[14px] leading-5 text-body">Yes, and they work well there. Email clients block externally linked images by default, but Base64-embedded images display immediately. This makes them ideal for logos and small graphics in email templates.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">How do I convert a Base64 string back to an image file?</h3>
+          <p class="text-[14px] leading-5 text-body">Use our <a href="/blog/online-base64-to-file/" class="text-link hover:text-link-deep">Base64 to file converter</a>. Paste your Base64 string and click Download — the tool auto-detects the image format and reconstructs the original file. Works offline and client-side.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">
+        Convert an image to Base64 now. Free and local.
+      </h2>
+      <p class="text-[14px] leading-5 text-body mb-4">
+        Drag any image and get the Data URI instantly. PNG, JPEG, SVG, WebP — all supported.
+      </p>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90"
+      >
+        Convert Image Now
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <div class="mt-12 border-t border-hairline pt-8">
+      <h2 class="text-[18px] font-semibold leading-7 tracking-[-0.54px] text-ink mb-4">Related Guides</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href="/blog/online-base64-to-file/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">Base64 to Downloadable File</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">Convert encoded strings back to image files</p>
+        </a>
+        <a href="/blog/png-to-base64/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">PNG to Base64 Guide</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">Specific methods for PNG image encoding</p>
+        </a>
+        <a href="/blog/svg-to-base64/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">SVG to Base64 Guide</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">Embed vector graphics as Base64 Data URIs</p>
+        </a>
+        <a href="/blog/text-to-base64-encode/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all">
+          <p class="text-[14px] font-medium leading-5 text-ink">How to Encode Text to Base64</p>
+          <p class="text-[12px] leading-4 text-mute mt-1">The same encoding, but for text strings</p>
+        </a>
+      </div>
+    </div>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Base64 Images Explained: Data URIs, Performance, and When to Use Them",
+        "description": "How Base64 pictures and Data URIs work. Performance trade-offs, supported image formats, and when embedding images as Base64 helps or hurts your site.",
+        "datePublished": "2026-07-02",
+        "author": { "@type": "Organization", "name": "base64go.com" }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Should I use Base64 images on my website?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Only for very small images under 2 KB that appear on every page — icons, logos, UI elements. For larger images, serve them as regular files with proper caching. The performance trade-off shifts negative around the 5 KB mark." }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Base64 increase image file size?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes, by approximately 33%. A 1 KB image becomes about 1.33 KB as a Base64 Data URI. This is the overhead from representing binary data in a 64-character alphabet." }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use Base64 images in emails?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Email clients block externally linked images, but Base64-embedded images display immediately. Ideal for logos and small graphics in email templates." }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I convert a Base64 string back to an image file?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Use the Base64 to file converter at base64go.com. Paste the string, click Download, and the tool auto-detects the image format and reconstructs the file. Works offline and client-side." }
+          }
+        ]
+      }
+    </script>
+  </article>
+</Layout>
