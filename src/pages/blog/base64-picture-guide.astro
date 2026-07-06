@@ -65,7 +65,7 @@ import Layout from '../../layouts/Layout.astro';
         <span class="text-violet">def</span> <span class="text-ink">image_to_data_uri</span>(path, mime=<span class="text-warning-deep">"image/png"</span>):<br/>
         &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-violet">with</span> <span class="text-ink">open</span>(path, <span class="text-warning-deep">"rb"</span>) <span class="text-violet">as</span> f:<br/>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b64 = base64.b64encode(f.read()).decode(<span class="text-warning-deep">"utf-8"</span>)<br/>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-violet">return</span> <span class="text-mute">f</span><span class="text-warning-deep">"data:</span><span class="text-mute">{</span>mime<span class="text-mute">}</span><span class="text-warning-deep">;base64,</span><span class="text-mute">{</span>b64<span class="text-mute">}</span><span class="text-warning-deep">"</span>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-violet">return</span> <span class="text-mute">f"data:{'{'}mime{'}'};base64,{'{'}b64{'}'}"</span>
       </div>
 
       <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
