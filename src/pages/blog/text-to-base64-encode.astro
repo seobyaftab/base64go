@@ -33,6 +33,10 @@ import Layout from '../../layouts/Layout.astro';
         You have a text string and you need it in Base64. Maybe you are building a Basic Auth header, encoding credentials for an API call, or embedding text in a data URI. Whatever the reason, <strong class="text-ink font-medium">encoding text to Base64</strong> is one of those operations that comes up constantly in web development. This guide covers every method, from zero-setup online tools to production-ready code, including UTF-8 safe encoding for non-English text and emojis.
       </p>
 
+      <div class="rounded-xl border border-hairline-strong bg-canvas-soft p-5 text-[14px] leading-5">
+        <strong class="text-ink font-medium">In short:</strong> Encoding text to Base64 converts any string into a safe ASCII format using <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">btoa()</code> in JavaScript, Python's <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64.b64encode()</code>, or the <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64</code> command. Always encode text as UTF-8 bytes first to support emojis and non-English characters.
+      </div>
+
       <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
         The Fastest Way: Online Text to Base64 Tool
       </h2>
@@ -285,6 +289,22 @@ import Layout from '../../layouts/Layout.astro';
             "name": "Can I use Base64 to hide or encrypt passwords?",
             "acceptedAnswer": { "@type": "Answer", "text": "No. Base64 is encoding, not encryption. A Base64-encoded password can be decoded instantly — it provides zero security. Use proper hashing like bcrypt or Argon2 instead." }
           }
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "How to Encode Text to Base64",
+        "description": "Turn any text string into Base64 using online tools, JavaScript, Python, or the command line.",
+        "step": [
+          { "@type": "HowToStep", "position": 1, "name": "Type or paste your text", "text": "Type or paste your text on base64go.com." },
+          { "@type": "HowToStep", "position": 2, "name": "Switch to Encode mode", "text": "Switch the mode to Encode." },
+          { "@type": "HowToStep", "position": 3, "name": "Copy the Base64 output", "text": "The Base64 output appears instantly in the right panel. Click Copy to grab the encoded string." },
+          { "@type": "HowToStep", "position": 4, "name": "JavaScript encoding", "text": "Use JavaScript's btoa() function for simple ASCII text. For UTF-8 safe encoding including emojis, use TextEncoder first then btoa()." },
+          { "@type": "HowToStep", "position": 5, "name": "Python encoding", "text": "Use Python's base64.b64encode() with text.encode('utf-8') to handle any Unicode text including emojis and non-Latin scripts." },
+          { "@type": "HowToStep", "position": 6, "name": "Command line encoding", "text": "Use the base64 command on Linux, macOS, or PowerShell's [System.Convert]::ToBase64String() on Windows." }
         ]
       }
     </script>

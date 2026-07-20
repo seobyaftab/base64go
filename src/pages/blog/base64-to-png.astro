@@ -1,0 +1,154 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Base64 to PNG: Convert Encoded Strings Back to Images | base64go.com" description="Turn a Base64 string into a PNG image file. Online tool, JavaScript, Python, and CLI methods. Extract images from Data URIs, APIs, and JSON payloads." canonicalURL="https://base64go.com/blog/base64-to-png/">
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://base64go.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://base64go.com/blog/" },
+          { "@type": "ListItem", "position": 3, "name": "Base64 to PNG: Convert Encoded Strings Back to Images", "item": "https://base64go.com/blog/base64-to-png/" }
+        ]
+      }
+    </script>
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; How-To
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        Base64 to PNG: Convert Encoded Strings Back to Images
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Turn a Base64 string back into a PNG image. Extract images from Data URIs, API responses, and JSON payloads. Every method, from one-click to Python script.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        An API returned a Base64 string for an image. A JSON config file has a <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">"thumbnail": "iVBORw0KGgo..."</code> field. Or you are looking at a <a href="/blog/base64-picture-guide/" class="text-link hover:text-link-deep">Data URI</a> and need the actual PNG file, not a text string. Converting <strong class="text-ink font-medium">Base64 back to a PNG image</strong> is one decode operation — the trick is knowing whether your string is raw Base64 or a Data URI and whether it actually contains a PNG. Here is every method.
+      </p>
+
+      <div class="rounded-xl border border-hairline-strong bg-canvas-soft p-5 text-[14px] leading-5">
+        <strong class="text-ink font-medium">In short:</strong> Paste your Base64 string into the <a href="/" class="text-link hover:text-link-deep">decoder on base64go.com</a> and click Download — the tool detects it is a PNG from the encoded header bytes and saves it as a <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">.png</code> file automatically. For programmatic use: decode with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64.b64decode()</code> in Python or <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">atob()</code> + Blob in JavaScript, then write the bytes to a file with a <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">.png</code> extension.
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Method 1: The Online Tool (One Click)</h2>
+
+      <p>
+        Open the <a href="/" class="text-link hover:text-link-deep">Base64 decoder</a>, paste your string, and click Decode. The tool reads the first few bytes of the decoded data. If it sees the PNG magic bytes (<code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">89 50 4E 47</code>), it labels the output as PNG, shows a preview, and offers a Download button. If your string is a Data URI (<code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:image/png;base64,...</code>), it strips the prefix automatically.
+      </p>
+
+      <p>
+        The tool also handles the reverse operation — <a href="/blog/png-to-base64/" class="text-link hover:text-link-deep">converting a PNG to Base64</a> — if you need the encode direction instead.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Method 2: Python — Decode and Save to Disk</h2>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-violet">import</span> base64<br/>
+        <br/>
+        b64_string = <span class="text-warning-deep">"iVBORw0KGgoAAAANSUhEUg..."</span><br/>
+        <br/>
+        <span class="text-mute"># Strip Data URI prefix if present</span><br/>
+        <span class="text-violet">if</span> b64_string.startswith(<span class="text-warning-deep">"data:"</span>):<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;b64_string = b64_string.split(<span class="text-warning-deep">","</span>)[1]<br/>
+        <br/>
+        <span class="text-mute"># Decode and write to file</span><br/>
+        image_bytes = base64.b64decode(b64_string)<br/>
+        <span class="text-violet">with</span> <span class="text-ink">open</span>(<span class="text-warning-deep">"output.png"</span>, <span class="text-warning-deep">"wb"</span>) <span class="text-violet">as</span> f:<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;f.write(image_bytes)<br/>
+        <br/>
+        <span class="text-ink">print</span>(<span class="text-mute">f"Saved {'{'}len(image_bytes){'}'} bytes to output.png"</span>)
+      </div>
+
+      <p>
+        The critical line is <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">"wb"</code> (write-binary) in the <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">open()</code> call. If you accidentally use <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">"w"</code> (text mode) on Windows, Python inserts carriage returns into your binary data and the PNG will be corrupted — it will not open in any image viewer, with no useful error message. If your decoded PNG refuses to open, check that you wrote the file in binary mode.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Method 3: JavaScript — Download from the Browser</h2>
+
+      <p>
+        If you are building a web app and need to trigger a PNG download from a Base64 string:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-violet">function</span> <span class="text-ink">base64ToPngDownload</span>(b64, filename = <span class="text-warning-deep">"image.png"</span>) {'{'}<br/>
+        &nbsp;&nbsp;<span class="text-mute">// Strip Data URI prefix if present</span><br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> raw = b64.replace(<span class="text-warning-deep">/^data:image\/\w+;base64,/</span>, <span class="text-warning-deep">""</span>);<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> bytes = <span class="text-ink">Uint8Array</span>.from(atob(raw), c => c.charCodeAt(0));<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> blob = <span class="text-violet">new</span> <span class="text-ink">Blob</span>([bytes], {'{'} type: <span class="text-warning-deep">"image/png"</span> {'}'});<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> url = URL.createObjectURL(blob);<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> a = document.createElement(<span class="text-warning-deep">"a"</span>);<br/>
+        &nbsp;&nbsp;a.href = url; a.download = filename; a.click();<br/>
+        &nbsp;&nbsp;URL.revokeObjectURL(url);<br/>
+        {'}'}
+      </div>
+
+      <p>
+        This works for any image format — just change the MIME type in the Blob constructor. PNG, JPEG, WebP, GIF: the decode logic is identical. Only the file extension and MIME type change. See our <a href="/blog/online-base64-to-file/" class="text-link hover:text-link-deep">Base64 to file guide</a> for a version that auto-detects the format from the byte headers.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Method 4: Command Line</h2>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-mute"># Save your Base64 string to a file first</span><br/>
+        <span class="text-ink">echo</span> <span class="text-warning-deep">"iVBORw0KGgoAAAANSUhEUg..."</span> > encoded.b64<br/>
+        <br/>
+        <span class="text-mute"># Decode to PNG (Linux/WSL)</span><br/>
+        base64 -d encoded.b64 > output.png<br/>
+        <br/>
+        <span class="text-mute"># Decode to PNG (macOS)</span><br/>
+        base64 -D encoded.b64 > output.png<br/>
+        <br/>
+        <span class="text-mute"># One-liner with echo (Linux)</span><br/>
+        <span class="text-ink">echo</span> -n <span class="text-warning-deep">"iVBORw0KGgo..."</span> | base64 -d > output.png
+      </div>
+
+      <p>
+        If you get a "base64: invalid input" error, check for whitespace or line breaks in your string — the <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64</code> command is less forgiving of formatting than Python or JavaScript. A quick cleanup: <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">tr -d '\n\r ' < encoded.b64 | base64 -d > output.png</code> strips whitespace before decoding.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Frequently Asked Questions</h2>
+
+      <div class="space-y-4">
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">How do I know if a Base64 string contains a PNG?</h3>
+          <p class="text-[14px] leading-5 text-body">Decode the first few bytes and check the magic number. PNG files always start with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">‰PNG</code> (bytes: 89 50 4E 47). In Base64, PNG-encoded strings almost always start with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">iVBORw0KGgo</code>. Our <a href="/" class="text-link hover:text-link-deep">online decoder</a> detects this automatically.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">My decoded PNG won't open. What went wrong?</h3>
+          <p class="text-[14px] leading-5 text-body">Likely one of three things: you forgot to strip the Data URI prefix before decoding, you wrote the file in text mode instead of binary mode (especially on Windows), or the Base64 string is truncated or contains whitespace. Try decoding with the online tool first — if it opens there, the problem is in your write step, not the decode.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Can I convert Base64 to JPEG or WebP the same way?</h3>
+          <p class="text-[14px] leading-5 text-body">Yes. The decode process is identical regardless of image format — Base64 is format-agnostic. The only difference is the file extension you use when writing the decoded bytes, and the MIME type in the Data URI prefix. JPEG files start with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">/9j/</code> in Base64.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">Convert Base64 to PNG now. One click.</h2>
+      <p class="text-[14px] leading-5 text-body mb-4">Paste your string, get your image. Auto-detects format, strips Data URI prefixes.</p>
+      <a href="/" class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90">Open the Decoder<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+
+    <div class="mt-12 border-t border-hairline pt-8">
+      <h2 class="text-[18px] font-semibold leading-7 tracking-[-0.54px] text-ink mb-4">Related Guides</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href="/blog/png-to-base64/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">PNG to Base64 Guide</p><p class="text-[12px] leading-4 text-mute mt-1">The reverse direction — encode PNG images</p></a>
+        <a href="/blog/base64-picture-guide/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">Base64 Images Explained</p><p class="text-[12px] leading-4 text-mute mt-1">Data URIs, performance, and when to use them</p></a>
+        <a href="/blog/online-base64-to-file/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">Base64 to Downloadable File</p><p class="text-[12px] leading-4 text-mute mt-1">Generic file conversion for any format</p></a>
+        <a href="/blog/svg-to-base64/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">SVG to Base64 Guide</p><p class="text-[12px] leading-4 text-mute mt-1">Vector graphics encoding for CSS and HTML</p></a>
+      </div>
+    </div>
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Base64 to PNG: Convert Encoded Strings Back to Images","description":"Turn a Base64 string back into a PNG image. Extract images from Data URIs, API responses, and JSON. Online tool, Python, JavaScript, and CLI methods.","datePublished":"2026-07-20","author":{"@type":"Organization","name":"base64go.com"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I know if a Base64 string contains a PNG?","acceptedAnswer":{"@type":"Answer","text":"Decode the first few bytes and check the magic number. PNG files always start with ‰PNG (bytes: 89 50 4E 47). In Base64, PNG strings almost always start with iVBORw0KGgo. Our online decoder detects this automatically."}},{"@type":"Question","name":"My decoded PNG won't open. What went wrong?","acceptedAnswer":{"@type":"Answer","text":"Likely: forgot to strip the Data URI prefix, wrote the file in text mode instead of binary mode (Windows), or the Base64 string is truncated or contains whitespace."}},{"@type":"Question","name":"Can I convert Base64 to JPEG or WebP the same way?","acceptedAnswer":{"@type":"Answer","text":"Yes. The decode process is identical regardless of image format. Only the file extension and MIME type change. JPEG files start with /9j/ in Base64."}}]}</script>
+  </article>
+</Layout>

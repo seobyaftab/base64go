@@ -33,6 +33,10 @@ import Layout from '../../layouts/Layout.astro';
         You have seen them: long strings of text that start with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:image/png;base64,...</code> and somehow turn into a picture in the browser. A Base64 picture is a regular image file — PNG, JPEG, SVG, GIF, WebP — <a href="/blog/text-to-base64-encode/" class="text-link hover:text-link-deep">encoded as a Base64 text string</a> and embedded directly into HTML or CSS instead of being loaded as a separate file. This guide explains how it works, when to use it, and — critically — when to avoid it.
       </p>
 
+      <div class="rounded-xl border border-hairline-strong bg-canvas-soft p-5 text-[14px] leading-5">
+        <strong class="text-ink font-medium">In short:</strong> A Base64 picture is a regular image encoded as a text string and embedded directly in HTML or CSS via a Data URI. Use it for tiny icons and email templates. Avoid for images over 2 KB — the 33% size increase and lack of caching hurt performance.
+      </div>
+
       <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
         What Is a Base64 Picture?
       </h2>
@@ -278,6 +282,19 @@ import Layout from '../../layouts/Layout.astro';
             "name": "How do I convert a Base64 string back to an image file?",
             "acceptedAnswer": { "@type": "Answer", "text": "Use the Base64 to file converter at base64go.com. Paste the string, click Download, and the tool auto-detects the image format and reconstructs the file. Works offline and client-side." }
           }
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "How to Convert Any Image to Base64",
+        "description": "Convert any image to a Base64 Data URI for embedding in HTML or CSS.",
+        "step": [
+          { "@type": "HowToStep", "position": 1, "name": "Use the online tool", "text": "Drag any image onto base64go.com and the Base64 Data URI appears instantly. No upload, no server involved. Click copy and paste it into your HTML or CSS." },
+          { "@type": "HowToStep", "position": 2, "name": "Convert using JavaScript", "text": "Use the FileReader API with readAsDataURL() to convert an image file to a Base64 Data URI in the browser." },
+          { "@type": "HowToStep", "position": 3, "name": "Convert using Python", "text": "Use Python's base64.b64encode() to read an image file in binary mode and return a Base64 Data URI string." }
         ]
       }
     </script>

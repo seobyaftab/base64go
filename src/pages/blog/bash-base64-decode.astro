@@ -1,0 +1,137 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="How to Decode Base64 in Bash (Linux, WSL, macOS) | base64go.com" description="Decode Base64 strings and files in the terminal. Linux, WSL, and macOS commands with real examples. Avoid the echo newline trap and encoding mistakes." canonicalURL="https://base64go.com/blog/bash-base64-decode/">
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://base64go.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://base64go.com/blog/" },
+          { "@type": "ListItem", "position": 3, "name": "How to Decode Base64 in Bash", "item": "https://base64go.com/blog/bash-base64-decode/" }
+        ]
+      }
+    </script>
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; How-To
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        How to Decode Base64 in Bash
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Decode Base64 in Linux, WSL, and macOS terminals. Real commands, real output, and the two pitfalls that silently corrupt your results.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        You have a Base64 string in a terminal and you need the original data back. The <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64</code> command ships with every Unix system. No install, no dependencies, one command. But the <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">echo</code> newline trap and the macOS/Linux flag difference catch people every time. Here is the clean reference.
+      </p>
+
+      <div class="rounded-xl border border-hairline-strong bg-canvas-soft p-5 text-[14px] leading-5">
+        <strong class="text-ink font-medium">In short:</strong> Use <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64 -d</code> on Linux/WSL, <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64 -D</code> on macOS. Always use <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">echo -n</code> when piping strings — the default <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">echo</code> appends a newline that gets encoded with your data and corrupts the output. For one-off decodes without a terminal, use the <a href="/" class="text-link hover:text-link-deep">online Base64 decoder</a> — paste, read, done.
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Decode a String from the Command Line</h2>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-mute"># Linux / WSL</span><br/>
+        <span class="text-ink">echo</span> -n <span class="text-warning-deep">"SGVsbG8sIFdvcmxkIQ=="</span> | base64 -d<br/>
+        <span class="text-mute"># Output: Hello, World!</span><br/>
+        <br/>
+        <span class="text-mute"># macOS</span><br/>
+        <span class="text-ink">echo</span> -n <span class="text-warning-deep">"SGVsbG8sIFdvcmxkIQ=="</span> | base64 -D<br/>
+        <span class="text-mute"># Output: Hello, World!</span>
+      </div>
+
+      <p>
+        The <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">-n</code> flag on <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">echo</code> is not optional here. Run <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">echo "SGVsbG8=" | base64 -d</code> without it and you get <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">Hello</code> followed by a newline character. That extra byte is invisible in most terminal output but it will break anything downstream that expects the exact original data — checksums, binary file headers, API payloads.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Decode a Base64 File</h2>
+
+      <p>
+        If you have a file containing a Base64 string (like <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">encoded.b64</code>), decoding it to a new file is cleaner than piping:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-mute"># Decode a Base64 file back to its original format</span><br/>
+        base64 -d encoded.b64 > output.png<br/>
+        <br/>
+        <span class="text-mute"># On macOS, same command but with -D</span><br/>
+        base64 -D encoded.b64 > output.png
+      </div>
+
+      <p>
+        The file can contain the Base64 string on a single line or spread across multiple lines — <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64 -d</code> handles both. It ignores whitespace and newlines inside the encoded data. This is useful when you are dealing with PEM certificates, which wrap Base64 at 64 characters per line. For a complete walkthrough on <a href="/blog/online-base64-to-file/" class="text-link hover:text-link-deep">reconstructing files from Base64</a>, including how to identify the file type without an extension, see our dedicated guide.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">The echo Trap, Explained</h2>
+
+      <p>
+        <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">echo</code> without <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">-n</code> adds a trailing newline (<code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">\n</code>, 0x0A) to whatever you pipe. That newline gets Base64-decoded along with your string. If you are decoding text, the output looks fine except for an extra blank line. If you are decoding binary data — an image header, a cryptographic key, a PDF — that extra byte corrupts the file in ways that range from "won't open" to "appears to work but is silently wrong."
+      </p>
+
+      <p>
+        Safer alternative to <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">echo</code>: use <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">printf</code> instead. It does not append a newline by default:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-ink">printf</span> <span class="text-warning-deep">"SGVsbG8="</span> | base64 -d<br/>
+        <span class="text-mute"># Output: Hello (no trailing newline, guaranteed)</span>
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Linux vs macOS: Why the Flag Difference Exists</h2>
+
+      <p>
+        Both systems use the same <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64</code> utility, but macOS inherited the BSD version, where <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">-d</code> means something else entirely. The BSD flag for decode is uppercase <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">-D</code>. Linux (GNU coreutils) uses lowercase <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">-d</code>. If you get a "base64: illegal option" error on Mac, you used the wrong case.
+      </p>
+
+      <p>
+        The portable fix: skip <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64</code> entirely and use <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">openssl base64 -d</code>, which accepts the lowercase flag on both platforms. Or use Python's <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">python3 -c "import base64, sys; print(base64.b64decode(sys.argv[1]).decode())"</code> — same on every OS.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Frequently Asked Questions</h2>
+
+      <div class="space-y-4">
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Why does my decoded output have an extra blank line?</h3>
+          <p class="text-[14px] leading-5 text-body">The <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">echo</code> command appended a newline before piping. Use <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">echo -n</code> to suppress it, or switch to <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">printf</code> which does not add a newline by default.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">I get "base64: illegal option -- d" on macOS. What gives?</h3>
+          <p class="text-[14px] leading-5 text-body">macOS uses the BSD version of base64. The decode flag is uppercase <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">-D</code>, not lowercase <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">-d</code>. Or use <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">openssl base64 -d</code>, which accepts the lowercase flag on both Linux and Mac.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Is it safe to pipe untrusted Base64 strings into the terminal?</h3>
+          <p class="text-[14px] leading-5 text-body">Decoding a Base64 string itself is safe — it produces bytes, not executable commands. But if you then redirect those bytes into a file and execute that file, you are running whatever was encoded. Same caution as opening any file from an untrusted source. Also: piping arbitrary binary output directly to your terminal can corrupt the display. Redirect to a file with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">> output.bin</code> and inspect the file, rather than printing raw bytes to stdout.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">Skip the terminal. Decode Base64 instantly online.</h2>
+      <p class="text-[14px] leading-5 text-body mb-4">Paste, read, done. No flags to remember, no newline traps.</p>
+      <a href="/" class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90">Open the Decoder<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+
+    <div class="mt-12 border-t border-hairline pt-8">
+      <h2 class="text-[18px] font-semibold leading-7 tracking-[-0.54px] text-ink mb-4">Related Guides</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href="/blog/powershell-base64-decode/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">PowerShell Base64 Decode</p><p class="text-[12px] leading-4 text-mute mt-1">The Windows equivalent to this guide</p></a>
+        <a href="/blog/base64-converter-guide/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">Base64 Converter Guide</p><p class="text-[12px] leading-4 text-mute mt-1">Compare CLI, Python, JS, and online methods</p></a>
+        <a href="/blog/how-to-encode-file-to-base64/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">How to Encode a File to Base64</p><p class="text-[12px] leading-4 text-mute mt-1">The encode direction for files via CLI and code</p></a>
+        <a href="/blog/base64-to-text/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">Base64 to Text Guide</p><p class="text-[12px] leading-4 text-mute mt-1">Fix garbled output after decoding</p></a>
+      </div>
+    </div>
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"How to Decode Base64 in Bash (Linux, WSL, macOS)","description":"Decode Base64 strings and files in the terminal. Linux, WSL, and macOS commands with real examples. Avoid the echo newline trap and platform flag differences.","datePublished":"2026-07-20","author":{"@type":"Organization","name":"base64go.com"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why does my decoded output have an extra blank line?","acceptedAnswer":{"@type":"Answer","text":"The echo command appended a newline before piping. Use echo -n to suppress it, or switch to printf which does not add a newline by default."}},{"@type":"Question","name":"I get 'base64: illegal option -- d' on macOS. What gives?","acceptedAnswer":{"@type":"Answer","text":"macOS uses the BSD version. The decode flag is uppercase -D, not lowercase -d. Or use openssl base64 -d which accepts the lowercase flag on both platforms."}},{"@type":"Question","name":"Is it safe to pipe untrusted Base64 strings into the terminal?","acceptedAnswer":{"@type":"Answer","text":"Decoding Base64 is safe — it produces bytes, not commands. But redirect decoded binary data to a file rather than printing to stdout, and do not execute decoded files from untrusted sources."}}]}</script>
+  </article>
+</Layout>

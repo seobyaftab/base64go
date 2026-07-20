@@ -1,0 +1,140 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="How to Deobfuscate Base64: Read Encoded Data | base64go.com" description="Decode Base64 strings used for obfuscation in scripts, configs, and logs. Inspect hidden data, analyze payloads, and understand what you are looking at." canonicalURL="https://base64go.com/blog/deobfuscate-base64/">
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://base64go.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://base64go.com/blog/" },
+          { "@type": "ListItem", "position": 3, "name": "How to Deobfuscate Base64: Read Encoded Data", "item": "https://base64go.com/blog/deobfuscate-base64/" }
+        ]
+      }
+    </script>
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; Guide
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        How to Deobfuscate Base64: Read Encoded Data
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Found a Base64 string in a script, config file, or log and need to read what it contains? Decode it, inspect it, and understand what the original data actually is.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        You are debugging a script and find a long string that looks like Base64. Maybe it is an API token hidden in a config file. Maybe it is a payload in a log entry you are investigating. Maybe it is a suspicious value in a URL parameter. Base64 is not encryption — <a href="/blog/base64-is-not-encryption/" class="text-link hover:text-link-deep">it is encoding</a>, and decoding it takes one operation. The real skill is knowing what you are looking at after you decode it.
+      </p>
+
+      <div class="rounded-xl border border-hairline-strong bg-canvas-soft p-5 text-[14px] leading-5">
+        <strong class="text-ink font-medium">In short:</strong> Paste the string into the <a href="/" class="text-link hover:text-link-deep">decoder at base64go.com</a> — it decodes and shows you the raw output instantly, no terminal needed. If you are doing this programmatically: <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">atob()</code> in JavaScript, <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64.b64decode()</code> in Python, or <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">base64 -d</code> on the CLI. The decode is trivial. Interpreting the output — that is what this guide covers.
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Common Places You Will Find Base64 in the Wild</h2>
+
+      <p>
+        Knowing where Base64 shows up helps you recognize it and know what to expect after decoding:
+      </p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">Basic Auth headers.</strong> The <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">Authorization: Basic dXNlcjpwYXNz</code> header is Base64-encoded <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">username:password</code>. Decode it and you see the credentials in plain text. This is by design — Basic Auth relies entirely on HTTPS for security, not on the encoding.</li>
+        <li><strong class="text-ink font-medium">JWT tokens.</strong> The first two sections of every JWT (before the dots) are Base64URL-encoded JSON. Decode the middle section and you can read the token's payload — user ID, expiration, permissions — without any key. The signature in the third section provides the security, not the encoding.</li>
+        <li><strong class="text-ink font-medium">Kubernetes secrets.</strong> <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">kubectl get secret -o yaml</code> shows values as Base64. Run <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">echo "dmFsdWU=" | base64 -d</code> and you see the actual secret value. Kubernetes uses Base64 for transport formatting, not protection — secrets must be encrypted at rest separately.</li>
+        <li><strong class="text-ink font-medium">Docker config JSON.</strong> <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">~/.docker/config.json</code> stores registry credentials as Base64. Anyone with filesystem access to that file can decode and use those credentials.</li>
+        <li><strong class="text-ink font-medium">Obfuscated URLs and redirects.</strong> Some sites Base64-encode URLs in redirect parameters — e.g., <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">?next=aHR0cHM6Ly8uLi4=</code>. Decoding reveals the destination before you click.</li>
+      </ul>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">How to Decode It Instantly</h2>
+
+      <p>
+        The decode operation takes under a second. Pick whatever you have open:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-mute"># Terminal (Linux/WSL)</span><br/>
+        <span class="text-ink">echo</span> <span class="text-warning-deep">"dXNlcjpwYXNz"</span> | base64 -d<br/>
+        <span class="text-mute"># → user:pass</span><br/>
+        <br/>
+        <span class="text-mute"># Python (any OS)</span><br/>
+        python3 -c <span class="text-warning-deep">"import base64; print(base64.b64decode('dXNlcjpwYXNz').decode())"</span><br/>
+        <span class="text-mute"># → user:pass</span><br/>
+        <br/>
+        <span class="text-mute"># JavaScript (browser console)</span><br/>
+        atob(<span class="text-warning-deep">"dXNlcjpwYXNz"</span>)<br/>
+        <span class="text-mute">// → "user:pass"</span>
+      </div>
+
+      <p>
+        Or skip the command entirely: paste it into the <a href="/" class="text-link hover:text-link-deep">Base64 decoder</a>. If you want the full reference for decoding from a terminal, our <a href="/blog/bash-base64-decode/" class="text-link hover:text-link-deep">Bash decode guide</a> covers every flag and platform quirk.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">After Decoding: Identify What You Have</h2>
+
+      <p>
+        Decoded output is raw bytes. What those bytes represent depends on context. Here is how to identify what you are looking at:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft-2 p-5 overflow-x-auto">
+        <table class="w-full text-left text-[13px] leading-5">
+          <thead><tr class="border-b border-hairline text-mute font-mono uppercase text-[11px] tracking-[0.5px]"><th class="pb-2 pr-4 font-medium">Output Looks Like</th><th class="pb-2 pr-4 font-medium">Probably</th><th class="pb-2 font-medium">Next Step</th></tr></thead>
+          <tbody class="text-body">
+            <tr class="border-b border-hairline/50"><td class="py-2 pr-4 font-mono text-ink">user:pass</td><td class="py-2 pr-4">Basic Auth credentials</td><td class="py-2">Do not commit, rotate if exposed</td></tr>
+            <tr class="border-b border-hairline/50"><td class="py-2 pr-4 font-mono text-ink">{ JSON }</td><td class="py-2 pr-4">JWT payload or API response</td><td class="py-2">Parse with jq or JSON.parse</td></tr>
+            <tr class="border-b border-hairline/50"><td class="py-2 pr-4 font-mono text-ink">‰PNG / ÿØÿà</td><td class="py-2 pr-4">Image file (PNG / JPEG header)</td><td class="py-2">Save as .png or .jpg and open</td></tr>
+            <tr class="border-b border-hairline/50"><td class="py-2 pr-4 font-mono text-ink">%PDF / PK</td><td class="py-2 pr-4">Document / ZIP archive</td><td class="py-2">Save with correct extension</td></tr>
+            <tr class="border-b border-hairline/50"><td class="py-2 pr-4 font-mono text-ink">Readable text</td><td class="py-2 pr-4">Plain text string</td><td class="py-2">Done — you already have the answer</td></tr>
+            <tr><td class="py-2 pr-4 font-mono text-ink">Unreadable binary</td><td class="py-2 pr-4">Encrypted data or proprietary format</td><td class="py-2">Base64 was just transport — you need a decryption key</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        That last row is the important one. If the decoded output is still gibberish — not readable text, not a recognizable file header — then the Base64 was only the outer wrapper. The actual data is encrypted or in a binary format you will need additional tools to parse. This is common with malware samples, DRM-protected content, and proprietary game assets. Base64 got you through the first door; the second door needs a different key.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Frequently Asked Questions</h2>
+
+      <div class="space-y-4">
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Can I tell what a Base64 string contains before decoding it?</h3>
+          <p class="text-[14px] leading-5 text-body">Sometimes. The first few Base64 characters often reveal the file type: <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">iVBORw0KGgo</code> is always PNG, <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">JVBERi0</code> is PDF, <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">/9j/</code> is JPEG. But short strings or custom payloads give no hint until decoded. Our <a href="/" class="text-link hover:text-link-deep">online decoder</a> auto-detects the common ones.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Is it legal to decode Base64 strings I find?</h3>
+          <p class="text-[14px] leading-5 text-body">Decoding data you already have access to is not a legal issue — Base64 is a public standard, not a protection mechanism. But what you do with the decoded output might be. Reading a JWT payload from your own session token is fine. Decoding someone else's credentials from a leaked config file and using them is not.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">The decoded output is still scrambled. Is it double-encoded?</h3>
+          <p class="text-[14px] leading-5 text-body">Possibly. Some systems Base64-encode data multiple times. Try decoding again — if the output is still valid Base64 (only A-Z, a-z, 0-9, +, /, =), you likely have another layer. Also check if the output starts with a known cipher format marker. If the output is random binary with no recognizable structure, it is probably encrypted, not double-encoded.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">Decode any Base64 string now. Instant inspection.</h2>
+      <p class="text-[14px] leading-5 text-body mb-4">Paste, decode, see what is inside. Auto-detects file types and formats.</p>
+      <a href="/" class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90">Open the Decoder<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+
+    <div class="mt-12 border-t border-hairline pt-8">
+      <h2 class="text-[18px] font-semibold leading-7 tracking-[-0.54px] text-ink mb-4">Related Guides</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href="/blog/base64-is-not-encryption/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">Base64 Is Not Encryption</p><p class="text-[12px] leading-4 text-mute mt-1">Why encoding and encryption are not the same</p></a>
+        <a href="/blog/base64-translator-guide/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">What Is a Base64 Translator?</p><p class="text-[12px] leading-4 text-mute mt-1">How the encoding algorithm actually works</p></a>
+        <a href="/blog/bash-base64-decode/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">How to Decode Base64 in Bash</p><p class="text-[12px] leading-4 text-mute mt-1">Terminal decode reference for Linux and Mac</p></a>
+        <a href="/blog/base64-to-text/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">Base64 to Text Guide</p><p class="text-[12px] leading-4 text-mute mt-1">Fix encoding issues in decoded output</p></a>
+      </div>
+    </div>
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"How to Deobfuscate Base64: Read Encoded Data","description":"Decode Base64 strings found in scripts, configs, and logs. Inspect hidden data, identify file types from Base64 headers, and understand encoded payloads.","datePublished":"2026-07-20","author":{"@type":"Organization","name":"base64go.com"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can I tell what a Base64 string contains before decoding it?","acceptedAnswer":{"@type":"Answer","text":"Sometimes. iVBORw0KGgo is always PNG, JVBERi0 is PDF, /9j/ is JPEG. Short strings or custom payloads give no hint until decoded. Our online decoder auto-detects common types."}},{"@type":"Question","name":"Is it legal to decode Base64 strings I find?","acceptedAnswer":{"@type":"Answer","text":"Decoding data you already have access to is not a legal issue — Base64 is a public standard. But what you do with the decoded output might be. Reading your own session token is fine; using leaked credentials is not."}},{"@type":"Question","name":"The decoded output is still scrambled. Is it double-encoded?","acceptedAnswer":{"@type":"Answer","text":"Possibly. Try decoding again. Also check if the output starts with a known cipher marker. If the output is random binary with no structure, it is probably encrypted, not double-encoded."}}]}</script>
+  </article>
+</Layout>

@@ -33,6 +33,10 @@ import Layout from '../../layouts/Layout.astro';
         Search for "Base64 translator" and you will find a page full of online tools. But a Base64 translator is not a language translator — it does not convert English to Spanish. It <strong class="text-ink font-medium">translates data between two formats</strong>: raw bytes and the Base64 character set defined in <a href="https://datatracker.ietf.org/doc/html/rfc4648" target="_blank" rel="noopener" class="text-link hover:text-link-deep">RFC 4648</a>. Understanding how that translation works makes you better at debugging encoding issues, working with APIs, and choosing the right tool for the job.
       </p>
 
+      <div class="rounded-xl border border-hairline-strong bg-canvas-soft p-5 text-[14px] leading-5">
+        <strong class="text-ink font-medium">In short:</strong> A Base64 translator converts data between raw bytes and the 64-character Base64 alphabet. Every 3 bytes of input become 4 Base64 characters. The process is deterministic and fully reversible — anyone can decode Base64 without a key.
+      </div>
+
       <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">
         What a Base64 Translator Actually Does
       </h2>
@@ -254,6 +258,20 @@ import Layout from '../../layouts/Layout.astro';
             "name": "Is Base64 translation secure?",
             "acceptedAnswer": { "@type": "Answer", "text": "Our tool runs entirely in your browser — data never leaves your computer. But Base64 is encoding, not encryption — anyone who has the Base64 string can reverse it." }
           }
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "How to Encode Data with a Base64 Translator",
+        "description": "Learn how a Base64 translator converts text and binary data to and from Base64 format with a step-by-step encoding walkthrough.",
+        "step": [
+          { "@type": "HowToStep", "position": 1, "name": "Convert to bytes", "text": "Convert each character of the input text to its byte value. For example, 'H' = 0x48 (01001000) and 'i' = 0x69 (01101001)." },
+          { "@type": "HowToStep", "position": 2, "name": "Chunk into 6-bit groups", "text": "Chunk the bits into 6-bit groups. If the bits don't divide evenly by 6, pad with zeros to the next multiple." },
+          { "@type": "HowToStep", "position": 3, "name": "Map to the Base64 alphabet", "text": "Map each 6-bit value to the corresponding Base64 alphabet character. For example, 010010 (18) maps to S, 000110 (6) maps to G." },
+          { "@type": "HowToStep", "position": 4, "name": "Add padding", "text": "Add '=' characters as padding to reach a multiple of 24 bits. The final result for 'Hi' is 'SGk='." }
         ]
       }
     </script>

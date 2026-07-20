@@ -1,0 +1,145 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Base64 to Text: Decode Back to a Readable String | base64go.com" description="Convert Base64 back to readable text. Online tool, JavaScript, Python, and CLI methods. Fix garbled output, handle UTF-8, and avoid common decode mistakes." canonicalURL="https://base64go.com/blog/base64-to-text/">
+  <article class="mx-auto max-w-[800px] px-4 py-16 sm:py-24 lg:py-32">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://base64go.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://base64go.com/blog/" },
+          { "@type": "ListItem", "position": 3, "name": "Base64 to Text: Decode Back to a Readable String", "item": "https://base64go.com/blog/base64-to-text/" }
+        ]
+      }
+    </script>
+    <header class="mb-12">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">
+        <a href="/blog/" class="text-link no-underline hover:text-link-deep">Blog</a> &middot; How-To
+      </p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        Base64 to Text: Decode Back to a Readable String
+      </h1>
+      <p class="mt-4 text-[18px] leading-7 text-body">
+        Convert Base64 strings back to readable text. Fix garbled output, handle non-ASCII characters, and avoid the encoding mistakes that turn your decoded text into garbage.
+      </p>
+    </header>
+
+    <div class="space-y-6 text-[16px] leading-6 text-body">
+
+      <p>
+        You paste a Base64 string into a decoder and the output is a mess. Question marks where letters should be. Gibberish symbols. Or worse — it looks fine at first glance but the non-English characters are silently corrupted. Converting <strong class="text-ink font-medium">Base64 to text</strong> is simple in theory but the character encoding layer trips people up constantly. Here is how to get readable output every time.
+      </p>
+
+      <div class="rounded-xl border border-hairline-strong bg-canvas-soft p-5 text-[14px] leading-5">
+        <strong class="text-ink font-medium">In short:</strong> Base64 decodes to <em>bytes</em>, not text. To get readable output, those bytes must then be interpreted using the correct character encoding — UTF-8 in 99% of cases. If your decoded text is garbled, the problem is almost always an encoding mismatch, not the Base64 decode itself. Use our <a href="/" class="text-link hover:text-link-deep">Base64 encoder/decoder</a> to skip the hassle — it auto-detects UTF-8 and handles the encoding layer for you.
+      </div>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Step 1: Decode the Base64 String</h2>
+
+      <p>
+        The decode step itself is deterministic. The same Base64 input always produces the same byte sequence. Here are the three most common ways to get those bytes:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-mute">// JavaScript</span><br/>
+        <span class="text-violet">const</span> decoded = atob(<span class="text-warning-deep">"SGVsbG8="</span>); <span class="text-mute">// → "Hello"</span><br/>
+        <br/>
+        <span class="text-mute"># Python</span><br/>
+        <span class="text-violet">import</span> base64<br/>
+        decoded = base64.b64decode(<span class="text-warning-deep">"SGVsbG8="</span>).decode(<span class="text-warning-deep">"utf-8"</span>)  <span class="text-mute"># → "Hello"</span><br/>
+        <br/>
+        <span class="text-mute"># Command line</span><br/>
+        <span class="text-ink">echo</span> <span class="text-warning-deep">"SGVsbG8="</span> | base64 -d  <span class="text-mute"># → Hello</span>
+      </div>
+
+      <p>
+        This part works for ASCII text 100% of the time. If your input is plain English letters, numbers, and symbols, you are done. But if the original text contained anything beyond basic ASCII — accented letters, emojis, Chinese characters, curly quotes — this naive decode will produce corrupted output. Read on.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Step 2: Fix the Character Encoding (Why Your Output Is Garbled)</h2>
+
+      <p>
+        Base64 encodes bytes, and text is stored as bytes using a character encoding. If the original text was UTF-8 but you interpret the decoded bytes as Latin-1, every non-ASCII character turns into garbage. The fix depends on what tool you are using:
+      </p>
+
+      <p>
+        <strong class="text-ink font-medium">In JavaScript:</strong> <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">atob()</code> only handles Latin-1. For any text beyond ASCII, you need the <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">TextDecoder</code> approach:
+      </p>
+
+      <div class="rounded-xl border border-hairline bg-canvas-soft p-5 font-mono text-[13px] leading-5 overflow-x-auto">
+        <span class="text-violet">function</span> <span class="text-ink">base64ToText</span>(b64) {'{'}<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> binary = atob(b64);<br/>
+        &nbsp;&nbsp;<span class="text-violet">const</span> bytes = <span class="text-violet">new</span> <span class="text-ink">Uint8Array</span>(binary.length);<br/>
+        &nbsp;&nbsp;<span class="text-violet">for</span> (<span class="text-violet">let</span> i = 0; i &lt; binary.length; i++) {'{'}<br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;bytes[i] = binary.charCodeAt(i);<br/>
+        &nbsp;&nbsp;{'}'}<br/>
+        &nbsp;&nbsp;<span class="text-violet">return new</span> <span class="text-ink">TextDecoder</span>(<span class="text-warning-deep">"utf-8"</span>).decode(bytes);<br/>
+        {'}'}<br/>
+        <br/>
+        base64ToText(<span class="text-warning-deep">"Q2Fmw6k="</span>); <span class="text-mute">// → "Café"</span>
+      </div>
+
+      <p>
+        <strong class="text-ink font-medium">In Python:</strong> The <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">.decode("utf-8")</code> at the end of the chain is what turns bytes into a string. If you omit it, you get a <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">bytes</code> object instead of a <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">str</code>. If your output looks like <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">b'Hello'</code> instead of <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">Hello</code>, that is the missing <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">.decode()</code>.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Use the Online Tool (Skip Both Steps Entirely)</h2>
+
+      <p>
+        If you want the decoded text and do not care about the plumbing: paste your Base64 string into the <a href="/" class="text-link hover:text-link-deep">decoder on base64go.com</a>. The tool handles the byte→text conversion automatically, detects whether the output is valid UTF-8, and shows you the result immediately. No <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">TextDecoder</code> boilerplate, no encoding guesswork. For a broader look at decoding methods beyond text specifically, see our <a href="/blog/how-to-decode-base64/" class="text-link hover:text-link-deep">complete Base64 decoding guide</a>.
+      </p>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">When Decoded Text Still Looks Wrong</h2>
+
+      <p>
+        Sometimes the encode-decode round trip produces readable-but-wrong output: the text is valid characters but not the characters you expected. Three common causes:
+      </p>
+
+      <ul class="list-disc pl-6 space-y-2">
+        <li><strong class="text-ink font-medium">The original encoding was not UTF-8.</strong> Windows applications sometimes use UTF-16 LE or Windows-1252. If your decoded text alternates between readable letters and blank/null characters, it was probably UTF-16. If accented characters are systematically swapped with other accented characters, it was probably Windows-1252. Try <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">.decode("utf-16-le")</code> or <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">.decode("cp1252")</code> in Python.</li>
+        <li><strong class="text-ink font-medium">The Base64 includes a Data URI prefix.</strong> If your string starts with <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">data:text/plain;base64,</code>, that prefix is part of the string, not part of the encoded data. Strip it before decoding or the output will have 20+ bytes of garbage at the start.</li>
+        <li><strong class="text-ink font-medium">The Base64 string is truncated.</strong> If the string is missing trailing characters, the last 1-2 bytes of decoded output will be corrupted. A valid Base64 string always has a length that is a multiple of 4.</li>
+      </ul>
+
+      <h2 class="text-[24px] font-semibold leading-8 tracking-[-0.96px] text-ink mt-10 mb-4">Frequently Asked Questions</h2>
+
+      <div class="space-y-4">
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Why is my decoded Base64 text showing as random symbols?</h3>
+          <p class="text-[14px] leading-5 text-body">The bytes decoded correctly but the character encoding is wrong. If you used <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">atob()</code> in JavaScript, it only handles Latin-1 — anything beyond ASCII breaks. Use <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">TextDecoder("utf-8")</code> instead. In Python, make sure you call <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">.decode("utf-8")</code> on the bytes output.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">Can Base64 decode to ASCII-only text?</h3>
+          <p class="text-[14px] leading-5 text-body">Base64 itself can encode any binary data, and ASCII is a subset of that. If the original text was pure ASCII, the decoded output will be too. But Base64 does not restrict or guarantee ASCII — it is completely encoding-agnostic. The output is whatever bytes were originally encoded.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-soft p-5">
+          <h3 class="text-[16px] font-semibold leading-6 text-ink mb-2">How much larger is Base64 than the original text?</h3>
+          <p class="text-[14px] leading-5 text-body">Exactly 33% larger. Every 3 bytes of original text become 4 Base64 characters, plus padding. So a 90-character UTF-8 string becomes a 120-character Base64 string (plus possible <code class="rounded bg-canvas-soft-2 px-1.5 py-0.5 text-[13px] font-mono text-ink">=</code> padding). For a deeper dive into the math, see our <a href="/blog/base64-translator-guide/" class="text-link hover:text-link-deep">Base64 translator guide</a>.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas p-8 text-center shadow-level-3">
+      <h2 class="text-[20px] font-semibold leading-7 tracking-[-0.6px] text-ink mb-2">Decode Base64 to text now. No encoding headaches.</h2>
+      <p class="text-[14px] leading-5 text-body mb-4">Paste your string and get readable text instantly. UTF-8 auto-detection built in.</p>
+      <a href="/" class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[16px] font-medium leading-6 text-canvas no-underline transition-all hover:opacity-90">Open Base64 Decoder<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+
+    <div class="mt-12 border-t border-hairline pt-8">
+      <h2 class="text-[18px] font-semibold leading-7 tracking-[-0.54px] text-ink mb-4">Related Guides</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href="/blog/how-to-decode-base64/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">How to Decode Base64</p><p class="text-[12px] leading-4 text-mute mt-1">Complete decode walkthrough with every method</p></a>
+        <a href="/blog/base64-translator-guide/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">What Is a Base64 Translator?</p><p class="text-[12px] leading-4 text-mute mt-1">How the encoding/decoding algorithm works</p></a>
+        <a href="/blog/base64-converter-guide/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">Base64 Converter Guide</p><p class="text-[12px] leading-4 text-mute mt-1">Compare every conversion method side by side</p></a>
+        <a href="/blog/bash-base64-decode/" class="block rounded-lg border border-hairline bg-canvas p-4 no-underline hover:shadow-level-3 transition-all"><p class="text-[14px] font-medium leading-5 text-ink">How to Decode Base64 in Bash</p><p class="text-[12px] leading-4 text-mute mt-1">Linux, WSL, and macOS terminal methods</p></a>
+      </div>
+    </div>
+
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Base64 to Text: Decode Back to a Readable String","description":"Convert Base64 strings back to readable text. Fix garbled output, handle non-ASCII characters, and avoid encoding mistakes. Online tool, JS, Python methods.","datePublished":"2026-07-20","author":{"@type":"Organization","name":"base64go.com"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why is my decoded Base64 text showing as random symbols?","acceptedAnswer":{"@type":"Answer","text":"The bytes decoded correctly but the character encoding is wrong. JavaScript's atob() only handles Latin-1. Use TextDecoder('utf-8') instead. In Python, call .decode('utf-8') on the bytes output."}},{"@type":"Question","name":"Can Base64 decode to ASCII-only text?","acceptedAnswer":{"@type":"Answer","text":"Base64 can encode any binary data. If the original was pure ASCII, the decoded output will be too. But Base64 itself is encoding-agnostic — it does not restrict or guarantee ASCII output."}},{"@type":"Question","name":"How much larger is Base64 than the original text?","acceptedAnswer":{"@type":"Answer","text":"Exactly 33% larger. Every 3 bytes of original text become 4 Base64 characters. So a 90-character UTF-8 string becomes a 120-character Base64 string plus possible padding."}}]}</script>
+  </article>
+</Layout>
