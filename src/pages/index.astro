@@ -1,59 +1,125 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import CodeGeneratorMatrix from '../components/CodeGeneratorMatrix.astro';
 ---
 
 <Layout>
   <!-- Hero Section -->
-  <section class="relative overflow-hidden bg-canvas px-4 pb-16 pt-24 sm:pb-24 sm:pt-32 lg:pb-32 lg:pt-40">
-    <!-- Mesh gradient backdrop -->
-    <div
-      class="absolute inset-0 opacity-[0.07] dark:opacity-[0.12]"
-      style="background: radial-gradient(ellipse 80% 60% at 50% 0%, #007cf0 0%, transparent 40%), radial-gradient(ellipse 60% 50% at 80% 50%, #7928ca 0%, transparent 40%), radial-gradient(ellipse 60% 50% at 20% 50%, #ff0080 0%, transparent 40%), radial-gradient(ellipse 80% 60% at 50% 100%, #f9cb28 0%, transparent 40%);"
-    ></div>
+  <section id="hero" class="relative overflow-hidden bg-canvas px-4 pb-16 pt-24 sm:pb-24 sm:pt-32 lg:pb-32 lg:pt-40">
+    <!-- Animated mesh gradient -->
+    <div class="absolute inset-0 opacity-[0.06] dark:opacity-[0.10]">
+      <div class="absolute inset-0 animate-mesh" style="background: radial-gradient(ellipse 80% 60% at 50% 0%, #007cf0 0%, transparent 40%), radial-gradient(ellipse 60% 50% at 80% 50%, #7928ca 0%, transparent 40%), radial-gradient(ellipse 60% 50% at 20% 50%, #ff0080 0%, transparent 40%), radial-gradient(ellipse 80% 60% at 50% 100%, #f9cb28 0%, transparent 40%);"></div>
+    </div>
+    <!-- Subtle dot grid -->
+    <div class="absolute inset-0 opacity-[0.025] dark:opacity-[0.04]" style="background-image: radial-gradient(circle, currentColor 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <!-- Floating tech shapes (auto-animated, cursor parallax via wrapper) -->
+    <div class="hero-float-wrap" style="position:absolute;top:12%;left:8%;pointer-events:none;z-index:1;transition:transform 0.5s ease-out;"><div class="hero-float" style="width:70px;height:70px;border:2px solid rgba(0,124,240,0.25);border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;"></div></div>
+    <div class="hero-float-wrap" style="position:absolute;top:58%;left:84%;pointer-events:none;z-index:1;transition:transform 0.6s ease-out;"><div class="hero-float" style="width:45px;height:45px;background:rgba(121,40,202,0.08);border:2px solid rgba(121,40,202,0.2);border-radius:50%;"></div></div>
+    <div class="hero-float-wrap" style="position:absolute;top:22%;right:8%;pointer-events:none;z-index:1;transition:transform 0.4s ease-out;"><div class="hero-float" style="width:10px;height:10px;background:rgba(255,0,128,0.3);border-radius:50%;box-shadow:0 0 10px rgba(255,0,128,0.15);"></div></div>
+    <div class="hero-float-wrap" style="position:absolute;bottom:22%;left:15%;pointer-events:none;z-index:1;transition:transform 0.55s ease-out;"><div class="hero-float" style="width:5px;height:5px;background:rgba(249,203,40,0.35);border-radius:50%;box-shadow:0 0 6px rgba(249,203,40,0.2);"></div></div>
+    <div class="hero-float-wrap" style="position:absolute;top:42%;left:74%;pointer-events:none;z-index:1;transition:transform 0.45s ease-out;"><div class="hero-float" style="width:8px;height:8px;background:rgba(0,124,240,0.25);border-radius:50%;box-shadow:0 0 8px rgba(0,124,240,0.15);"></div></div>
+    <div class="hero-float-wrap" style="position:absolute;top:72%;right:14%;pointer-events:none;z-index:1;transition:transform 0.65s ease-out;"><div class="hero-float" style="width:28px;height:28px;border:2px solid rgba(0,124,240,0.18);border-radius:4px;transform:rotate(45deg);"></div></div>
 
     <div class="relative mx-auto max-w-[1400px] text-center">
-      <div class="mx-auto mb-4 flex items-center justify-center gap-2">
-        <span
-          class="inline-flex items-center rounded-full bg-canvas-soft px-3 py-1 text-[12px] leading-4 text-body font-mono"
-        >
-          New  -  100% Client-Side
+      <!-- Badge -->
+      <div class="mx-auto mb-5 flex items-center justify-center gap-2">
+        <span class="inline-flex items-center gap-1.5 rounded-full border border-link/20 bg-link-bg-soft/40 px-3 py-1 text-[12px] leading-4 text-link-deep font-medium">
+          <span class="relative flex h-2 w-2">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-link opacity-60"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-link"></span>
+          </span>
+          New &mdash; 100% Client-Side
         </span>
       </div>
-      <h1
-        class="mx-auto max-w-3xl text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]"
-      >
-        Base64 Encoder &amp; Decoder.
+
+      <!-- Title with gradient text -->
+      <h1 class="mx-auto max-w-3xl text-[36px] font-semibold leading-[44px] tracking-[-1.44px] text-ink sm:text-[52px] sm:leading-[52px] sm:tracking-[-2.6px]">
+        <span class="bg-gradient-to-r from-link via-[#7928ca] to-[#ff0080] bg-clip-text text-transparent">Base64</span> Encoder &amp; Decoder.
       </h1>
-      <p
-        class="mx-auto mt-4 max-w-xl text-[16px] leading-6 text-body sm:text-[18px] sm:leading-7"
-      >
-        Live, instant, and 100% private. Encode or decode Base64 right in your browser  -  no data is ever sent to a server.
+
+      <!-- Description -->
+      <p class="mx-auto mt-5 max-w-xl text-[16px] leading-6 text-body sm:text-[18px] sm:leading-7">
+        Live, instant, and 100% private. Encode or decode Base64 right in your browser &mdash; no data is ever sent to a server.
       </p>
+
+      <!-- Subtle feature dots -->
+      <div class="mx-auto mt-6 flex items-center justify-center gap-6 text-[12px] leading-4 text-mute">
+        <span class="inline-flex items-center gap-1.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          No upload
+        </span>
+        <span class="inline-flex items-center gap-1.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Instant
+        </span>
+        <span class="inline-flex items-center gap-1.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Private
+        </span>
+      </div>
     </div>
   </section>
+
+  <style>
+    @keyframes mesh-shift {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      33% { transform: scale(1.08) rotate(1deg); }
+      66% { transform: scale(0.95) rotate(-1deg); }
+    }
+    .animate-mesh {
+      animation: mesh-shift 12s ease-in-out infinite;
+      will-change: transform;
+    }
+    /* Floating element auto-animations */
+    @keyframes float-bob {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -8px; }
+    }
+    @keyframes float-sway {
+      0%, 100% { translate: 0 0; }
+      33% { translate: 6px -4px; }
+      66% { translate: -4px -6px; }
+    }
+    @keyframes float-drift {
+      0%, 100% { translate: 0 0; }
+      25% { translate: -8px 4px; }
+      50% { translate: 4px -6px; }
+      75% { translate: 6px 2px; }
+    }
+    .hero-float { animation-duration: 6s; animation-iteration-count: infinite; animation-timing-function: ease-in-out; }
+    .hero-float-wrap:nth-child(1) .hero-float { animation-name: float-drift; animation-duration: 7s; }
+    .hero-float-wrap:nth-child(2) .hero-float { animation-name: float-sway; animation-duration: 5s; }
+    .hero-float-wrap:nth-child(3) .hero-float { animation-name: float-bob; animation-duration: 3.5s; }
+    .hero-float-wrap:nth-child(4) .hero-float { animation-name: float-drift; animation-duration: 8s; }
+    .hero-float-wrap:nth-child(5) .hero-float { animation-name: float-bob; animation-duration: 4.5s; }
+    .hero-float-wrap:nth-child(6) .hero-float { animation-name: float-sway; animation-duration: 6.5s; }
+    @media (max-width: 640px) { .hero-float-wrap { display: none; } }
+  </style>
 
   <!-- Tool Section -->
   <section class="px-4 pb-16 sm:pb-24 lg:pb-32">
     <div class="mx-auto max-w-[1200px]">
+      <!-- SEO Headings -->
+      <div class="text-center mb-8">
+        <h2 class="text-[22px] font-semibold leading-7 tracking-[-0.66px] text-ink sm:text-[28px] sm:leading-8 sm:tracking-[-0.84px]">
+          <span class="bg-gradient-to-r from-link via-[#7928ca] to-[#ff0080] bg-clip-text text-transparent">Image to Base64</span> Converter.
+        </h2>
+        <p class="mt-2 text-[14px] leading-5 text-body sm:text-[16px] sm:leading-6">Encode images to Base64 strings or Data URIs. Decode them back. Text, files, and images — all client-side.</p>
+      </div>
       <!-- Mode Tabs -->
-      <div class="mb-6 flex items-center justify-center gap-1">
-        <div class="inline-flex rounded-full bg-canvas-soft-2 p-1" role="tablist" aria-label="Encode or Decode mode">
-          <button
-            id="tab-encode"
-            role="tab"
-            aria-selected="true"
-            class="rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-ink bg-canvas shadow-level-1 transition-all"
-          >
-            Encode
-          </button>
-          <button
-            id="tab-decode"
-            role="tab"
-            aria-selected="false"
-            class="rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-body hover:text-ink transition-all"
-          >
-            Decode
-          </button>
+      <div class="mb-4 flex items-center justify-center gap-1">
+        <div class="inline-flex rounded-full bg-canvas-soft-2 p-1" role="tablist">
+          <button id="tab-encode" role="tab" aria-selected="true" class="rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-ink bg-canvas shadow-level-1 transition-all">Encode</button>
+          <button id="tab-decode" role="tab" aria-selected="false" class="rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-body hover:text-ink transition-all">Decode</button>
+        </div>
+      </div>
+
+      <!-- Sub-toggles: Text / Image -->
+      <div class="mb-4 flex items-center justify-center gap-3">
+        <span class="text-[11px] leading-4 text-mute font-mono uppercase tracking-[0.5px]">Mode:</span>
+        <div class="inline-flex rounded-full bg-canvas-soft-2 p-0.5" role="tablist">
+          <button id="sub-text" role="tab" aria-selected="true" class="rounded-full px-3 py-1.5 text-[12px] font-medium leading-4 tracking-[-0.24px] text-ink bg-canvas shadow-level-1 transition-all">Text</button>
+          <button id="sub-image" role="tab" aria-selected="false" class="rounded-full px-3 py-1.5 text-[12px] font-medium leading-4 tracking-[-0.24px] text-body hover:text-ink transition-all">Image</button>
         </div>
       </div>
 
@@ -76,6 +142,8 @@ import Layout from '../layouts/Layout.astro';
           <span id="input-stats" class="text-[12px] leading-4 text-mute font-mono"></span>
         </div>
 
+        <!-- Text input wrapper (hidden when image mode active) -->
+        <div id="text-input-wrap">
         <!-- Drag & Drop zone -->
         <div
           id="drop-zone"
@@ -128,10 +196,50 @@ import Layout from '../layouts/Layout.astro';
           title="Swap (Ctrl+Shift+S)"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <polyline points="19 12 12 19 5 12" />
+            <path d="M20 7H4m0 0l4-4m-4 4l4 4m-4 6h16m0 0l-4-4m4 4l-4 4"/>
           </svg>
         </button>
+      </div>
+
+      </div><!-- /text-input-wrap -->
+
+      <!-- Image Panel (shown when image is uploaded, replaces text input) -->
+      <div id="image-panel" class="hidden mb-4">
+        <div class="rounded-xl border-2 border-dashed border-hairline bg-canvas p-6 text-center transition-all hover:border-link cursor-pointer relative" id="image-drop">
+          <input type="file" id="image-file-input" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+          <div id="image-placeholder">
+            <svg class="mx-auto mb-2 text-mute" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <p class="text-[14px] font-medium text-ink">Drop an image or click to browse</p>
+            <p class="text-[12px] leading-4 text-mute mt-1">PNG, JPEG, WebP, GIF, SVG — auto-resized if large</p>
+          </div>
+          <div id="image-preview-area" class="hidden">
+            <div class="flex flex-col sm:flex-row gap-4 text-left">
+              <div class="sm:w-1/2 rounded-lg border border-hairline bg-canvas-soft overflow-hidden">
+                <div class="flex items-center justify-between px-3 py-1.5 border-b border-hairline bg-canvas-soft-2">
+                  <span class="text-[11px] font-mono text-mute uppercase">Preview</span>
+                  <span id="img-dims" class="text-[11px] font-mono text-mute"></span>
+                </div>
+                <div class="p-1 flex items-center justify-center min-h-[140px]" style="background-image:linear-gradient(45deg,#e5e5e5 25%,transparent 25%),linear-gradient(-45deg,#e5e5e5 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e5e5e5 75%),linear-gradient(-45deg,transparent 75%,#e5e5e5 75%);background-size:16px 16px;background-position:0 0,8px 8px">
+                  <img id="img-preview" class="max-w-full max-h-[300px] object-contain" alt="" />
+                </div>
+              </div>
+              <div class="sm:w-1/2 space-y-2">
+                <p class="text-[12px]"><span class="text-mute">Name:</span> <span id="img-name" class="text-ink"></span></p>
+                <p class="text-[12px]"><span class="text-mute">Size:</span> <span id="img-size" class="text-ink"></span> → <span id="img-b64size" class="text-ink"></span></p>
+                <p class="text-[12px]"><span class="text-mute">Format:</span> <span id="img-format" class="text-ink"></span></p>
+                <p id="img-resized" class="hidden text-[11px] text-warning-deep"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label id="label-keep-original" class="inline-flex items-center gap-2 mt-3 text-[12px] leading-4 text-mute cursor-pointer select-none">
+          <input type="checkbox" id="img-keep-original" class="w-3.5 h-3.5 rounded border-hairline accent-link cursor-pointer" />
+          Keep original size (lossless, large files may freeze browser)
+        </label>
+        <div id="image-actions" class="hidden flex flex-wrap gap-2 mt-3">
+          <button id="img-download" class="inline-flex items-center gap-1.5 rounded-full bg-ink px-5 py-2.5 text-[13px] font-medium leading-4 text-canvas transition-all hover:opacity-90">Download Encoded .txt</button>
+          <button id="img-clear" class="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-canvas px-4 py-2 text-[12px] font-medium leading-4 text-ink transition-all hover:shadow-level-3">Clear</button>
+        </div>
       </div>
 
       <!-- Output Panel -->
@@ -192,6 +300,14 @@ import Layout from '../layouts/Layout.astro';
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
           Clear All
         </button>
+
+        <a
+          href="#code-generator"
+          class="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-2.5 text-[14px] font-medium leading-5 text-blue-400 transition-all hover:bg-blue-500/20 active:scale-[0.97]"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Get Code (Python, Node, Bash)
+        </a>
 
         <button
           id="history-toggle"
@@ -343,6 +459,9 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
+  <!-- Developer Code Generator Matrix -->
+  <CodeGeneratorMatrix />
+
   <!-- FAQ Section -->
   <section class="bg-canvas-soft px-4 py-16 sm:py-24 border-t border-hairline">
     <div class="mx-auto max-w-[800px]">
@@ -474,6 +593,8 @@ import Layout from '../layouts/Layout.astro';
   const swapBtn = document.getElementById('swap-btn')!;
   const tabEncode = document.getElementById('tab-encode')!;
   const tabDecode = document.getElementById('tab-decode')!;
+  const imagePanel = document.getElementById('image-panel')!;
+  const textInputWrap = document.getElementById('text-input-wrap')!;
   const dropZone = document.getElementById('drop-zone')!;
   const dropOverlay = document.getElementById('drop-overlay')!;
   const fileInfo = document.getElementById('file-info')!;
@@ -487,7 +608,40 @@ import Layout from '../layouts/Layout.astro';
   const historyClearAll = document.getElementById('history-clear-all')!;
 
   let mode: 'encode' | 'decode' = 'encode';
+  let subType: 'text' | 'image' = 'text';
   let currentFile: File | null = null;
+
+  const subText = document.getElementById('sub-text')!;
+  const subImage = document.getElementById('sub-image')!;
+
+  function updateUI() {
+    const isText = subType === 'text';
+    textInputWrap.classList.toggle('hidden', !isText);
+    imagePanel.classList.toggle('hidden', isText);
+    // Hide output textarea in image mode
+    const outputWrap = document.getElementById('output-area')?.closest('.mb-4') as HTMLElement;
+    if (outputWrap) outputWrap.classList.toggle('hidden', !isText);
+    if (!isText) { resetImageUI(); updateImageDropLabel(); }
+    if (isText) processInput();
+  }
+
+  subText.addEventListener('click', () => {
+    subType = 'text';
+    subText.setAttribute('aria-selected', 'true');
+    subText.className = 'rounded-full px-3 py-1.5 text-[12px] font-medium leading-4 tracking-[-0.24px] text-ink bg-canvas shadow-level-1 transition-all';
+    subImage.setAttribute('aria-selected', 'false');
+    subImage.className = 'rounded-full px-3 py-1.5 text-[12px] font-medium leading-4 tracking-[-0.24px] text-body hover:text-ink transition-all';
+    updateUI();
+  });
+
+  subImage.addEventListener('click', () => {
+    subType = 'image';
+    subImage.setAttribute('aria-selected', 'true');
+    subImage.className = 'rounded-full px-3 py-1.5 text-[12px] font-medium leading-4 tracking-[-0.24px] text-ink bg-canvas shadow-level-1 transition-all';
+    subText.setAttribute('aria-selected', 'false');
+    subText.className = 'rounded-full px-3 py-1.5 text-[12px] font-medium leading-4 tracking-[-0.24px] text-body hover:text-ink transition-all';
+    updateUI();
+  });
   let history: Array<{ mode: string; input: string; output: string; time: number }> = [];
 
   // ─── Load history ───
@@ -559,30 +713,187 @@ import Layout from '../layouts/Layout.astro';
   // ─── Mode switching ───
   function setMode(m: 'encode' | 'decode') {
     mode = m;
+    const active = 'rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-ink bg-canvas shadow-level-1 transition-all';
+    const inactive = 'rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-body hover:text-ink transition-all';
+
     if (m === 'encode') {
-      tabEncode.setAttribute('aria-selected', 'true');
-      tabEncode.className =
-        'rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-ink bg-canvas shadow-level-1 transition-all';
-      tabDecode.setAttribute('aria-selected', 'false');
-      tabDecode.className =
-        'rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-body hover:text-ink transition-all';
+      tabEncode.setAttribute('aria-selected', 'true'); tabEncode.className = active;
+      tabDecode.setAttribute('aria-selected', 'false'); tabDecode.className = inactive;
       inputLabel.textContent = 'Plain Text';
       outputLabel.textContent = 'Base64 Encoded';
     } else {
-      tabDecode.setAttribute('aria-selected', 'true');
-      tabDecode.className =
-        'rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-ink bg-canvas shadow-level-1 transition-all';
-      tabEncode.setAttribute('aria-selected', 'false');
-      tabEncode.className =
-        'rounded-full px-4 py-2 text-[14px] font-medium leading-5 tracking-[-0.28px] text-body hover:text-ink transition-all';
+      tabDecode.setAttribute('aria-selected', 'true'); tabDecode.className = active;
+      tabEncode.setAttribute('aria-selected', 'false'); tabEncode.className = inactive;
       inputLabel.textContent = 'Base64 Encoded';
-      outputLabel.textContent = 'Decoded Text';
+      outputLabel.textContent = 'Decoded Output';
     }
-    processInput();
+    updateImageDropLabel();
+    updateUI();
   }
 
   tabEncode.addEventListener('click', () => setMode('encode'));
   tabDecode.addEventListener('click', () => setMode('decode'));
+
+  // ─── Image Mode Logic ───
+  const imgFileInput = document.getElementById('image-file-input') as HTMLInputElement;
+  const imgDrop = document.getElementById('image-drop')!;
+  const imgPlaceholder = document.getElementById('image-placeholder')!;
+  const imgPreviewArea = document.getElementById('image-preview-area')!;
+  const imgPreview = document.getElementById('img-preview') as HTMLImageElement;
+  const imgDims = document.getElementById('img-dims')!;
+  const imgName = document.getElementById('img-name')!;
+  const imgSize = document.getElementById('img-size')!;
+  const imgB64Size = document.getElementById('img-b64size')!;
+  const imgFormat = document.getElementById('img-format')!;
+  const imgResized = document.getElementById('img-resized')!;
+  const imgActions = document.getElementById('image-actions')!;
+  const imgOutputPreview = document.getElementById('img-output-preview')!;
+  const imgOutputText = document.getElementById('img-output-text')!;
+  const imgOutputNote = document.getElementById('img-output-note')!;
+  const imgCopied = document.getElementById('img-copied')!;
+
+  let imgFullDataURI = '';
+  let imgFullRaw = '';
+
+  function resetImageUI() {
+    imgPlaceholder.classList.remove('hidden');
+    imgPreviewArea.classList.add('hidden');
+    imgActions.classList.add('hidden');
+    imgOutputPreview.classList.add('hidden');
+    imgFileInput.value = '';
+    imgFullDataURI = '';
+    imgFullRaw = '';
+    outputArea.value = '';
+    updateOutputStats();
+    textInputWrap.classList.remove('hidden');
+    imagePanel.classList.add('hidden');
+  }
+
+  function tryDecodeAndShowImage(input: string) {
+    let b64 = input.replace(/\s/g, '');
+    let mime = 'image/png';
+    const dataUriMatch = b64.match(/^data:(image\/\w+);base64,(.+)$/i);
+    if (dataUriMatch) { mime = dataUriMatch[1]; b64 = dataUriMatch[2]; }
+    else if (b64.startsWith('iVBORw0KGgo')) mime = 'image/png';
+    else if (b64.startsWith('/9j/')) mime = 'image/jpeg';
+    else if (b64.startsWith('R0lGOD')) mime = 'image/gif';
+
+    const dataURI = `data:${mime};base64,${b64}`;
+    const img = new Image();
+    img.onload = () => {
+      imgPlaceholder.classList.add('hidden');
+      imgPreviewArea.classList.remove('hidden');
+      imgActions.classList.remove('hidden');
+      imgPreview.src = dataURI;
+      imgDims.textContent = `${img.naturalWidth} × ${img.naturalHeight}px`;
+      imgName.textContent = `decoded.${mime.split('/')[1]}`;
+      imgB64Size.textContent = formatBytes(b64.length);
+      imgSize.textContent = '—';
+      imgFormat.textContent = mime;
+
+      const dlBtn = document.getElementById('img-download') as HTMLButtonElement;
+      dlBtn.textContent = 'Download Image';
+      dlBtn.onclick = () => { const a = document.createElement('a'); a.href = dataURI; a.download = `decoded.${mime.split('/')[1]}`; a.click(); };
+    };
+    img.onerror = () => { alert('Not a valid image. The file should contain a Base64 image string.'); };
+    img.src = dataURI;
+  }
+
+  // Update drop zone label based on encode/decode
+  function updateImageDropLabel() {
+    const label = imgDrop.querySelector('p:first-of-type') as HTMLElement;
+    if (label) {
+      label.textContent = mode === 'encode'
+        ? 'Drop an image or click to browse'
+        : 'Drop a .txt file (Base64 string) or click to browse';
+    }
+    imgFileInput.accept = mode === 'encode' ? 'image/*' : '.txt,.b64,text/plain';
+    // Hide resize checkbox in decode mode
+    const keepLabel = document.getElementById('label-keep-original') as HTMLElement;
+    if (keepLabel) keepLabel.style.display = mode === 'encode' ? '' : 'none';
+  }
+
+  function handleImageFile(file: File) {
+    if (file.size > 10 * 1024 * 1024) { alert('File too large. Max 10 MB.'); return; }
+    // In decode mode, accept text files containing Base64
+    if (mode === 'decode') {
+      const reader = new FileReader();
+      reader.onload = () => { tryDecodeAndShowImage(reader.result as string); };
+      reader.onerror = () => { alert('Failed to read file.'); };
+      reader.readAsText(file);
+      return;
+    }
+    // Encode mode: image only
+    if (!file.type.startsWith('image/')) { alert('Please upload an image file.'); return; }
+    handleEncodeImage(file);
+  }
+
+  function handleEncodeImage(file: File) {
+    const MAX_PX = 1200;
+    const keepOriginal = (document.getElementById('img-keep-original') as HTMLInputElement).checked;
+
+    function process(blob: Blob, outW: number, outH: number, wasResized: boolean) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        imgFullDataURI = reader.result as string;
+        const m = imgFullDataURI.match(/^data:([^;]+);base64,(.+)$/);
+        imgFullRaw = m ? m[2] : imgFullDataURI;
+
+        imgPlaceholder.classList.add('hidden');
+        imgPreviewArea.classList.remove('hidden');
+        imgActions.classList.remove('hidden');
+
+        imgPreview.src = imgFullDataURI;
+        imgDims.textContent = `${outW} × ${outH}px`;
+        imgName.textContent = file.name;
+        imgSize.textContent = formatBytes(file.size) + (wasResized ? ` → ${formatBytes(blob.size)}` : '');
+        imgB64Size.textContent = formatBytes(imgFullRaw.length);
+        imgFormat.textContent = file.type || 'unknown';
+        if (wasResized) { imgResized.classList.remove('hidden'); imgResized.textContent = `Resized to ${outW}×${outH}.`; }
+        else { imgResized.classList.add('hidden'); }
+
+        const dlBtn = document.getElementById('img-download') as HTMLButtonElement;
+        dlBtn.textContent = 'Download Encoded .txt';
+        dlBtn.onclick = () => {
+          const b = new Blob([imgFullRaw], { type: 'text/plain' });
+          const u = URL.createObjectURL(b); const a = document.createElement('a');
+          a.href = u; a.download = file.name + '.b64.txt'; a.click(); URL.revokeObjectURL(u);
+        };
+      };
+      reader.readAsDataURL(blob);
+    }
+
+    if (keepOriginal) {
+      process(file, 0, 0, false);
+      return;
+    }
+
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const w = img.naturalWidth, h = img.naturalHeight;
+      if (w <= MAX_PX && h <= MAX_PX) { process(file, w, h, false); return; }
+      const scale = Math.min(MAX_PX / w, MAX_PX / h);
+      const c = document.createElement('canvas');
+      c.width = Math.round(w * scale); c.height = Math.round(h * scale);
+      c.getContext('2d')!.drawImage(img, 0, 0, c.width, c.height);
+      c.toBlob(b => process(b!, c.width, c.height, true), file.type || 'image/png', 0.92);
+    };
+    img.src = url;
+  }
+
+  imgFileInput.addEventListener('change', () => { const f = imgFileInput.files?.[0]; if (f) handleImageFile(f); });
+  imgDrop.addEventListener('dragover', (e) => { e.preventDefault(); imgDrop.classList.add('border-link'); });
+  imgDrop.addEventListener('dragleave', () => { imgDrop.classList.remove('border-link'); });
+  imgDrop.addEventListener('drop', (e) => { e.preventDefault(); imgDrop.classList.remove('border-link'); const f = e.dataTransfer?.files?.[0]; if (f) handleImageFile(f); });
+
+  document.getElementById('img-download')!.addEventListener('click', () => {
+    const blob = new Blob([imgFullRaw], { type: 'text/plain' });
+    const u = URL.createObjectURL(blob); const a = document.createElement('a');
+    a.href = u; a.download = (imgName.textContent || 'image') + '.b64.txt'; a.click(); URL.revokeObjectURL(u);
+  });
+  document.getElementById('img-clear')!.addEventListener('click', resetImageUI);
 
   // ─── Processing ───
   function processInput() {
@@ -633,6 +944,43 @@ import Layout from '../layouts/Layout.astro';
 
     outputArea.value = result.output;
     outputStats.textContent = formatBytes(new TextEncoder().encode(result.output).length);
+
+    // If the input looks like an image (Data URI or raw Base64 with image header), show preview
+    if (mode === 'decode') {
+      const inp = input.trim();
+      const isDataUri = /^data:image\/\w+;base64,/i.test(inp);
+      const isRawImageB64 = /^(iVBORw0KGgo|\/9j\/|R0lGOD|UklGR)/.test(inp.replace(/\s/g, ''));
+      if (isDataUri || isRawImageB64) {
+        let b64 = inp.replace(/\s/g, '');
+        let mime = 'image/png';
+        if (b64.startsWith('iVBORw0KGgo')) mime = 'image/png';
+        else if (b64.startsWith('/9j/')) mime = 'image/jpeg';
+        else if (b64.startsWith('R0lGOD')) mime = 'image/gif';
+        else if (b64.startsWith('UklGR')) mime = 'image/webp';
+        const dataUri = isDataUri ? b64 : `data:${mime};base64,${b64}`;
+        const img = new Image();
+        img.onload = () => {
+          resetImageUI();
+          imagePanel.classList.remove('hidden');
+          imgFullDataURI = dataUri;
+          imgFullRaw = isDataUri ? inp.replace(/^data:image\/\w+;base64,/, '') : inp.replace(/\s/g, '');
+          imgPlaceholder.classList.add('hidden');
+          imgPreviewArea.classList.remove('hidden');
+          imgActions.classList.remove('hidden');
+          imgOutputPreview.classList.remove('hidden');
+          imgPreview.src = dataUri;
+          imgDims.textContent = `${img.naturalWidth} × ${img.naturalHeight}px`;
+          imgName.textContent = `decoded.${mime.split('/')[1]}`;
+          const b64len = new Blob([imgFullRaw]).size;
+          imgSize.textContent = '—';
+          imgB64Size.textContent = formatBytes(imgFullRaw.length);
+          imgFormat.textContent = mime;
+          imgOutputText.textContent = imgFullRaw.length > 200 ? imgFullRaw.slice(0, 200) + `...[${(imgFullRaw.length/1024).toFixed(1)} KB]` : imgFullRaw;
+          imgOutputNote.textContent = imgFullRaw.length > 200 ? '(first 200 chars)' : '';
+        };
+        img.src = dataUri;
+      }
+    }
   }
 
   let processTimer: ReturnType<typeof setTimeout>;
@@ -750,6 +1098,19 @@ import Layout from '../layouts/Layout.astro';
     fileName.textContent = file.name;
     fileSize.textContent = `(${formatBytes(file.size)})`;
 
+    // If it's an image, swap to image mode — hide text input, show preview
+    if (file.type.startsWith('image/')) {
+      try {
+        resetImageUI();
+        textInputWrap.classList.add('hidden');
+        imagePanel.classList.remove('hidden');
+        handleImageFile(file);
+        return;
+      } catch {
+        // fall through to text handling
+      }
+    }
+
     try {
       const result = await fileToBase64(file);
       inputArea.value = result.output;
@@ -798,6 +1159,22 @@ import Layout from '../layouts/Layout.astro';
       clearBtn.click();
     }
   });
+
+  // ─── Hero cursor parallax ───
+  const heroEl = document.getElementById('hero');
+  if (heroEl && window.innerWidth > 640) {
+    heroEl.addEventListener('mousemove', (e) => {
+      const rect = heroEl.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      const floats = document.querySelectorAll('.hero-float-wrap');
+      const strengths = [20, -25, 35, -40, 28, -22];
+      floats.forEach((el, i) => {
+        const s = strengths[i] || 15;
+        (el as HTMLElement).style.transform = `translate3d(${x * s}px, ${y * s}px, 0)`;
+      });
+    });
+  }
 
   // ─── Init ───
   renderHistory();

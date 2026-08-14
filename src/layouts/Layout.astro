@@ -8,6 +8,7 @@ interface Props {
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
+  noindex?: boolean;
 }
 
 const {
@@ -15,15 +16,19 @@ const {
   description = 'Free online Base64 encoder and decoder. Live encode/decode text, files, and images. Base64URL support, drag & drop, dark mode. No data sent to any server.',
   ogImage = 'https://base64go.com/og-image.png',
   canonicalURL,
+  noindex = false,
 } = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -32,6 +37,7 @@ const {
     />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex, follow" /> : null}
     {canonicalURL ? <link rel="canonical" href={canonicalURL} /> : null}
     <!-- Open Graph -->
     <meta property="og:title" content={title} />

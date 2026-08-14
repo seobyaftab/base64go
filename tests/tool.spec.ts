@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const BASE = 'http://localhost:4321';
+const BASE = 'https://base64go.com';
 
 test.describe('Base64go — Home Page', () => {
   test('page loads with correct title', async ({ page }) => {
@@ -190,5 +190,34 @@ test.describe('Base64go — Responsive', () => {
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.goto(BASE);
     await expect(page.locator('h1')).toBeVisible();
+  });
+});
+
+test.describe('Base64go — Code Generator Matrix', () => {
+  test('code generator section is visible', async ({ page }) => {
+    await page.goto(BASE);
+    await expect(page.locator('#code-generator')).toBeVisible();
+    await expect(page.locator('#snippet-code-display')).toBeVisible();
+  });
+
+  test('language tab buttons update snippet output', async ({ page }) => {
+    await page.goto(BASE);
+    // Click Node.js tab
+    await page.locator('#lang-tab-container button[data-lang="nodejs"]').click();
+    await expect(page.locator('#snippet-code-display')).toContainText('Buffer.from');
+
+    // Click Bash tab
+    await page.locator('#lang-tab-container button[data-lang="bash"]').click();
+    await expect(page.locator('#snippet-code-display')).toContainText('base64 --decode');
+
+    // Click PowerShell tab
+    await page.locator('#lang-tab-container button[data-lang="powershell"]').click();
+    await expect(page.locator('#snippet-code-display')).toContainText('FromBase64String');
+  });
+
+  test('copy code button updates text state', async ({ page }) => {
+    await page.goto(BASE);
+    await page.locator('#copy-snippet-btn').click();
+    await expect(page.locator('#copy-btn-text')).toContainText('Copied!');
   });
 });

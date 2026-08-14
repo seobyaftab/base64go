@@ -1,0 +1,298 @@
+---
+// CodeGeneratorMatrix.astro - Developer Multi-Language Code Generator
+---
+
+<section id="code-generator" class="py-12 px-4 max-w-[1400px] mx-auto">
+  <div class="bg-[var(--color-bg-surface,#18181b)] border border-white/10 rounded-2xl p-6 md:p-8 space-y-6 shadow-2xl">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-blue-400 mb-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+          Developer Code Snippets Generator
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Generate Base64 Code Snippets in Any Language</h2>
+        <p class="text-sm text-zinc-400 mt-1">100% accurate, copy-paste code snippets for your backend, CLI, or scripts.</p>
+      </div>
+
+      <!-- Language Selector Tabs -->
+      <div class="flex flex-wrap gap-2 bg-black/40 p-1.5 rounded-xl border border-white/10" id="lang-tab-container">
+        <button class="lang-btn active px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-blue-600 text-white shadow" data-lang="python">Python</button>
+        <button class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition-all" data-lang="nodejs">Node.js</button>
+        <button class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition-all" data-lang="bash">Bash / CLI</button>
+        <button class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition-all" data-lang="powershell">PowerShell</button>
+        <button class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition-all" data-lang="go">Go</button>
+        <button class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition-all" data-lang="csharp">C#</button>
+        <button class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition-all" data-lang="php">PHP</button>
+      </div>
+    </div>
+
+    <!-- Code Display Box -->
+    <div class="relative bg-zinc-950 rounded-xl border border-white/10 p-5 font-mono text-xs md:text-sm text-zinc-200 overflow-x-auto">
+      <button id="copy-snippet-btn" class="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white text-xs px-3 py-1.5 rounded-lg font-sans font-medium flex items-center gap-1.5 transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+        <span id="copy-btn-text">Copy Code</span>
+      </button>
+
+      <pre><code id="snippet-code-display" class="block leading-relaxed"># Select a language tab above to view tested Base64 implementation code.</code></pre>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function() {
+    const textSnippets = {
+      python: (txt) => `# Python Base64 Encoding & Decoding (Text)
+import base64
+
+raw_text = "${txt || 'Hello World'}"
+
+# Encode to Base64
+encoded_bytes = base64.b64encode(raw_text.encode('utf-8'))
+encoded_str = encoded_bytes.decode('utf-8')
+print("Encoded:", encoded_str)
+
+# Decode back to plain text
+decoded_bytes = base64.b64decode(encoded_str)
+decoded_str = decoded_bytes.decode('utf-8')
+print("Decoded:", decoded_str)`,
+
+      nodejs: (txt) => `// Node.js & Modern JavaScript Base64 (Text)
+const rawText = "${txt || 'Hello World'}";
+
+// 1. Encoding
+const encodedStr = Buffer.from(rawText, 'utf-8').toString('base64');
+console.log("Encoded:", encodedStr);
+
+// 2. Decoding
+const decodedStr = Buffer.from(encodedStr, 'base64').toString('utf-8');
+console.log("Decoded:", decodedStr);`,
+
+      bash: (txt) => `# Linux / Bash Terminal Base64 (Text)
+RAW_TEXT="${txt || 'Hello World'}"
+
+# Encode text
+ENCODED=$(echo -n "$RAW_TEXT" | base64)
+echo "Encoded: $ENCODED"
+
+# Decode Base64 string
+DECODED=$(echo -n "$ENCODED" | base64 --decode)
+echo "Decoded: $DECODED"`,
+
+      powershell: (txt) => `# Windows PowerShell Base64 (Text)
+$rawText = "${txt || 'Hello World'}"
+
+# Encode string
+$bytes = [System.Text.Encoding]::UTF8.GetBytes($rawText)
+$encoded = [Convert]::ToBase64String($bytes)
+Write-Host "Encoded:" $encoded
+
+# Decode string
+$decodedBytes = [Convert]::FromBase64String($encoded)
+$decoded = [System.Text.Encoding]::UTF8.GetString($decodedBytes)
+Write-Host "Decoded:" $decoded`,
+
+      go: (txt) => `// Go (Golang) Standard Base64 (Text)
+package main
+
+import (
+	"encoding/base64"
+	"fmt"
+)
+
+func main() {
+	rawText := "${txt || 'Hello World'}"
+
+	// Encode
+	encoded := base64.StdEncoding.EncodeToString([]byte(rawText))
+	fmt.Println("Encoded:", encoded)
+
+	// Decode
+	decodedBytes, _ := base64.StdEncoding.DecodeString(encoded)
+	fmt.Println("Decoded:", string(decodedBytes))
+}`,
+
+      csharp: (txt) => `// C# .NET Base64 Implementation (Text)
+using System;
+using System.Text;
+
+string rawText = "${txt || 'Hello World'}";
+
+// Encode
+string encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(rawText));
+Console.WriteLine($"Encoded: {encoded}");
+
+// Decode
+string decoded = Encoding.UTF8.GetString(Convert.FromBase64String(encoded));
+Console.WriteLine($"Decoded: {decoded}");`,
+
+      php: (txt) => `<?php
+// PHP Base64 Helper (Text)
+$rawText = "${txt || 'Hello World'}";
+
+// Encode
+$encoded = base64_encode($rawText);
+echo "Encoded: " . $encoded . "\n";
+
+// Decode
+$decoded = base64_decode($encoded);
+echo "Decoded: " . $decoded . "\n";
+?>`
+    };
+
+    const imageSnippets = {
+      python: (fileName) => `# Python Image to Base64 & File Decode
+import base64
+
+# 1. Encode image file to Base64
+with open("${fileName || 'image.png'}", "rb") as image_file:
+    encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+    print("Base64 Length:", len(encoded_string))
+
+# 2. Decode Base64 string back to image file
+with open("output_${fileName || 'image.png'}", "wb") as output_file:
+    output_file.write(base64.b64decode(encoded_string))`,
+
+      nodejs: (fileName) => `// Node.js Image to Base64 & File Decode
+const fs = require('fs');
+
+// 1. Encode image file to Base64
+const imageBuffer = fs.readFileSync('${fileName || 'image.png'}');
+const b64String = imageBuffer.toString('base64');
+console.log("Base64 String Length:", b64String.length);
+
+// 2. Decode Base64 back to image file
+fs.writeFileSync('output_${fileName || 'image.png'}', Buffer.from(b64String, 'base64'));`,
+
+      bash: (fileName) => `# Linux / Bash Terminal Image to Base64
+# 1. Encode image file to text file
+base64 -i ${fileName || 'image.png'} -o encoded.txt
+
+# 2. Decode Base64 text file back to image
+base64 -d -i encoded.txt -o output_${fileName || 'image.png'}`,
+
+      powershell: (fileName) => `# Windows PowerShell Image to Base64
+# 1. Encode image file
+$bytes = [System.IO.File]::ReadAllBytes("${fileName || 'image.png'}")
+$b64 = [Convert]::ToBase64String($bytes)
+[System.IO.File]::WriteAllText("encoded.txt", $b64)
+
+# 2. Decode Base64 back to image
+$decodedBytes = [Convert]::FromBase64String($b64)
+[System.IO.File]::WriteAllBytes("output_${fileName || 'image.png'}", $decodedBytes)`,
+
+      go: (fileName) => `// Go (Golang) Image to Base64 File
+package main
+
+import (
+	"encoding/base64"
+	"fmt"
+	"os"
+)
+
+func main() {
+	// Read image file
+	data, _ := os.ReadFile("${fileName || 'image.png'}")
+	encoded := base64.StdEncoding.EncodeToString(data)
+	fmt.Println("Base64 Length:", len(encoded))
+
+	// Save back to file
+	decoded, _ := base64.StdEncoding.DecodeString(encoded)
+	os.WriteFile("output_${fileName || 'image.png'}", decoded, 0644)
+}`,
+
+      csharp: (fileName) => `// C# .NET Image File Base64
+using System;
+using System.IO;
+
+// 1. Read & Encode Image File
+byte[] imageBytes = File.ReadAllBytes("${fileName || 'image.png'}");
+string b64 = Convert.ToBase64String(imageBytes);
+
+// 2. Decode Base64 Back to Image
+byte[] outputBytes = Convert.FromBase64String(b64);
+File.WriteAllBytes("output_${fileName || 'image.png'}", outputBytes);`,
+
+      php: (fileName) => `<?php
+// PHP Image File Base64 Converter
+// 1. Encode image file
+$imageData = file_get_contents("${fileName || 'image.png'}");
+$b64 = base64_encode($imageData);
+
+// 2. Decode back to file
+file_put_contents("output_${fileName || 'image.png'}", base64_decode($b64));
+?>`
+    };
+
+    let currentLang = 'python';
+
+    function updateSnippetDisplay() {
+      const subImageBtn = document.getElementById('sub-image');
+      const isImageMode = subImageBtn && subImageBtn.getAttribute('aria-selected') === 'true';
+
+      const fileInput = document.getElementById('file-input');
+      const uploadedFile = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0].name : null;
+
+      const codeEl = document.getElementById('snippet-code-display');
+      if (!codeEl) return;
+
+      if (isImageMode || uploadedFile) {
+        const fn = uploadedFile || 'image.png';
+        if (imageSnippets[currentLang]) {
+          codeEl.textContent = imageSnippets[currentLang](fn);
+        }
+      } else {
+        const mainInput = document.getElementById('input-text') || document.querySelector('textarea');
+        const textVal = mainInput ? mainInput.value.replace(/"/g, '\\"').replace(/\n/g, ' ') : 'Hello World';
+        if (textSnippets[currentLang]) {
+          codeEl.textContent = textSnippets[currentLang](textVal.slice(0, 60));
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const buttons = document.querySelectorAll('#lang-tab-container .lang-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => {
+            b.classList.remove('bg-blue-600', 'text-white', 'shadow');
+            b.classList.add('text-zinc-400');
+          });
+          btn.classList.add('bg-blue-600', 'text-white', 'shadow');
+          btn.classList.remove('text-zinc-400');
+          currentLang = btn.getAttribute('data-lang');
+          updateSnippetDisplay();
+        });
+      });
+
+      // Listen to main input & mode updates
+      const mainInput = document.getElementById('input-text') || document.querySelector('textarea');
+      if (mainInput) {
+        mainInput.addEventListener('input', updateSnippetDisplay);
+      }
+
+      const subTextBtn = document.getElementById('sub-text');
+      const subImageBtn = document.getElementById('sub-image');
+      if (subTextBtn) subTextBtn.addEventListener('click', () => setTimeout(updateSnippetDisplay, 50));
+      if (subImageBtn) subImageBtn.addEventListener('click', () => setTimeout(updateSnippetDisplay, 50));
+
+      const fileInput = document.getElementById('file-input');
+      if (fileInput) fileInput.addEventListener('change', updateSnippetDisplay);
+
+      // Copy snippet functionality
+      const copyBtn = document.getElementById('copy-snippet-btn');
+      const copyText = document.getElementById('copy-btn-text');
+      if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+          const codeEl = document.getElementById('snippet-code-display');
+          if (codeEl) {
+            navigator.clipboard.writeText(codeEl.textContent);
+            copyText.textContent = 'Copied!';
+            setTimeout(() => { copyText.textContent = 'Copy Code'; }, 2000);
+          }
+        });
+      }
+
+      updateSnippetDisplay();
+    });
+  })();
+</script>

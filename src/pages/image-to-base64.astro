@@ -1,0 +1,338 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Image to Base64 Converter — Free Online Tool | base64go.com" description="Convert any image to Base64 online. Get Data URI or raw Base64 string. Auto-resize for large images, instant preview. Free, no upload, works offline." canonicalURL="https://base64go.com/image-to-base64/">
+  <section class="mx-auto max-w-[900px] px-4 py-16 sm:py-24">
+    <header class="mb-10 text-center">
+      <p class="text-[12px] leading-4 text-mute font-mono uppercase tracking-[0.5px] mb-3">Image to Base64</p>
+      <h1 class="text-[32px] font-semibold leading-[40px] tracking-[-1.28px] text-ink sm:text-[48px] sm:leading-[48px] sm:tracking-[-2.4px]">
+        Image to Base64 Converter.
+      </h1>
+      <p class="mt-4 mx-auto max-w-[600px] text-[18px] leading-7 text-body">
+        Convert any image to Base64. Get Data URI for HTML/CSS or raw Base64 string. Instant preview. Free, private, no upload.
+      </p>
+    </header>
+
+    <!-- Encode: Image → Base64 -->
+    <div class="rounded-2xl border border-hairline bg-canvas p-6 shadow-level-3 mb-8">
+      <h2 class="text-[18px] font-semibold leading-7 text-ink mb-4">Image → Base64</h2>
+
+      <!-- Upload area -->
+      <div id="encode-drop" class="relative rounded-xl border-2 border-dashed border-hairline-strong bg-canvas-soft p-10 text-center transition-all hover:border-link cursor-pointer">
+        <input type="file" id="encode-input" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+        <div id="encode-placeholder">
+          <svg class="mx-auto mb-3 text-mute" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p class="text-[16px] font-medium text-ink">Drop an image here or click to browse</p>
+          <p class="text-[13px] leading-4 text-mute mt-1">PNG, JPEG, WebP, SVG, GIF — up to 10 MB. Large images auto-resized.</p>
+        </div>
+      </div>
+
+      <!-- Preview + Controls -->
+      <div id="encode-result" class="hidden mt-6 space-y-4">
+        <div class="flex flex-col sm:flex-row gap-4">
+          <!-- Preview -->
+          <div class="sm:w-1/2 rounded-xl border border-hairline bg-canvas-soft overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2 border-b border-hairline bg-canvas-soft-2">
+              <span class="text-[12px] font-mono text-mute uppercase">Preview</span>
+              <span id="encode-dims" class="text-[12px] font-mono text-mute"></span>
+            </div>
+            <div class="p-2 flex items-center justify-center min-h-[200px] bg-[length:20px_20px] bg-[position:0_0,10px_10px]" style="background-image: linear-gradient(45deg, #e5e5e5 25%, transparent 25%), linear-gradient(-45deg, #e5e5e5 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e5e5e5 75%), linear-gradient(-45deg, transparent 75%, #e5e5e5 75%); background-size: 20px 20px;">
+              <img id="encode-preview" class="max-w-full max-h-[400px] object-contain" alt="Preview" />
+            </div>
+          </div>
+          <!-- Info -->
+          <div class="sm:w-1/2 space-y-3">
+            <div class="rounded-xl border border-hairline bg-canvas-soft p-4">
+              <p class="text-[12px] text-mute font-mono uppercase mb-2">File Info</p>
+              <div class="space-y-1 text-[14px] leading-5">
+                <p><span class="text-mute">Name:</span> <span id="encode-name" class="text-ink"></span></p>
+                <p><span class="text-mute">Original size:</span> <span id="encode-size" class="text-ink"></span></p>
+                <p><span class="text-mute">Base64 size:</span> <span id="encode-b64size" class="text-ink"></span></p>
+                <p><span class="text-mute">Format:</span> <span id="encode-format" class="text-ink"></span></p>
+                <p id="encode-resized-note" class="text-[12px] text-warning-deep hidden"><span class="text-mute"></span></p>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button id="copy-datauri" class="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-[13px] font-medium leading-5 text-canvas transition-all hover:opacity-90">Copy Data URI</button>
+              <button id="copy-raw" class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-2 text-[13px] font-medium leading-5 text-ink transition-all hover:shadow-level-3">Copy Raw Base64</button>
+              <button id="download-img-b64" class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-2 text-[13px] font-medium leading-5 text-ink transition-all hover:shadow-level-3">Download .txt</button>
+            </div>
+            <div class="rounded-xl border border-hairline bg-canvas-soft-2 p-3">
+              <p class="text-[11px] leading-4 text-mute font-mono uppercase mb-1">Base64 Output (first 200 chars)</p>
+              <pre id="encode-output-preview" class="text-[12px] leading-4 font-mono text-body break-all max-h-[120px] overflow-y-auto whitespace-pre-wrap"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decode: Base64 → Image -->
+    <div class="rounded-2xl border border-hairline bg-canvas p-6 shadow-level-3">
+      <h2 class="text-[18px] font-semibold leading-7 text-ink mb-4">Base64 → Image</h2>
+
+      <textarea id="decode-input" rows="3" placeholder="Paste a Base64 string or Data URI here...&#10;Example: data:image/png;base64,iVBORw0KGgo..." class="w-full rounded-xl border border-hairline bg-canvas-soft p-4 text-[14px] leading-5 text-ink font-mono placeholder:text-mute resize-y focus:outline-none focus:border-link"></textarea>
+
+      <div class="flex items-center gap-3 mt-3">
+        <button id="decode-btn" class="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[14px] font-medium leading-5 text-canvas transition-all hover:opacity-90">Decode to Image</button>
+        <span id="decode-status" class="text-[13px] text-mute"></span>
+      </div>
+
+      <div id="decode-result" class="hidden mt-6">
+        <div class="rounded-xl border border-hairline bg-canvas-soft overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-2 border-b border-hairline bg-canvas-soft-2">
+            <span class="text-[12px] font-mono text-mute uppercase">Decoded Image</span>
+            <span id="decode-dims" class="text-[12px] font-mono text-mute"></span>
+          </div>
+          <div class="p-2 flex items-center justify-center min-h-[200px] bg-[length:20px_20px] bg-[position:0_0,10px_10px]" style="background-image: linear-gradient(45deg, #e5e5e5 25%, transparent 25%), linear-gradient(-45deg, #e5e5e5 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e5e5e5 75%), linear-gradient(-45deg, transparent 75%, #e5e5e5 75%); background-size: 20px 20px;">
+            <img id="decode-preview" class="max-w-full max-h-[400px] object-contain hidden" alt="Decoded" />
+            <p id="decode-error" class="text-[14px] text-danger hidden"></p>
+          </div>
+        </div>
+        <button id="download-decoded" class="hidden mt-3 inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-2 text-[13px] font-medium leading-5 text-ink transition-all hover:shadow-level-3">Download Image</button>
+      </div>
+    </div>
+
+    <div class="mt-16 rounded-xl border border-hairline bg-canvas-soft p-6 text-center">
+      <h2 class="text-[16px] font-medium leading-6 text-ink mb-2">Also need the full encoder/decoder?</h2>
+      <p class="text-[14px] leading-5 text-body mb-3">Our <a href="/" class="text-link hover:text-link-deep">main Base64 tool</a> handles text, files, Base64URL, and batch operations.</p>
+    </div>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Image to Base64 Converter",
+        "url": "https://base64go.com/image-to-base64/",
+        "description": "Free online Image to Base64 converter. Convert any image to Base64 string or Data URI. Instant preview, client-side processing, no upload.",
+        "applicationCategory": "Multimedia",
+        "operatingSystem": "All",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "How do I convert an image to Base64?", "acceptedAnswer": { "@type": "Answer", "text": "Upload or drag your image onto the tool. It converts instantly and gives you both a Data URI (for HTML/CSS) and a raw Base64 string. Large images are auto-resized to keep the output manageable." } },
+          { "@type": "Question", "name": "Can I convert Base64 back to an image?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Paste any Base64 string or Data URI into the decoder section. The tool detects the image format and shows a preview instantly. You can then download the decoded image." } },
+          { "@type": "Question", "name": "Is this image to Base64 converter free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Completely free. No sign-up, no upload. All conversion happens in your browser. Images larger than 2 MP are auto-resized to keep the Base64 output at a reasonable size." } }
+        ]
+      }
+    </script>
+  </section>
+</Layout>
+
+<script>
+  const MAX_IMAGE_PIXELS = 1200; // max width/height before resize
+  const MAX_DISPLAY_CHARS = 200; // truncate Base64 display
+
+  // --- ENCODE LOGIC ---
+  const encodeInput = document.getElementById('encode-input') as HTMLInputElement;
+  const encodeDrop = document.getElementById('encode-drop')!;
+  const encodeResult = document.getElementById('encode-result')!;
+  const encodePlaceholder = document.getElementById('encode-placeholder')!;
+  const encodePreview = document.getElementById('encode-preview') as HTMLImageElement;
+  const encodeDims = document.getElementById('encode-dims')!;
+  const encodeName = document.getElementById('encode-name')!;
+  const encodeSize = document.getElementById('encode-size')!;
+  const encodeB64Size = document.getElementById('encode-b64size')!;
+  const encodeFormat = document.getElementById('encode-format')!;
+  const encodeResizedNote = document.getElementById('encode-resized-note')!;
+  const encodeOutputPreview = document.getElementById('encode-output-preview')!;
+  const copyDataUri = document.getElementById('copy-datauri')!;
+  const copyRaw = document.getElementById('copy-raw')!;
+  const downloadImgB64 = document.getElementById('download-img-b64')!;
+
+  let fullDataURI = '';
+  let fullRawBase64 = '';
+
+  function resizeImageIfNeeded(file: File): Promise<{ blob: Blob; width: number; height: number; wasResized: boolean }> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const w = img.naturalWidth;
+        const h = img.naturalHeight;
+        if (w <= MAX_IMAGE_PIXELS && h <= MAX_IMAGE_PIXELS) {
+          resolve({ blob: file, width: w, height: h, wasResized: false });
+          return;
+        }
+        const scale = Math.min(MAX_IMAGE_PIXELS / w, MAX_IMAGE_PIXELS / h);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(w * scale);
+        canvas.height = Math.round(h * scale);
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => {
+          resolve({ blob: blob!, width: canvas.width, height: canvas.height, wasResized: true });
+        }, file.type || 'image/png', 0.92);
+      };
+      img.src = url;
+    });
+  }
+
+  function formatBytes(bytes: number): string {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  }
+
+  async function handleEncodeFile(file: File) {
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file (PNG, JPEG, WebP, GIF, SVG).');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      alert('File is over 10 MB. Please use a smaller image.');
+      return;
+    }
+
+    encodePlaceholder.classList.add('hidden');
+    encodeResult.classList.remove('hidden');
+
+    const { blob, width, height, wasResized } = await resizeImageIfNeeded(file);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      fullDataURI = reader.result as string;
+      const base64Match = fullDataURI.match(/^data:([^;]+);base64,(.+)$/);
+      fullRawBase64 = base64Match ? base64Match[2] : fullDataURI;
+
+      encodePreview.src = fullDataURI;
+      encodeDims.textContent = `${width} × ${height}px`;
+      encodeName.textContent = file.name;
+      encodeSize.textContent = formatBytes(file.size) + (wasResized ? ` → ${formatBytes(blob.size)} (resized)` : '');
+      encodeB64Size.textContent = formatBytes(fullRawBase64.length) + ' (≈' + (blob.size > 0 ? Math.round((fullRawBase64.length / blob.size - 1) * 100) : 33) + '% larger)';
+      encodeFormat.textContent = file.type || blob.type || 'unknown';
+      if (wasResized) {
+        encodeResizedNote.classList.remove('hidden');
+        (encodeResizedNote.querySelector('span')!).textContent = `Resized from ${file.type.split('/')[1].toUpperCase()} ${file.naturalWidth || '?'}×${file.naturalHeight || '?'} to keep output manageable. Original available on request.`;
+      } else {
+        encodeResizedNote.classList.add('hidden');
+      }
+
+      // Truncate display
+      const preview = fullRawBase64.length > MAX_DISPLAY_CHARS
+        ? fullRawBase64.slice(0, MAX_DISPLAY_CHARS) + `... [${(fullRawBase64.length / 1024).toFixed(1)} KB total — use Copy button for full string]`
+        : fullRawBase64;
+      encodeOutputPreview.textContent = preview;
+    };
+    reader.readAsDataURL(blob);
+  }
+
+  encodeInput.addEventListener('change', () => {
+    const file = encodeInput.files?.[0];
+    if (file) handleEncodeFile(file);
+  });
+
+  encodeDrop.addEventListener('dragover', (e) => { e.preventDefault(); encodeDrop.classList.add('border-link'); });
+  encodeDrop.addEventListener('dragleave', () => { encodeDrop.classList.remove('border-link'); });
+  encodeDrop.addEventListener('drop', (e) => {
+    e.preventDefault();
+    encodeDrop.classList.remove('border-link');
+    const file = e.dataTransfer?.files?.[0];
+    if (file) handleEncodeFile(file);
+  });
+
+  copyDataUri.addEventListener('click', () => {
+    navigator.clipboard.writeText(fullDataURI).then(() => {
+      (copyDataUri as HTMLButtonElement).textContent = 'Copied!';
+      setTimeout(() => { (copyDataUri as HTMLButtonElement).textContent = 'Copy Data URI'; }, 1500);
+    });
+  });
+
+  copyRaw.addEventListener('click', () => {
+    navigator.clipboard.writeText(fullRawBase64).then(() => {
+      (copyRaw as HTMLButtonElement).textContent = 'Copied!';
+      setTimeout(() => { (copyRaw as HTMLButtonElement).textContent = 'Copy Raw Base64'; }, 1500);
+    });
+  });
+
+  downloadImgB64.addEventListener('click', () => {
+    const blob = new Blob([fullRawBase64], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = (encodeName.textContent || 'image') + '.b64.txt';
+    a.click(); URL.revokeObjectURL(url);
+  });
+
+  // --- DECODE LOGIC ---
+  const decodeInput = document.getElementById('decode-input') as HTMLTextAreaElement;
+  const decodeBtn = document.getElementById('decode-btn')!;
+  const decodeStatus = document.getElementById('decode-status')!;
+  const decodeResult = document.getElementById('decode-result')!;
+  const decodePreview = document.getElementById('decode-preview') as HTMLImageElement;
+  const decodeDims = document.getElementById('decode-dims')!;
+  const decodeError = document.getElementById('decode-error')!;
+  const downloadDecoded = document.getElementById('download-decoded')!;
+
+  function handleDecode() {
+    const input = decodeInput.value.trim();
+    if (!input) { decodeStatus.textContent = 'Paste a Base64 string or Data URI first.'; return; }
+
+    decodeStatus.textContent = 'Decoding...';
+    decodeResult.classList.add('hidden');
+    decodePreview.classList.add('hidden');
+    decodeError.classList.add('hidden');
+    downloadDecoded.classList.add('hidden');
+
+    let b64 = input;
+    let mimeType = 'image/png';
+
+    // Strip Data URI prefix if present
+    const dataUriMatch = input.match(/^data:(image\/\w+);base64,(.+)$/i);
+    if (dataUriMatch) {
+      mimeType = dataUriMatch[1].toLowerCase();
+      b64 = dataUriMatch[2];
+    } else {
+      // Try to detect image type from Base64 header
+      if (b64.startsWith('iVBORw0KGgo')) mimeType = 'image/png';
+      else if (b64.startsWith('/9j/')) mimeType = 'image/jpeg';
+      else if (b64.startsWith('R0lGOD')) mimeType = 'image/gif';
+      else if (b64.startsWith('UklGR')) mimeType = 'image/webp';
+    }
+
+    // Clean whitespace
+    b64 = b64.replace(/\s/g, '');
+
+    const dataURI = `data:${mimeType};base64,${b64}`;
+    const img = new Image();
+
+    img.onload = () => {
+      decodeStatus.textContent = '';
+      decodeResult.classList.remove('hidden');
+      decodePreview.src = dataURI;
+      decodePreview.classList.remove('hidden');
+      decodeDims.textContent = `${img.naturalWidth} × ${img.naturalHeight}px · ${mimeType}`;
+      downloadDecoded.classList.remove('hidden');
+      (downloadDecoded as HTMLButtonElement).onclick = () => {
+        const a = document.createElement('a');
+        a.href = dataURI;
+        a.download = `decoded.${mimeType.split('/')[1]}`;
+        a.click();
+      };
+    };
+
+    img.onerror = () => {
+      decodeStatus.textContent = '';
+      decodeResult.classList.remove('hidden');
+      decodeError.textContent = 'Not a valid image. Check that the Base64 string is complete and not truncated.';
+      decodeError.classList.remove('hidden');
+    };
+
+    img.src = dataURI;
+  }
+
+  decodeBtn.addEventListener('click', handleDecode);
+  decodeInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) handleDecode();
+  });
+
+  // Auto-decode on paste
+  decodeInput.addEventListener('paste', () => {
+    setTimeout(handleDecode, 100);
+  });
+</script>
