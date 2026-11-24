@@ -1,0 +1,219 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const toolTitle = 'JSON Base64 Extractor: Decode & Preview Embedded API Files (Online)';
+const toolDescription = 'Scan JSON responses to automatically detect, preview, and download embedded Base64 PDFs, PNGs, and binary files. 100% client-side API payload debugging.';
+---
+
+<Layout
+  title={toolTitle}
+  description={toolDescription}
+  canonicalURL="https://base64go.com/tools/base64-to-json/"
+>
+  <main class="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 lg:px-8">
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-1.5 rounded-full border border-link/20 bg-link-bg-soft/40 px-3 py-1 text-[12px] leading-4 text-link-deep font-medium mb-3">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        API Webhook & Payload Inspector
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-ink mb-3">
+        <span class="bg-gradient-to-r from-link via-[#7928ca] to-[#ff0080] bg-clip-text text-transparent">JSON Base64</span> Extractor
+      </h1>
+      <p class="max-w-2xl mx-auto text-base sm:text-lg text-body">
+        Paste raw API JSON payloads. The engine recursively scans the JSON tree, identifies embedded Base64 documents or images, and lets you preview and download them.
+      </p>
+    </div>
+
+    <json-base64-extractor class="block">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+        <!-- Input Panel -->
+        <div class="lg:col-span-6 flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <label for="json-input" class="text-xs uppercase font-mono tracking-wider text-mute font-bold">
+              Raw JSON Response
+            </label>
+            <button id="btn-json-clear" type="button" class="text-xs text-mute hover:text-ink transition-colors font-mono cursor-pointer">
+              Clear
+            </button>
+          </div>
+
+          <textarea
+            id="json-input"
+            rows="16"
+            placeholder='Paste JSON with Base64 fields (e.g. { "status": 200, "data": { "invoice_pdf": "JVBERi0...", "avatar": "iVBORw0..." } })'
+            class="w-full resize-y rounded-xl border border-hairline bg-canvas p-4 text-xs sm:text-sm font-mono leading-relaxed text-ink placeholder:text-mute focus:outline-none focus:border-link min-h-[340px] shadow-level-1"
+            spellcheck="false"
+          ></textarea>
+
+          <div class="flex items-center gap-3">
+            <button
+              id="btn-json-sample"
+              type="button"
+              class="rounded-lg border border-hairline bg-canvas-soft-2 px-3 py-2 text-xs font-medium text-body hover:text-ink transition-colors cursor-pointer"
+            >
+              Load Sample API Response
+            </button>
+          </div>
+        </div>
+
+        <!-- Detected Files List -->
+        <div class="lg:col-span-6 flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs uppercase font-mono tracking-wider text-mute font-bold">Detected Base64 Payloads</span>
+            <span id="json-count-badge" class="text-xs font-mono px-2 py-0.5 rounded bg-link-bg-soft text-link-deep font-semibold">
+              0 Found
+            </span>
+          </div>
+
+          <div id="json-results-list" class="flex flex-col gap-3 min-h-[340px] rounded-xl border border-hairline bg-canvas-soft-2 p-4 shadow-level-1 overflow-y-auto max-h-[500px]">
+            <div id="json-empty" class="text-center p-8 text-mute my-auto">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="mx-auto mb-2 opacity-40"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <p class="text-xs font-medium text-body">No Base64 strings detected yet</p>
+              <p class="text-[11px] text-mute mt-1">Paste a JSON response on the left to extract files.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </json-base64-extractor>
+
+    <article class="prose max-w-none border-t border-hairline pt-12 text-body">
+      <h2 class="text-2xl font-semibold text-ink mb-4">Debugging Base64 Inside REST and GraphQL APIs</h2>
+      <p class="leading-relaxed mb-4">
+        Modern payment gateways, PDF generation services, and webhook providers frequently return binary assets as Base64 strings nested deeply inside JSON data structures. Copying and extracting these fields by hand is slow and error-prone.
+      </p>
+      <p class="leading-relaxed mb-4">
+        This tool recursively walks every key and array in your JSON document, checks for Base64 magic headers, and decodes them directly into downloadable files inside your browser.
+      </p>
+    </article>
+  </main>
+</Layout>
+
+<script>
+  class JsonBase64Extractor extends HTMLElement {
+    connectedCallback() {
+      const input = this.querySelector('#json-input') as HTMLTextAreaElement;
+      const btnClear = this.querySelector('#btn-json-clear');
+      const btnSample = this.querySelector('#btn-json-sample');
+      const countBadge = this.querySelector('#json-count-badge');
+      const resultsList = this.querySelector('#json-results-list');
+      const emptyState = this.querySelector('#json-empty');
+
+      const sampleJson = JSON.stringify({
+        status: 'success',
+        transaction_id: 'tx_9812471',
+        created_at: '2026-11-24T03:45:00Z',
+        documents: {
+          receipt_pdf: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDY5L0ZpbHRlci9GbGF0ZURlY29kZT4+c3RyZWFtCnicS1FIK8rPVTDSUVBQSFRQ0FUISs1LzEtPTlVIzs8rVkgqLUosTi2qLM9WqOECALaFDYgKZW5kc3RyZWFtCmVuZG9iam4KMSAwIG9iago8PC9UeXBlL1BhZ2UvUGFyZW50IDMgMCBSL0NvbnRlbnRzIDIgMCBSL1Jlc291cmNlczw8L1Byb2NTZXRbL1BERi9UZXh0XT4+Pj4KZW5kb2JqCjMgMCBvYmoKPDwvVHlwZS9QYWdlcy9LaWRzWzEgMCBSXS9Db3VudCAxL01lZGlhQm94WzAgMCA2MTIgNzkyXT4+CmVuZG9iam4KNCAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMyAwIFI+PgplbmRvYmoKdHJhaWxlcgo8PC9TaXplIDUvUm9vdCA0IDAgUj4+CiUlRU9G',
+          user_badge_png: 'iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFUlEQVR42mNk+M9QzwAEjDAGYzAKAwAE4wIBi2+bggAAAABJRU5ErkJggg=='
+        }
+      }, null, 2);
+
+      const isBase64String = (str: string): { isB64: boolean; type: string; ext: string } => {
+        if (typeof str !== 'string' || str.length < 24) return { isB64: false, type: '', ext: '' };
+        let s = str.trim();
+        if (s.startsWith('data:')) {
+          const m = s.match(/^data:([^;]+);base64,/);
+          if (m) {
+            const mime = m[1];
+            return { isB64: true, type: mime, ext: mime.split('/')[1] || 'bin' };
+          }
+          s = s.split('base64,')[1] || '';
+        }
+        if (s.startsWith('JVBERi0')) return { isB64: true, type: 'application/pdf', ext: 'pdf' };
+        if (s.startsWith('iVBORw0KGgo')) return { isB64: true, type: 'image/png', ext: 'png' };
+        if (s.startsWith('/9j/')) return { isB64: true, type: 'image/jpeg', ext: 'jpg' };
+        if (s.startsWith('R0lGOD')) return { isB64: true, type: 'image/gif', ext: 'gif' };
+        if (s.startsWith('UklGR')) return { isB64: true, type: 'image/webp', ext: 'webp' };
+        if (s.startsWith('PHN2Zy') || s.startsWith('<svg')) return { isB64: true, type: 'image/svg+xml', ext: 'svg' };
+
+        // Test standard base64 regex for longer strings
+        if (/^[A-Za-z0-9+/=]{40,}$/.test(s)) {
+          return { isB64: true, type: 'application/octet-stream', ext: 'bin' };
+        }
+        return { isB64: false, type: '', ext: '' };
+      };
+
+      const parseJson = (text: string) => {
+        const found: Array<{ path: string; b64: string; type: string; ext: string; bytes: number }> = [];
+
+        try {
+          const parsed = JSON.parse(text);
+          const walk = (obj: any, currentPath: string) => {
+            if (!obj || typeof obj !== 'object') return;
+            for (const key of Object.keys(obj)) {
+              const val = obj[key];
+              const p = currentPath ? `${currentPath}.${key}` : key;
+              if (typeof val === 'string') {
+                const check = isBase64String(val);
+                if (check.isB64) {
+                  const raw = val.includes('base64,') ? val.split('base64,')[1] : val;
+                  found.push({
+                    path: p,
+                    b64: raw.trim(),
+                    type: check.type,
+                    ext: check.ext,
+                    bytes: Math.round(raw.trim().length * 0.75)
+                  });
+                }
+              } else if (typeof val === 'object') {
+                walk(val, p);
+              }
+            }
+          };
+          walk(parsed, '');
+        } catch (e) {}
+
+        if (countBadge) countBadge.textContent = `${found.length} Found`;
+
+        if (resultsList) {
+          resultsList.innerHTML = '';
+          if (found.length === 0) {
+            if (emptyState) resultsList.appendChild(emptyState);
+            return;
+          }
+
+          found.forEach((item, idx) => {
+            const card = document.createElement('div');
+            card.className = 'p-4 rounded-xl border border-hairline bg-canvas flex flex-col gap-2 shadow-2xs';
+
+            const sizeKb = (item.bytes / 1024).toFixed(1);
+            const dataUrl = `data:${item.type};base64,${item.b64}`;
+
+            card.innerHTML = `
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono font-bold text-ink truncate max-w-[280px]" title="${item.path}">${item.path}</span>
+                <span class="text-[11px] font-mono uppercase px-2 py-0.5 rounded bg-link-bg-soft text-link-deep font-semibold">${item.ext}</span>
+              </div>
+              <div class="flex items-center justify-between text-xs text-mute font-mono">
+                <span>${item.type}</span>
+                <span>${sizeKb} KB</span>
+              </div>
+              <div class="flex items-center gap-2 mt-1">
+                <a download="${item.path.replace(/[^a-zA-Z0-9_-]/g, '_')}.${item.ext}" href="${dataUrl}" class="inline-flex items-center gap-1.5 rounded-lg bg-link px-3 py-1.5 text-xs font-semibold text-white hover:bg-link-deep transition-all">
+                  Download .${item.ext}
+                </a>
+              </div>
+            `;
+            resultsList.appendChild(card);
+          });
+        }
+      };
+
+      input?.addEventListener('input', () => parseJson(input.value));
+
+      btnClear?.addEventListener('click', () => {
+        if (input) input.value = '';
+        parseJson('');
+      });
+
+      btnSample?.addEventListener('click', () => {
+        if (input) {
+          input.value = sampleJson;
+          parseJson(sampleJson);
+        }
+      });
+    }
+  }
+
+  customElements.define('json-base64-extractor', JsonBase64Extractor);
+</script>
