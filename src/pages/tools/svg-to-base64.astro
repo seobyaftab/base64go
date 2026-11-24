@@ -1,0 +1,305 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const toolTitle = 'SVG to Base64 & Data URI Studio: CSS & HTML Generator (Online)';
+const toolDescription = 'Convert SVG code or files into Base64 Data URIs, inline CSS background-image rules, HTML img tags, and React JSX. 100% client-side with live SVG preview.';
+---
+
+<Layout
+  title={toolTitle}
+  description={toolDescription}
+  canonicalURL="https://base64go.com/tools/svg-to-base64/"
+>
+  <main class="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 lg:px-8">
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-1.5 rounded-full border border-link/20 bg-link-bg-soft/40 px-3 py-1 text-[12px] leading-4 text-link-deep font-medium mb-3">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Instant CSS & HTML Snippets
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-ink mb-3">
+        <span class="bg-gradient-to-r from-link via-[#7928ca] to-[#ff0080] bg-clip-text text-transparent">SVG to Base64</span> Studio
+      </h1>
+      <p class="max-w-2xl mx-auto text-base sm:text-lg text-body">
+        Paste SVG markup or drop an SVG file to generate optimized Base64 Data URIs, CSS background-image rules, and HTML elements.
+      </p>
+    </div>
+
+    <svg-to-base64-studio class="block">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+        <!-- SVG Input Panel -->
+        <div class="lg:col-span-6 flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <label for="svg-input" class="text-xs uppercase font-mono tracking-wider text-mute font-bold">
+              Raw SVG Markup or File
+            </label>
+            <button id="btn-svg-clear" type="button" class="text-xs text-mute hover:text-ink transition-colors font-mono cursor-pointer">
+              Clear
+            </button>
+          </div>
+
+          <textarea
+            id="svg-input"
+            rows="12"
+            placeholder="<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>&#10;  <circle cx='12' cy='12' r='10' fill='#007cf0'/>&#10;</svg>"
+            class="w-full resize-y rounded-xl border border-hairline bg-canvas p-4 text-xs sm:text-sm font-mono leading-relaxed text-ink placeholder:text-mute focus:outline-none focus:border-link min-h-[280px] shadow-level-1"
+            spellcheck="false"
+          ></textarea>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button
+              id="btn-svg-sample"
+              type="button"
+              class="rounded-lg border border-hairline bg-canvas-soft-2 px-3 py-2 text-xs font-medium text-body hover:text-ink transition-colors cursor-pointer"
+            >
+              Load Sample Icon
+            </button>
+            <label class="rounded-lg border border-hairline bg-canvas-soft-2 px-3 py-2 text-xs font-medium text-body hover:text-ink transition-colors cursor-pointer inline-flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Upload .svg
+              <input type="file" id="svg-file-upload" accept=".svg" class="hidden" />
+            </label>
+          </div>
+
+          <!-- Live Preview Box -->
+          <div class="rounded-xl border border-hairline bg-canvas p-4 shadow-level-1">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs uppercase font-mono tracking-wider text-mute font-bold">Live Visual Render</span>
+              <span id="svg-dims-badge" class="text-xs font-mono text-mute">0 x 0 px</span>
+            </div>
+            <div class="w-full h-36 rounded-lg bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:12px_12px] flex items-center justify-center p-4 overflow-hidden border border-hairline">
+              <div id="svg-preview-container" class="max-w-full max-h-full flex items-center justify-center">
+                <span class="text-xs text-mute font-mono">No SVG Loaded</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generated Snippets Panel -->
+        <div class="lg:col-span-6 flex flex-col gap-4">
+          <!-- Format Tabs -->
+          <div class="flex flex-wrap items-center gap-1 border-b border-hairline pb-2">
+            <button type="button" class="snippet-tab rounded-lg px-3 py-1.5 text-xs font-semibold bg-link text-white shadow-level-1 cursor-pointer" data-format="css">
+              CSS url()
+            </button>
+            <button type="button" class="snippet-tab rounded-lg px-3 py-1.5 text-xs font-semibold bg-canvas-soft-2 text-body hover:text-ink cursor-pointer" data-format="data-uri">
+              Data URI
+            </button>
+            <button type="button" class="snippet-tab rounded-lg px-3 py-1.5 text-xs font-semibold bg-canvas-soft-2 text-body hover:text-ink cursor-pointer" data-format="html">
+              HTML img
+            </button>
+            <button type="button" class="snippet-tab rounded-lg px-3 py-1.5 text-xs font-semibold bg-canvas-soft-2 text-body hover:text-ink cursor-pointer" data-format="jsx">
+              React JSX
+            </button>
+            <button type="button" class="snippet-tab rounded-lg px-3 py-1.5 text-xs font-semibold bg-canvas-soft-2 text-body hover:text-ink cursor-pointer" data-format="raw">
+              Raw Base64
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <span id="snippet-label" class="text-xs uppercase font-mono tracking-wider text-mute font-bold">
+              CSS background-image Snippet
+            </span>
+            <button
+              id="btn-copy-snippet"
+              type="button"
+              class="inline-flex items-center gap-1.5 rounded-lg bg-link px-3.5 py-1.5 text-xs font-semibold text-white shadow-level-1 hover:bg-link-deep transition-all cursor-pointer"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span id="copy-btn-text">Copy Snippet</span>
+            </button>
+          </div>
+
+          <textarea
+            id="snippet-output"
+            rows="16"
+            readonly
+            class="w-full resize-y rounded-xl border border-hairline bg-canvas-soft-2 p-4 text-xs font-mono leading-relaxed text-ink focus:outline-none min-h-[380px] shadow-level-1"
+            spellcheck="false"
+          ></textarea>
+
+          <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+            <div class="p-3 rounded-lg border border-hairline bg-canvas">
+              <span class="text-mute block text-[11px] mb-0.5">Original SVG Size</span>
+              <span id="stat-orig-size" class="font-bold text-ink">0 B</span>
+            </div>
+            <div class="p-3 rounded-lg border border-hairline bg-canvas">
+              <span class="text-mute block text-[11px] mb-0.5">Base64 Overhead</span>
+              <span id="stat-b64-size" class="font-bold text-ink">+33.3% (0 B)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </svg-to-base64-studio>
+
+    <!-- SEO Content Section -->
+    <article class="prose max-w-none border-t border-hairline pt-12 text-body">
+      <h2 class="text-2xl font-semibold text-ink mb-4">Why Embed SVGs as Base64 Data URIs?</h2>
+      <p class="leading-relaxed mb-4">
+        Embedding vector icons directly into CSS stylesheets or HTML code eliminates separate HTTP round-trips. Browsers can render the icons immediately on first paint without layout shifts (CLS) or flashing placeholders.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+        <div class="p-5 rounded-xl border border-hairline bg-canvas">
+          <h3 class="font-semibold text-ink text-base mb-1">Zero HTTP Requests</h3>
+          <p class="text-xs text-mute">Bundles iconography directly into stylesheets for instantaneous CSS rendering.</p>
+        </div>
+        <div class="p-5 rounded-xl border border-hairline bg-canvas">
+          <h3 class="font-semibold text-ink text-base mb-1">Scalable Vector Quality</h3>
+          <p class="text-xs text-mute">Sharp rendering on all retina and high-DPI screens without pixelation.</p>
+        </div>
+        <div class="p-5 rounded-xl border border-hairline bg-canvas">
+          <h3 class="font-semibold text-ink text-base mb-1">100% Offline Capable</h3>
+          <p class="text-xs text-mute">Embedded Data URIs function perfectly in offline PWAs, email templates, and intranet tools.</p>
+        </div>
+      </div>
+    </article>
+  </main>
+</Layout>
+
+<script>
+  class SvgToBase64Studio extends HTMLElement {
+    connectedCallback() {
+      const input = this.querySelector('#svg-input') as HTMLTextAreaElement;
+      const btnClear = this.querySelector('#btn-svg-clear');
+      const btnSample = this.querySelector('#btn-svg-sample');
+      const fileUpload = this.querySelector('#svg-file-upload') as HTMLInputElement;
+      const previewContainer = this.querySelector('#svg-preview-container');
+      const dimsBadge = this.querySelector('#svg-dims-badge');
+      const snippetOutput = this.querySelector('#snippet-output') as HTMLTextAreaElement;
+      const snippetLabel = this.querySelector('#snippet-label');
+      const btnCopy = this.querySelector('#btn-copy-snippet');
+      const copyBtnText = this.querySelector('#copy-btn-text');
+      const statOrig = this.querySelector('#stat-orig-size');
+      const statB64 = this.querySelector('#stat-b64-size');
+      const tabs = this.querySelectorAll('.snippet-tab');
+
+      let currentFormat = 'css';
+      let rawBase64 = '';
+      let dataUri = '';
+
+      const sampleSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#007cf0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>`;
+
+      const updateSnippets = () => {
+        if (!rawBase64) {
+          if (snippetOutput) snippetOutput.value = '';
+          return;
+        }
+
+        let outputText = '';
+        if (currentFormat === 'css') {
+          outputText = `background-image: url("${dataUri}");\nbackground-repeat: no-repeat;\nbackground-position: center;\nbackground-size: contain;`;
+          if (snippetLabel) snippetLabel.textContent = 'CSS background-image Snippet';
+        } else if (currentFormat === 'data-uri') {
+          outputText = dataUri;
+          if (snippetLabel) snippetLabel.textContent = 'Raw Data URI String';
+        } else if (currentFormat === 'html') {
+          outputText = `<img src="${dataUri}" alt="Embedded Vector Icon" width="24" height="24" />`;
+          if (snippetLabel) snippetLabel.textContent = 'HTML <img> Tag Snippet';
+        } else if (currentFormat === 'jsx') {
+          outputText = `<img src={"${dataUri}"} alt="Vector Icon" width={24} height={24} />`;
+          if (snippetLabel) snippetLabel.textContent = 'React JSX <img> Snippet';
+        } else if (currentFormat === 'raw') {
+          outputText = rawBase64;
+          if (snippetLabel) snippetLabel.textContent = 'Raw Base64 String (No Prefix)';
+        }
+
+        if (snippetOutput) snippetOutput.value = outputText;
+      };
+
+      const processSvg = (svgText: string) => {
+        const trimmed = svgText.trim();
+        if (!trimmed) {
+          rawBase64 = '';
+          dataUri = '';
+          if (previewContainer) previewContainer.innerHTML = '<span class="text-xs text-mute font-mono">No SVG Loaded</span>';
+          if (dimsBadge) dimsBadge.textContent = '0 x 0 px';
+          if (statOrig) statOrig.textContent = '0 B';
+          if (statB64) statB64.textContent = '+33.3% (0 B)';
+          updateSnippets();
+          return;
+        }
+
+        try {
+          // Encode UTF-8 SVG string to Base64 safely
+          const encoded = btoa(unescape(encodeURIComponent(trimmed)));
+          rawBase64 = encoded;
+          dataUri = `data:image/svg+xml;base64,${encoded}`;
+
+          // Visual render
+          if (previewContainer) previewContainer.innerHTML = trimmed;
+
+          // Dimensions inspection
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(trimmed, 'image/svg+xml');
+          const svgEl = doc.querySelector('svg');
+          const viewBox = svgEl?.getAttribute('viewBox') || '';
+          const w = svgEl?.getAttribute('width') || (viewBox.split(' ')[2]) || 'Auto';
+          const h = svgEl?.getAttribute('height') || (viewBox.split(' ')[3]) || 'Auto';
+
+          if (dimsBadge) dimsBadge.textContent = `${w} x ${h} px`;
+
+          const origBytes = new TextEncoder().encode(trimmed).length;
+          const b64Bytes = encoded.length;
+          if (statOrig) statOrig.textContent = `${origBytes} B`;
+          if (statB64) statB64.textContent = `+33.3% (${b64Bytes} B)`;
+
+          updateSnippets();
+        } catch (e) {
+          if (previewContainer) previewContainer.innerHTML = '<span class="text-xs text-red-500 font-mono">Malformed SVG Code</span>';
+        }
+      };
+
+      input?.addEventListener('input', () => processSvg(input.value));
+
+      btnClear?.addEventListener('click', () => {
+        if (input) input.value = '';
+        processSvg('');
+      });
+
+      btnSample?.addEventListener('click', () => {
+        if (input) {
+          input.value = sampleSvg;
+          processSvg(sampleSvg);
+        }
+      });
+
+      fileUpload?.addEventListener('change', (e: any) => {
+        const file = e.target.files?.[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const text = event.target?.result as string;
+            if (input && text) {
+              input.value = text;
+              processSvg(text);
+            }
+          };
+          reader.readAsText(file);
+        }
+      });
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.className = 'snippet-tab rounded-lg px-3 py-1.5 text-xs font-semibold bg-canvas-soft-2 text-body hover:text-ink cursor-pointer');
+          tab.className = 'snippet-tab rounded-lg px-3 py-1.5 text-xs font-semibold bg-link text-white shadow-level-1 cursor-pointer';
+          currentFormat = tab.getAttribute('data-format') || 'css';
+          updateSnippets();
+        });
+      });
+
+      btnCopy?.addEventListener('click', () => {
+        if (snippetOutput?.value) {
+          navigator.clipboard.writeText(snippetOutput.value).then(() => {
+            if (copyBtnText) copyBtnText.textContent = 'Copied!';
+            setTimeout(() => {
+              if (copyBtnText) copyBtnText.textContent = 'Copy Snippet';
+            }, 1800);
+          });
+        }
+      });
+    }
+  }
+
+  customElements.define('svg-to-base64-studio', SvgToBase64Studio);
+</script>
