@@ -1,0 +1,293 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const toolTitle = 'Base64 to PDF Decoder: Preview & Download Online (100% Private)';
+const toolDescription = 'Decode Base64 strings to PDF documents, preview inline, inspect PDF version and size, and download .pdf files locally. 100% client-side with zero server uploads.';
+---
+
+<Layout
+  title={toolTitle}
+  description={toolDescription}
+  canonicalURL="https://base64go.com/tools/base64-to-pdf/"
+>
+  <main class="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-1.5 rounded-full border border-link/20 bg-link-bg-soft/40 px-3 py-1 text-[12px] leading-4 text-link-deep font-medium mb-3">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        100% Client-Side: Zero Server Uploads
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-ink mb-3">
+        <span class="bg-gradient-to-r from-link via-[#7928ca] to-[#ff0080] bg-clip-text text-transparent">Base64 to PDF</span> Decoder
+      </h1>
+      <p class="max-w-2xl mx-auto text-base sm:text-lg text-body">
+        Paste any Base64 encoded string or Data URI to instantly render, inspect, and download the PDF document directly in your browser.
+      </p>
+    </div>
+
+    <!-- Converter Component -->
+    <base64-pdf-viewer class="block">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+        <!-- Input Area -->
+        <div class="lg:col-span-5 flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <label for="pdf-input" class="text-xs uppercase font-mono tracking-wider text-mute font-bold">
+              Base64 Input (or JSON with Base64)
+            </label>
+            <button id="btn-clear" type="button" class="text-xs text-mute hover:text-ink transition-colors font-mono cursor-pointer">
+              Clear
+            </button>
+          </div>
+
+          <textarea
+            id="pdf-input"
+            rows="14"
+            placeholder="Paste Base64 PDF string (e.g. JVBERi0xLj... or data:application/pdf;base64,JVBERi0...)"
+            class="w-full resize-y rounded-xl border border-hairline bg-canvas p-4 text-xs sm:text-sm font-mono leading-relaxed text-ink placeholder:text-mute focus:outline-none focus:border-link min-h-[300px] lg:min-h-[460px] shadow-level-1"
+            spellcheck="false"
+          ></textarea>
+
+          <!-- Input Action Buttons -->
+          <div class="flex flex-wrap items-center gap-3">
+            <button
+              id="btn-sample"
+              type="button"
+              class="rounded-lg border border-hairline bg-canvas-soft-2 px-3 py-2 text-xs font-medium text-body hover:text-ink transition-colors cursor-pointer"
+            >
+              Load Sample PDF
+            </button>
+            <label class="rounded-lg border border-hairline bg-canvas-soft-2 px-3 py-2 text-xs font-medium text-body hover:text-ink transition-colors cursor-pointer inline-flex items-center gap-1.5">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Upload .txt / .b64
+              <input type="file" id="file-upload" accept=".txt,.b64" class="hidden" />
+            </label>
+          </div>
+        </div>
+
+        <!-- Output & PDF Previewer -->
+        <div class="lg:col-span-7 flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xs uppercase font-mono tracking-wider text-mute font-bold">Live PDF Preview</span>
+              <span id="pdf-version-badge" class="hidden text-[11px] font-mono px-2 py-0.5 rounded bg-link-bg-soft text-link-deep font-semibold">
+                PDF 1.4
+              </span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="pdf-size-badge" class="text-xs font-mono text-mute">0 KB</span>
+              <a
+                id="btn-download"
+                download="decoded-document.pdf"
+                class="pointer-events-none opacity-50 inline-flex items-center gap-1.5 rounded-lg bg-link px-3.5 py-1.5 text-xs font-semibold text-white shadow-level-1 hover:bg-link-deep transition-all cursor-pointer"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download PDF
+              </a>
+            </div>
+          </div>
+
+          <!-- Preview Frame Container -->
+          <div class="relative w-full rounded-xl border border-hairline bg-canvas-soft-2 min-h-[300px] lg:min-h-[460px] flex items-center justify-center overflow-hidden shadow-level-1">
+            <div id="empty-state" class="text-center p-8 text-mute">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="mx-auto mb-3 opacity-40"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              <p class="text-sm font-medium text-body">Paste a Base64 PDF string on the left</p>
+              <p class="text-xs text-mute mt-1">The document will render live inside this pane.</p>
+            </div>
+
+            <div id="error-state" class="hidden text-center p-8 text-red-500">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mx-auto mb-2 text-red-400"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <p id="error-msg" class="text-sm font-medium text-red-600 dark:text-red-400">Invalid Base64 or Not a Valid PDF</p>
+            </div>
+
+            <iframe
+              id="pdf-frame"
+              class="hidden w-full h-[520px] rounded-xl border-0 bg-white"
+              title="Decoded PDF Document"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </base64-pdf-viewer>
+
+    <!-- Technical SEO Content & FAQ -->
+    <article class="prose max-w-none border-t border-hairline pt-12 text-body">
+      <h2 class="text-2xl font-semibold text-ink mb-4">How to Decode Base64 to PDF in Your Browser</h2>
+      <p class="leading-relaxed mb-4">
+        Base64 encoding represents binary PDF files as ASCII text strings so they can be embedded inside JSON API responses, email MIME attachments, or database records. When a system transmits a document, the original binary byte stream is mapped into a 64-character alphabet.
+      </p>
+      <p class="leading-relaxed mb-6">
+        This decoder processes the payload entirely on the client side using JavaScript TypedArrays and the native browser Blob API. Your document is never uploaded to any remote server or stored in a third-party cache.
+      </p>
+
+      <h3 class="text-xl font-semibold text-ink mb-3">PDF Magic Byte Signatures</h3>
+      <p class="leading-relaxed mb-4">
+        Every standard PDF document begins with the ASCII header <code>%PDF-</code>. In hexadecimal representation, these magic bytes are <code>25 50 44 46 2D</code>. In Base64 encoding, standard PDF strings almost universally begin with the characters:
+      </p>
+      <div class="p-4 rounded-xl bg-canvas-soft-2 border border-hairline font-mono text-sm mb-6">
+        JVBERi0...
+      </div>
+
+      <h3 class="text-xl font-semibold text-ink mb-3">Frequently Asked Questions</h3>
+      <div class="space-y-4 mb-8">
+        <div class="p-5 rounded-xl border border-hairline bg-canvas">
+          <h4 class="font-semibold text-ink mb-1">Is it safe to decode confidential or enterprise PDFs here?</h4>
+          <p class="text-sm text-body">Yes. Base64Go processes 100% of data locally inside your web browser memory. No network requests are made, no cookies track your payload, and no files are saved to any cloud server.</p>
+        </div>
+        <div class="p-5 rounded-xl border border-hairline bg-canvas">
+          <h4 class="font-semibold text-ink mb-1">Does this support JSON wrapped Base64 responses?</h4>
+          <p class="text-sm text-body">Yes. If your API returned a JSON response like <code>&#123;&#125;</code>, you can paste the entire block. The engine automatically extracts the Base64 field and renders the PDF.</p>
+        </div>
+      </div>
+    </article>
+  </main>
+</Layout>
+
+<script>
+  class Base64PdfViewer extends HTMLElement {
+    connectedCallback() {
+      const input = this.querySelector('#pdf-input') as HTMLTextAreaElement;
+      const btnClear = this.querySelector('#btn-clear');
+      const btnSample = this.querySelector('#btn-sample');
+      const fileUpload = this.querySelector('#file-upload') as HTMLInputElement;
+      const iframe = this.querySelector('#pdf-frame') as HTMLIFrameElement;
+      const emptyState = this.querySelector('#empty-state');
+      const errorState = this.querySelector('#error-state');
+      const errorMsg = this.querySelector('#error-msg');
+      const versionBadge = this.querySelector('#pdf-version-badge');
+      const sizeBadge = this.querySelector('#pdf-size-badge');
+      const btnDownload = this.querySelector('#btn-download') as HTMLAnchorElement;
+
+      let currentBlobUrl: string | null = null;
+
+      // Sample minimal valid PDF (Base64)
+      const samplePdf = 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDY5L0ZpbHRlci9GbGF0ZURlY29kZT4+c3RyZWFtCnicS1FIK8rPVTDSUVBQSFRQ0FUISs1LzEtPTlVIzs8rVkgqLUosTi2qLM9WqOECALaFDYgKZW5kc3RyZWFtCmVuZG9iam4KMSAwIG9iago8PC9UeXBlL1BhZ2UvUGFyZW50IDMgMCBSL0NvbnRlbnRzIDIgMCBSL1Jlc291cmNlczw8L1Byb2NTZXRbL1BERi9UZXh0XT4+Pj4KZW5kb2JqCjMgMCBvYmoKPDwvVHlwZS9QYWdlcy9LaWRzWzEgMCBSXS9Db3VudCAxL01lZGlhQm94WzAgMCA2MTIgNzkyXT4+CmVuZG9iam4KNCAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMyAwIFI+PgplbmRvYmoKdHJhaWxlcgo8PC9TaXplIDUvUm9vdCA0IDAgUj4+CiUlRU9G';
+
+      const cleanupUrl = () => {
+        if (currentBlobUrl) {
+          URL.revokeObjectURL(currentBlobUrl);
+          currentBlobUrl = null;
+        }
+      };
+
+      const renderPdf = (rawString: string) => {
+        cleanupUrl();
+        let cleaned = rawString.trim();
+
+        if (!cleaned) {
+          emptyState?.classList.remove('hidden');
+          errorState?.classList.add('hidden');
+          iframe?.classList.add('hidden');
+          versionBadge?.classList.add('hidden');
+          if (sizeBadge) sizeBadge.textContent = '0 KB';
+          btnDownload?.classList.add('pointer-events-none', 'opacity-50');
+          return;
+        }
+
+        // Auto-extract from JSON if user pasted JSON
+        if (cleaned.startsWith('{') && cleaned.endsWith('}')) {
+          try {
+            const parsed = JSON.parse(cleaned);
+            for (const key of Object.keys(parsed)) {
+              if (typeof parsed[key] === 'string' && parsed[key].includes('JVBERi0')) {
+                cleaned = parsed[key];
+                break;
+              }
+            }
+          } catch (e) {}
+        }
+
+        // Strip Data URI header if present
+        if (cleaned.includes('base64,')) {
+          cleaned = cleaned.split('base64,')[1];
+        }
+
+        // Clean whitespaces and newlines
+        cleaned = cleaned.replace(/\s+/g, '');
+
+        try {
+          // Decode Base64 to binary string
+          const binaryStr = atob(cleaned);
+          const len = binaryStr.length;
+          const bytes = new Uint8Array(len);
+          for (let i = 0; i < len; i++) {
+            bytes[i] = binaryStr.charCodeAt(i);
+          }
+
+          // Check PDF magic bytes (%PDF-)
+          const header = String.fromCharCode(...bytes.slice(0, 8));
+          if (!header.startsWith('%PDF-')) {
+            throw new Error('Payload does not contain valid PDF header (%PDF-)');
+          }
+
+          // Extract PDF version
+          const versionMatch = header.match(/%PDF-(\d\.\d)/);
+          const pdfVersion = versionMatch ? `PDF ${versionMatch[1]}` : 'PDF';
+
+          // Create Blob
+          const blob = new Blob([bytes], { type: 'application/pdf' });
+          currentBlobUrl = URL.createObjectURL(blob);
+
+          // Update UI
+          emptyState?.classList.add('hidden');
+          errorState?.classList.add('hidden');
+          iframe?.classList.remove('hidden');
+          iframe.src = currentBlobUrl;
+
+          if (versionBadge) {
+            versionBadge.textContent = pdfVersion;
+            versionBadge.classList.remove('hidden');
+          }
+
+          if (sizeBadge) {
+            const kb = (len / 1024).toFixed(1);
+            sizeBadge.textContent = `${kb} KB`;
+          }
+
+          if (btnDownload) {
+            btnDownload.href = currentBlobUrl;
+            btnDownload.classList.remove('pointer-events-none', 'opacity-50');
+          }
+        } catch (err: any) {
+          emptyState?.classList.add('hidden');
+          iframe?.classList.add('hidden');
+          versionBadge?.classList.add('hidden');
+          errorState?.classList.remove('hidden');
+          if (errorMsg) errorMsg.textContent = err.message || 'Invalid Base64 or Not a Valid PDF';
+          if (sizeBadge) sizeBadge.textContent = '0 KB';
+          btnDownload?.classList.add('pointer-events-none', 'opacity-50');
+        }
+      };
+
+      input?.addEventListener('input', () => renderPdf(input.value));
+
+      btnClear?.addEventListener('click', () => {
+        if (input) input.value = '';
+        renderPdf('');
+      });
+
+      btnSample?.addEventListener('click', () => {
+        if (input) {
+          input.value = samplePdf;
+          renderPdf(samplePdf);
+        }
+      });
+
+      fileUpload?.addEventListener('change', (e: any) => {
+        const file = e.target.files?.[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const text = event.target?.result as string;
+            if (input && text) {
+              input.value = text;
+              renderPdf(text);
+            }
+          };
+          reader.readAsText(file);
+        }
+      });
+    }
+  }
+
+  customElements.define('base64-pdf-viewer', Base64PdfViewer);
+</script>
