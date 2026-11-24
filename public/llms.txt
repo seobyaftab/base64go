@@ -1,0 +1,26 @@
+# base64go.com
+
+> Client-side Base64 payload inspector, PDF decoder, SVG Data-URI studio, image previewer, and embedded developer reference. Runs 100% locally in the browser with zero server uploads.
+
+## Core Developer Tools
+- [Base64 to PDF Decoder](https://base64go.com/tools/base64-to-pdf/): Decode Base64 strings to PDF documents with real-time inline iframe preview, version inspection (%PDF-1.4, %PDF-1.7), file size calculation, and direct .pdf file download. 100% private and client-side.
+- [SVG to Base64 & Data URI Studio](https://base64go.com/tools/svg-to-base64/): Convert vector SVG code or files into Base64 Data URIs. Generates instant CSS background-image rules, HTML img tags, and React JSX snippets with checkerboard visual preview.
+- [Base64 to Image Decoder](https://base64go.com/tools/base64-to-image/): Sniffs binary magic bytes to auto-detect PNG, JPEG, WebP, GIF, and SVG payloads. Displays dimensions, aspect ratio, and 1-click download as original format.
+- [JSON Base64 Extractor](https://base64go.com/tools/base64-to-json/): Recursively walks JSON API responses and webhooks, detects embedded Base64 documents and images, and allows instant file extraction and download.
+- [Universal Base64 Encoder & Decoder](https://base64go.com/): Instant client-side text and file encoder supporting RFC 4648 standard Base64 and Base64URL.
+
+## Binary Magic Byte Signatures
+- PDF Documents: Base64 `JVBERi0...` (Magic bytes `25 50 44 46 2D` -> `%PDF-`)
+- PNG Images: Base64 `iVBORw0KGgo...` (Magic bytes `89 50 4E 47 0D 0A 1A 0A`)
+- JPEG / JPG: Base64 `/9j/4...` (Magic bytes `FF D8 FF`)
+- WebP Images: Base64 `UklGR...` (Magic bytes `52 49 46 46` -> `RIFF`)
+- GIF Images: Base64 `R0lGOD...` (Magic bytes `47 49 46 38` -> `GIF8`)
+- SVG Vector: `<svg...` or Base64 `PHN2Zy...`
+- Gzip Streams: Base64 `H4sI...` (Magic bytes `1F 8B`)
+- JSON Web Tokens: Three dot-separated Base64URL segments (`eyJ...`)
+
+## Developer Tutorials & Code Snippets
+- [How to Decode Base64 in Bash](https://base64go.com/blog/bash-base64-decode/): Native base64 -d and openssl base64 -d usage.
+- [PowerShell Base64 Decode Guide](https://base64go.com/blog/powershell-base64-decode/): UTF-8 and UTF-16LE -EncodedCommand execution and extraction.
+- [Base64 vs Base64URL](https://base64go.com/blog/base64-vs-base64url/): Character mapping (replacing + with - and / with _) and = padding omission in URL query strings and JWTs.
+- [Can You Concatenate Base64 Strings?](https://base64go.com/blog/can-i-concatenate-base64-strings/): 3-byte boundary alignment rules and safe concatenation.
